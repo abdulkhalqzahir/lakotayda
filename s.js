@@ -7,8 +7,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const groupSelect = document.getElementById('groupSelect');
     const studentTableBody = document.querySelector('#studentTable tbody');
 
-    // هێنانەوەی داتا لە Local Storage
-    let studentsData = getDataFromLocalStorage("studentsData") || [];
+    // فەنکشن بۆ هێنانەوەی داتا لە Local Storage
+    function getCurrentStudents() {
+        const stage = stageSelect.value;
+        const group = groupSelect.value;
+        const key = `students${stage}${group}`;
+        return getDataFromLocalStorage(key) || [];
+    }
+
+    // فەنکشن بۆ هەڵگرتنی داتا لە Local Storage
+    function saveCurrentStudents(students) {
+        const stage = stageSelect.value;
+        const group = groupSelect.value;
+        const key = `students${stage}${group}`;
+        saveDataToLocalStorage(key, students);
+    }
 
     // زیادکردنی قوتابی
     saveButton.addEventListener('click', function () {
@@ -28,8 +41,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     absenceDates: []
                 };
 
-                studentsData.push(student);
-                saveDataToLocalStorage("studentsData", studentsData); // هەڵگرتنی داتا
+                const students = getCurrentStudents();
+                students.push(student);
+                saveCurrentStudents(students); // هەڵگرتنی داتا
                 renderTable();
                 studentNameInput.value = '';
                 studentImageInput.value = '';
@@ -40,21 +54,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // سڕینەوەی قوتابی
-    deleteButton.addEventListener('click', function () {
-        const selectedStudent = prompt('ناوی قوتابیەکە بنووسە بۆ سڕینەوە:');
-        if (selectedStudent) {
-            confirmDelete(selectedStudent);
-        }
-    });
-
     // نیشاندانی خشتەکە
     function renderTable() {
+        const students = getCurrentStudents();
         studentTableBody.innerHTML = '';
-        studentsData.forEach((student, index) => {
+        students.forEach((student, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${student.name}</td>
+                <td>
+                    ${student.name}
+                    <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
+                </td>
                 <td><img src="${student.image}" alt="${student.name}" class="img-thumbnail"></td>
                 <td>${student.group}</td>
                 <td>${student.absences}</td>
@@ -70,17 +80,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // زیادکردنی غیاب
     window.markAbsent = function (index) {
+        const students = getCurrentStudents();
         const now = new Date();
         const dateString = now.toLocaleString();
-        studentsData[index].absences++;
-        studentsData[index].absenceDates.push(dateString);
-        saveDataToLocalStorage("studentsData", studentsData); // هەڵگرتنی داتا
+        students[index].absences++;
+        students[index].absenceDates.push(dateString);
+        saveCurrentStudents(students); // هەڵگرتنی داتا
         renderTable();
 
-        if (studentsData[index].absences === 6) {
+        if (students[index].absences === 6) {
             Swal.fire({
                 title: 'ئاگاداری!',
-                html: `<b>${studentsData[index].name}</b> قوتابی بەڕێز، لەبەر ڕێژەی زۆری نەهاتنت، بۆ دەوام کۆتایت بۆ هاتنەوە.`,
+                html: `<b>${students[index].name}</b> قوتابی بەڕێز، لەبەر ڕێژەی زۆری نەهاتنت، بۆ دەوام کۆتایت بۆ هاتنەوە.`,
                 icon: 'warning',
                 confirmButtonText: 'باشە',
             });
@@ -89,16 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // کەمکردنەوەی غیاب (هاتوو)
     window.markPresent = function (index) {
-        if (studentsData[index].absences > 0) {
-            studentsData[index].absences--;
-            studentsData[index].absenceDates.pop();
-            saveDataToLocalStorage("studentsData", studentsData); // هەڵگرتنی داتا
+        const students = getCurrentStudents();
+        if (students[index].absences > 0) {
+            students[index].absences--;
+            students[index].absenceDates.pop();
+            saveCurrentStudents(students); // هەڵگرتنی داتا
         }
         renderTable();
     };
 
     // دڵنیایی بۆ سڕینەوە
-    window.confirmDelete = function (studentName) {
+    window.confirmDelete = function (studentName, index) {
         Swal.fire({
             title: 'دڵنیایت؟',
             text: `دڵنیایت دەتەوێت قوتابی "${studentName}" بسڕیتەوە؟`,
@@ -108,8 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelButtonText: 'نەخێر'
         }).then((result) => {
             if (result.isConfirmed) {
-                studentsData = studentsData.filter(student => student.name !== studentName);
-                saveDataToLocalStorage("studentsData", studentsData); // هەڵگرتنی داتا
+                let students = getCurrentStudents();
+                students.splice(index, 1); // سڕینەوەی قوتابی لە لیستەکە
+                saveCurrentStudents(students); // هەڵگرتنی داتا
                 renderTable();
                 Swal.fire('سڕایەوە!', `قوتابی "${studentName}" سڕایەوە.`, 'success');
             }
@@ -128,4 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // نیشاندانی خشتەکە لە سەرەتادا
     renderTable();
+
+    // گۆڕینی قۆناغ و گروپ
+    stageSelect.addEventListener('change', renderTable);
+    groupSelect.addEventListener('change', renderTable);
 });
