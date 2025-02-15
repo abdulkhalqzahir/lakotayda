@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فۆڕمی لۆگین</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+         
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-shadow: 0px 0px 10px 0px red;    
+            margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        animation: gradientBG 15s ease infinite; /* ئەنیمەیشن */
+        text-align: right;
+        
+        }
+html,body{
+    background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
+background-size: cover;
+background-repeat: no-repeat;
+height: 100%;
+font-family: 'Numans', sans-serif;
+}
+input{
+    color: aliceblue;
+}
+      .login-container {
+            background-color: rgba(0,0,0,0.5) !important;
+
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 20px 0px red;
+           
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #bcbbac;
+        }
+
+        :hover.login-container input[type="text"],
+        :hover.login-container input[type="password"] {
+            box-shadow: 0px 0px 40px 0px yellow;
+        transition: 0.9s;}
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #000000;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: right;
+           
+            background-color: rgba(0,0,0,0.5) !important;
+        }
+
+        .login-container input[type="submit"] {
+            width: 321px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.5) !important;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            
+        }
+        :hover.login-container input[type="submit"]{
+box-shadow: 0px 0px 20px 0px red;
+transition: 0.5s;
+        }
+        .login-container input[type="submit"]:hover {
+            background-color: #218838;
+            
+        }
+
+        .login-container .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        img{
+          border-radius: 400px;
+        }
+        .password-container {
+    position: relative;
+    width: 100%;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+}
+
+.toggle-password:hover {
+    color: #007bff;
+}
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <img src="sa.jpg" alt="">
+        <h2>کۆلێژی کارگێری و ئابووری</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="ناوی بەکارهێنەر" required>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="پاسوۆرد" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility()"></span>
+            </div>
+            <br>
+            <input type="submit" value="چوونەژوورەوە">
+        </form>
+        
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.querySelector('.toggle-password');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.textContent = ''; // یان هێمایەکی تر بۆ نیشاندانی پاسوۆرد
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.textContent = '';
+    }
+}
+            // نموونەی یوزەر و پاسوۆرد
+            var correctUsername = "idara.com";
+            var correctPassword = "idara1";
+
+            if (username === correctUsername && password === correctPassword) {
+                // ئەگەر یوزەر و پاسوۆرد ڕاست بوو، بچۆ بۆ وێبسایتەکە
+                window.location.href = "sss.html";
+            } else {
+                // ئەگەر یوزەر یان پاسوۆرد هەڵە بوو، هەڵە نیشان بدە
+                document.getElementById('errorMessage').textContent = "ناوی بەکارهێنەر یان پاسوۆرد هەڵەیە!";
+            }
+        });
+    </script>
+
+</body>
+</html>

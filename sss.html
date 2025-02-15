@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی غیاباتی قوتابیان</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="s.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">سیستەمی غیاباتی قوتابیان</h1>
+        
+        <div class="form-group">
+            <label for="stageSelect">هەڵبژاردنی قۆناغ:</label>
+            <select id="stageSelect" class="form-control">
+                <option value="1">قۆناغی ١</option>
+                <option value="2">قۆناغی ٢</option>
+                <option value="3">قۆناغی ٣</option>
+                <option value="4">قۆناغی ٤</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="groupSelect">هەڵبژاردنی گروپ:</label>
+            <select id="groupSelect" class="form-control">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="studentName">ناوی قوتابی:</label>
+            <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
+        </div>
+        
+        <div class="form-group">
+            <label for="studentImage">وێنەی قوتابی:</label>
+            <input type="file" id="studentImage" class="form-control-file" accept="image/*">
+        </div>
+        
+        <button id="saveButton" class="btn btn-success mb-3">تۆمارکردن</button>
+        <button id="deleteButton" class="btn btn-danger mb-3">سڕینەوە</button>
+        
+        <h2 class="text-center mb-4">لیستی قوتابیان</h2>
+        <table id="studentTable" class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>ناو</th>
+                    <th>وێنە</th>
+                    <th>گروپ</th>
+                    <th>ژمارەی غیاب</th>
+                    <th>کاتی نەهاتنی قوتابی</th>
+                    <th>کردارەکان</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- لیستی قوتابیان لێرە دەخرێتەوە -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="s.js"></script>
+</body>
+</html>
