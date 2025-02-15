@@ -1,7 +1,7 @@
 body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(45deg, #544d4d, rgb(46, 54, 44), #e7eccf93 );
+      background: linear-gradient(45deg, #361d1d, rgb(46, 54, 44), #09090893 );
       background-size: 400% 400%;
       animation: gradientBG 10s ease infinite;
       direction: rtl;
@@ -49,7 +49,7 @@ body {
 .container {
     width: 80%;
     margin: 20px auto;
-    background: linear-gradient(135deg, rgb(229, 255, 0), #dcb482, #5ebc4d);
+    background: linear-gradient(135deg, rgb(88, 98, 246), #de3a3a, #5ebc4d);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 20px 0px red;
