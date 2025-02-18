@@ -47,7 +47,7 @@ body {
 }
 
 .container {
-    width: 80%;
+    width: 100%;
     margin: 20px auto;
     background: linear-gradient(135deg, rgb(88, 98, 246), #de3a3a, #5ebc4d);
     padding: 20px;
@@ -78,10 +78,10 @@ h1, h2 {
     transform: scale(0.8);
 }
 .imgt{
-    width: 300px;
+    width: 340px;
     height: 200px;
     position: relative;
-    right: 210px;
+    right: 250px;
     bottom: 80px;
 }
 .text-center{
@@ -89,7 +89,7 @@ h1, h2 {
     font-family: "Lucida Console", "Courier New", monospace;
     background-color: rgba(0,0,0,0.5) !important;
     width: 700px;
-    margin-right: 120px;
+    margin-right: 150px;
     border-radius: 10px;
     
 }
