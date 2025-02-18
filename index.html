@@ -6,8 +6,8 @@
     <title>فۆڕمی لۆگین</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-         
+        background-image: url(saa.jpg);
+        background-color: #cccccc;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,10 +19,10 @@
         font-family: Arial, sans-serif;
         animation: gradientBG 15s ease infinite; /* ئەنیمەیشن */
         text-align: right;
-        
+    
         }
 html,body{
-    background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
+ 
 background-size: cover;
 background-repeat: no-repeat;
 height: 100%;
@@ -33,7 +33,7 @@ input{
 }
       .login-container {
             background-color: rgba(0,0,0,0.5) !important;
-
+            border: 2px solid #000000;
             padding: 20px 40px;
             border-radius: 8px;
             box-shadow: 0px 0px 20px 0px red;
@@ -47,32 +47,35 @@ input{
             color: #bcbbac;
         }
 
+
         :hover.login-container input[type="text"],
         :hover.login-container input[type="password"] {
             box-shadow: 0px 0px 40px 0px yellow;
         transition: 0.9s;}
         .login-container input[type="text"],
         .login-container input[type="password"] {
+          
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #000000;
-            border-radius: 4px;
+            border: 2px solid #000000;
+            border-radius: 100px;
             font-size: 16px;
             text-align: right;
            
-            background-color: rgba(0,0,0,0.5) !important;
+            background-color: rgba(181, 21, 21, 0.5) !important;
         }
 
         .login-container input[type="submit"] {
             width: 321px;
             padding: 10px;
-            background-color: rgba(0,0,0,0.5) !important;
-            border: none;
-            border-radius: 4px;
+            background-color: rgba(185, 4, 4, 0.413) !important;
+            
+            border-radius: 90px;
             color: #fff;
             font-size: 16px;
             cursor: pointer;
+            border: 3px solid rgb(188, 0, 0);
             
         }
         :hover.login-container input[type="submit"]{
@@ -109,6 +112,12 @@ transition: 0.5s;
 .toggle-password:hover {
     color: #007bff;
 }
+label{
+    color: #f7f3f3e7;
+    direction: rtl;
+    text-align: left;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
     </style>
 </head>
 <body>
@@ -117,9 +126,11 @@ transition: 0.5s;
         <img src="sa.jpg" alt="">
         <h2>کۆلێژی کارگێری و ئابووری</h2>
         <form id="loginForm">
-            <input type="text" id="username" placeholder="ناوی بەکارهێنەر" required>
+            <label for="">(ناوی بەکارهێنەر)</label>
+            <input type="text" id="username"   required>
             <div class="password-container">
-                <input type="password" id="password" placeholder="پاسوۆرد" required>
+                <label for="">(وشەی نهێنی)</label>
+                <input type="password" id="password"  required>
                 <span class="toggle-password" onclick="togglePasswordVisibility()"></span>
             </div>
             <br>
