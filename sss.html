@@ -16,10 +16,22 @@
         <div class="form-group">
             <label for="stageSelect">هەڵبژاردنی قۆناغ:</label>
             <select id="stageSelect" class="form-control">
-                <option value="1">قۆناغی ١</option>
-                <option value="2">قۆناغی ٢</option>
-                <option value="3">قۆناغی ٣</option>
-                <option value="4">قۆناغی ٤</option>
+                <option value="1">قۆناغی 1</option>
+                <option value="2">قۆناغی 2</option>
+                <option value="3">قۆناغی 3</option>
+                <option value="4">قۆناغی 4</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="departmentSelect">هەڵبژاردنی بەش:</label>
+            <select id="departmentSelect" class="form-control">
+                <option value="ژمێریاری">ژمێریاری</option>
+                <option value="ئامار">ئامار</option>
+                <option value="ئابوری">ئابوری</option>
+                <option value="کارگێڕی کار">کارگێڕی کار</option>
+                <option value="دارای بانک">دارای بانک</option>
+                <option value="بازاڕگەری">بازاڕگەری</option>
             </select>
         </div>
 
@@ -46,17 +58,17 @@
         <button id="saveButton" class="btn btn-success mb-3">تۆمارکردن</button>
         <img  src="k.png" alt="" class="imgt">
         
-        
         <h2 class="text-center mb-4">لیستی قوتابیان</h2>
         <table id="studentTable" class="table table-bordered table-hover">
             <thead class="thead-light">
                 <tr>
                     <th>ناو</th>
                     <th>وێنە</th>
+                    <th>بەش</th>
                     <th>گروپ</th>
                     <th>ژمارەی غیاب</th>
                     <th>کاتی نەهاتنی قوتابی</th>
-                    <th>کردارەکان</th>
+                    <th>هاتووە یان نەهاتووە</th>
                 </tr>
             </thead>
             <tbody>

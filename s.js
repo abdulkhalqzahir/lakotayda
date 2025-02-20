@@ -4,22 +4,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const studentNameInput = document.getElementById('studentName');
     const studentImageInput = document.getElementById('studentImage');
     const stageSelect = document.getElementById('stageSelect');
+    const departmentSelect = document.getElementById('departmentSelect');
     const groupSelect = document.getElementById('groupSelect');
     const studentTableBody = document.querySelector('#studentTable tbody');
 
     // فەنکشن بۆ هێنانەوەی داتا لە Local Storage
     function getCurrentStudents() {
         const stage = stageSelect.value;
+        const department = departmentSelect.value;
         const group = groupSelect.value;
-        const key = `students${stage}${group}`;
+        const key = `students${stage}${department}${group}`;
         return getDataFromLocalStorage(key) || [];
     }
 
     // فەنکشن بۆ هەڵگرتنی داتا لە Local Storage
     function saveCurrentStudents(students) {
         const stage = stageSelect.value;
+        const department = departmentSelect.value;
         const group = groupSelect.value;
-        const key = `students${stage}${group}`;
+        const key = `students${stage}${department}${group}`;
         saveDataToLocalStorage(key, students);
     }
 
@@ -28,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const name = studentNameInput.value;
         const image = studentImageInput.files[0];
         const stage = stageSelect.value;
+        const department = departmentSelect.value;
         const group = groupSelect.value;
 
         if (name && image && group) {
@@ -36,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const student = {
                     name: name,
                     image: e.target.result,
+                    department: department,
                     group: group,
                     absences: 0,
                     absenceDates: []
@@ -66,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
                 </td>
                 <td><img src="${student.image}" alt="${student.name}" class="img-thumbnail"></td>
+                <td>${student.department}</td>
                 <td>${student.group}</td>
                 <td>${student.absences}</td>
                 <td>${student.absenceDates.join('<br>')}</td>
@@ -142,7 +148,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // نیشاندانی خشتەکە لە سەرەتادا
     renderTable();
 
-    // گۆڕینی قۆناغ و گروپ
+    // گۆڕینی قۆناغ، بەش و گروپ
     stageSelect.addEventListener('change', renderTable);
+    departmentSelect.addEventListener('change', renderTable);
     groupSelect.addEventListener('change', renderTable);
 });
