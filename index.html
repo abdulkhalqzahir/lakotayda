@@ -6,39 +6,38 @@
     <title>فۆڕمی لۆگین</title>
     <style>
         body {
-        background-image: url(saa.jpg);
-        background-color: #cccccc;
+            background-image: url(saa.jpg);
+            background-color: #cccccc;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            text-shadow: 0px 0px 10px 0px red;    
-            margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        animation: gradientBG 15s ease infinite; /* ئەنیمەیشن */
-        text-align: right;
-    
+            text-shadow: 0px 0px 10px 0px red;
+            font-family: Arial, sans-serif;
+            animation: gradientBG 15s ease infinite;
+            text-align: right;
         }
-html,body{
- 
-background-size: cover;
-background-repeat: no-repeat;
-height: 100%;
-font-family: 'Numans', sans-serif;
-}
-input{
-    color: aliceblue;
-}
-      .login-container {
-            background-color: rgba(0,0,0,0.5) !important;
+
+        html, body {
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100%;
+            font-family: 'Numans', sans-serif;
+        }
+
+        input {
+            color: aliceblue;
+        }
+
+        .login-container {
+            background-color: rgba(0, 0, 0, 0.5) !important;
             border: 10px ridge #090305;
             padding: 20px 40px;
             border-radius: 90px;
             box-shadow: 0px 0px 50px 0px rgb(255, 0, 0);
-           
-            width: 300px;
+            width: 90%; /* پانایی کۆنتەینەر بۆ مۆبایل */
+            max-width: 400px; /* پانایی کۆنتەینەر بۆ لاپتۆپ */
             text-align: center;
         }
 
@@ -47,14 +46,8 @@ input{
             color: #bcbbac;
         }
 
-
-        :hover.login-container input[type="text"],
-        :hover.login-container input[type="password"] {
-            box-shadow: 0px 0px 40px 0px yellow;
-        transition: 0.9s;}
         .login-container input[type="text"],
         .login-container input[type="password"] {
-          
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -62,115 +55,128 @@ input{
             border-radius: 100px;
             font-size: 16px;
             text-align: right;
-           
             background-color: rgba(181, 21, 21, 0.5) !important;
         }
 
         .login-container input[type="submit"] {
-            width: 321px;
+            width: 100%;
             padding: 10px;
             background-color: rgba(185, 4, 4, 0.413) !important;
-            
             border-radius: 90px;
             color: #fff;
             font-size: 16px;
             cursor: pointer;
             border: 3px solid rgb(188, 0, 0);
-            
         }
-        :hover.login-container input[type="submit"]{
-box-shadow: 0px 0px 20px 0px red;
-transition: 0.5s;
-        }
+
         .login-container input[type="submit"]:hover {
             background-color: #218838;
-            
         }
 
         .login-container .error-message {
             color: red;
             margin-top: 10px;
         }
-        img{
-          border-radius: 400px;
+
+        img {
+            border-radius: 400px;
+            max-width: 100%; /* وێنەکە بە شێوەیەکی ڕێژەیی گونجێت */
+            height: auto;
         }
+
         .password-container {
-    position: relative;
-    width: 100%;
-}
+            position: relative;
+            width: 100%;
+        }
 
-.toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 18px;
-    color: #333;
-}
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
 
-.toggle-password:hover {
-    color: #007bff;
-}
-label{
-    color: #f7f3f3e7;
-    direction: rtl;
-    text-align: left;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-}
+        .toggle-password:hover {
+            color: #007bff;
+        }
+
+        label {
+            color: #f7f3f3e7;
+            direction: rtl;
+            text-align: left;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+
+        /* Media Queries بۆ مۆبایل */
+        @media only screen and (max-width: 600px) {
+            .login-container {
+                padding: 15px;
+                border-radius: 50px;
+            }
+
+            .login-container h2 {
+                font-size: 1.5em;
+            }
+
+            .login-container input[type="text"],
+            .login-container input[type="password"] {
+                font-size: 14px;
+            }
+
+            .login-container input[type="submit"] {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="login-container">
         <img src="sa.jpg" alt="">
         <h2>کۆلێژی کارگێری و ئابووری</h2>
         <form id="loginForm">
             <label for="">(ناوی بەکارهێنەر)</label>
-            <input type="text" id="username"   required>
+            <input type="text" id="username" required>
             <div class="password-container">
                 <label for="">(وشەی نهێنی)</label>
-                <input type="password" id="password"  required>
+                <input type="password" id="password" required>
                 <span class="toggle-password" onclick="togglePasswordVisibility()"></span>
             </div>
             <br>
             <input type="submit" value="چوونەژوورەوە">
         </form>
-        
         <p class="error-message" id="errorMessage"></p>
     </div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
-
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
-            function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password');
-    const toggleIcon = document.querySelector('.toggle-password');
 
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.textContent = ''; // یان هێمایەکی تر بۆ نیشاندانی پاسوۆرد
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.textContent = '';
-    }
-}
-            // نموونەی یوزەر و پاسوۆرد
+            function togglePasswordVisibility() {
+                const passwordInput = document.getElementById('password');
+                const toggleIcon = document.querySelector('.toggle-password');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.textContent = '';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.textContent = '';
+                }
+            }
+
             var correctUsername = "idara.com";
             var correctPassword = "idara1";
 
             if (username === correctUsername && password === correctPassword) {
-                // ئەگەر یوزەر و پاسوۆرد ڕاست بوو، بچۆ بۆ وێبسایتەکە
                 window.location.href = "sss.html";
             } else {
-                // ئەگەر یوزەر یان پاسوۆرد هەڵە بوو، هەڵە نیشان بدە
                 document.getElementById('errorMessage').textContent = "ناوی بەکارهێنەر یان پاسوۆرد هەڵەیە!";
             }
         });
     </script>
-
 </body>
 </html>

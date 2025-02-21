@@ -1,39 +1,29 @@
 body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(45deg, #decaca, rgb(47, 95, 35), #e7e71e93 );
-      background-size: 400% 400%;
-      animation: gradientBG 10s ease infinite;
-      direction: rtl;
-      text-align: right;
-      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    }
-    @keyframes gradientBG {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #decaca, rgb(47, 95, 35), #e7e71e93);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    direction: rtl;
+    text-align: right;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
 
 @keyframes gradientBG {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
-.form-control{
+
+.form-control {
     border-radius: 10px;
-  
 }
-:hover .form-control{
+
+:hover .form-control {
     box-shadow: 0px 0px 30px 0px rgb(0, 34, 255);
-    
     transition: 0.5s;
 }
+
 .delete-icon {
     cursor: pointer;
     color: #dc3545;
@@ -73,23 +63,49 @@ h1, h2 {
     background-color: #dc3545 !important;
     color: white !important;
 }
-.btn:hover{
+
+.btn:hover {
     box-shadow: 0px 0px 20px 0px red;
     transform: scale(0.8);
 }
-.imgt{
+
+.imgt {
     width: 340px;
     height: 200px;
     position: relative;
     right: 250px;
     bottom: 80px;
 }
-.text-center{
+
+.text-center {
     color: aliceblue;
     font-family: "Lucida Console", "Courier New", monospace;
-    background-color: rgba(0,0,0,0.5) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
     width: 700px;
     margin-right: 150px;
     border-radius: 10px;
-    
+}
+
+/* Media Queries بۆ مۆبایل */
+@media only screen and (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .imgt {
+        width: 100%;
+        height: auto;
+        right: 0;
+        bottom: 0;
+    }
+
+    .text-center {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .table img {
+        width: 30px;
+        height: 30px;
+    }
 }
