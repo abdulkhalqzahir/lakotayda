@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const saveButton = document.getElementById('saveButton');
     const deleteButton = document.getElementById('deleteButton');
     const studentNameInput = document.getElementById('studentName');
-    const studentImageInput = document.getElementById('studentImage');
     const stageSelect = document.getElementById('stageSelect');
     const departmentSelect = document.getElementById('departmentSelect');
     const groupSelect = document.getElementById('groupSelect');
@@ -29,31 +28,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // زیادکردنی قوتابی
     saveButton.addEventListener('click', function () {
         const name = studentNameInput.value;
-        const image = studentImageInput.files[0];
         const stage = stageSelect.value;
         const department = departmentSelect.value;
         const group = groupSelect.value;
 
-        if (name && image && group) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const student = {
-                    name: name,
-                    image: e.target.result,
-                    department: department,
-                    group: group,
-                    absences: 0,
-                    absenceDates: []
-                };
-
-                const students = getCurrentStudents();
-                students.push(student);
-                saveCurrentStudents(students); // هەڵگرتنی داتا
-                renderTable();
-                studentNameInput.value = '';
-                studentImageInput.value = '';
+        if (name && group) {
+            const student = {
+                name: name,
+                department: department,
+                group: group,
+                absences: 0,
+                absenceDates: []
             };
-            reader.readAsDataURL(image);
+
+            const students = getCurrentStudents();
+            students.push(student);
+            saveCurrentStudents(students); // هەڵگرتنی داتا
+            renderTable();
+            studentNameInput.value = '';
         } else {
             alert('تکایە هەموو خانەکان پر بکەرەوە');
         }
@@ -70,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${student.name}
                     <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
                 </td>
-                <td><img src="${student.image}" alt="${student.name}" class="img-thumbnail"></td>
                 <td>${student.department}</td>
                 <td>${student.group}</td>
                 <td>${student.absences}</td>
