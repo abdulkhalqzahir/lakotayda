@@ -37,10 +37,19 @@ a {
 a:hover {
     text-decoration: underline;
 }
-img{
-    margin-right: 850px;
-    
-    width: 300px; height: 200px;
+.kuy{
+    position: relative;
+    left: 339px;
+    bottom: 80px;
+    width: 250px; height: 150px;
+
+}
+.kuyy{
+  
+    position: relative;
+    right: 658px;
+    bottom: 80px;
+    width: 250px; height: 150px;
     
 }
 @keyframes gradientBG {
