@@ -12,7 +12,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentLessonName = ''; // ناوی دەرس لە یادگا دەهێڵرێتەوە
     let lastAbsentClickTime = 0; // کاتی دوایین کلیک لەسەر نەهاتن
+// فەرزی گەڕان بۆ ناوی قوتابی
+searchInput.addEventListener('input', function () {
+    const searchQuery = this.value.toLowerCase();
+    const students = getCurrentStudents();
 
+    // فیلتەرکردنی قوتابیان بەپێی ناوەکە
+    const filteredStudents = students.filter(student => student.name.toLowerCase().includes(searchQuery));
+
+    // ڕیزکردنی قوتابیان بەپێی نزیکی ناوەکە بە گەڕانەکە
+    filteredStudents.sort((a, b) => {
+        const aIndex = a.name.toLowerCase().indexOf(searchQuery);
+        const bIndex = b.name.toLowerCase().indexOf(searchQuery);
+        return aIndex - bIndex;
+    });
+
+    // نیشاندانی لیستی فیلتەرکراو و ڕیزکراو
+    renderTable(filteredStudents);
+});
+
+// فەرزی نوێکردنەوەی خشتە بە لیستی دیاریکراو
+function renderTable(students = getCurrentStudents()) {
+    const studentTableBody = document.querySelector('#studentTable tbody');
+    studentTableBody.innerHTML = '';
+
+    students.forEach((student, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${student.name}</td>
+            <td>${student.department}</td>
+            <td>${student.group}</td>
+            <td>${student.absences}</td>
+            <td>${student.absenceDates.join('<br>')}</td>
+            <td>
+                <button class="btn btn-warning btn-sm" onclick="markAbsent(${index})">نەهاتن</button>
+                <button class="btn btn-success btn-sm" onclick="markPresent(${index})">هاتوو</button>
+                <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
+            </td>
+        `;
+        studentTableBody.appendChild(row);
+    });
+}
     // فەرمان بۆ هێنانەوەی داتا لە Local Storage
     function getCurrentStudents() {
         const stage = stageSelect.value;
