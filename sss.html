@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> عبدالخالق زاهیر خۆشناو</title>
+    <title>سیستەمی غیاباتی قوتابیان</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="s.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">غیاباتی قوتابیانی کۆلێژی بەڕێوەبردن و ئابووری</h1>
-        <img class="kuyy" src="k.png" alt="">  <img src="k.png" alt="" class="kuy">
+        <h1 class="text-center mb-4">سیستەمی غیاباتی قوتابیان</h1>
         
+        <!-- فۆرمی زیادکردنی قوتابی -->
         <div class="form-group">
             <label for="stageSelect">هەڵبژاردنی قۆناغ:</label>
             <select id="stageSelect" class="form-control">
@@ -49,12 +49,26 @@
             <label for="studentName">ناوی قوتابی:</label>
             <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
         </div>
-        
-        <button id="saveButton" class="btn-grad btn-success mb-3"><i class="bi bi-cloud-download-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download-fill" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
-          </svg></i></button>
-        
+
+        <div class="form-group">
+            <label for="lessonName">ناوی دەرس:</label>
+            <input type="text" id="lessonName" class="form-control" placeholder="ناوی دەرس بنووسە">
+        </div>
+
+        <button id="saveButton" class="btn-grad btn-success mb-3"><i class="fas fa-save"></i> <img src="to.jpg" alt="" style="width: 50px;height: 50px; border-radius: 10px;"></button>
+        <button onclick="printTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> <img src="p.jpg" alt="" style="width: 50px;height: 50px; border-radius: 10px;"></button>
+        <button onclick="clearAllData()" class="btn-grad btn-danger mb-3"><i class="fas fa-trash-alt"></i> <img src="cc.png" alt="" style="width: 50px;height: 50px;"></button>
+        <!-- شوێنی نیشاندانی ناوی دەرس -->
+        <div id="lessonDisplay" class="alert alert-info mt-3" style="display: none;">
+            <strong>ناوی دەرس:</strong> <span id="lessonNameDisplay"></span>
+        </div>
+
+        <!-- لیستی قوتابیان -->
         <h2 class="text-center mb-4">لیستی قوتابیان</h2>
+        <div class="form-group">
+            <label for="searchInput">گەڕان بۆ ناوی قوتابی:</label>
+            <input type="text" id="searchInput" class="form-control" placeholder="گەڕان بۆ ناوی قوتابی...">
+        </div>
         <table id="studentTable" class="table table-bordered table-hover">
             <thead class="thead-light">
                 <tr>
