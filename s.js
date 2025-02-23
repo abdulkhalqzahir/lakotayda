@@ -12,47 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentLessonName = ''; // ناوی دەرس لە یادگا دەهێڵرێتەوە
     let lastAbsentClickTime = 0; // کاتی دوایین کلیک لەسەر نەهاتن
-// فەرزی گەڕان بۆ ناوی قوتابی
-searchInput.addEventListener('input', function () {
-    const searchQuery = this.value.toLowerCase();
-    const students = getCurrentStudents();
 
-    // فیلتەرکردنی قوتابیان بەپێی ناوەکە
-    const filteredStudents = students.filter(student => student.name.toLowerCase().includes(searchQuery));
-
-    // ڕیزکردنی قوتابیان بەپێی نزیکی ناوەکە بە گەڕانەکە
-    filteredStudents.sort((a, b) => {
-        const aIndex = a.name.toLowerCase().indexOf(searchQuery);
-        const bIndex = b.name.toLowerCase().indexOf(searchQuery);
-        return aIndex - bIndex;
-    });
-
-    // نیشاندانی لیستی فیلتەرکراو و ڕیزکراو
-    renderTable(filteredStudents);
-});
-
-// فەرزی نوێکردنەوەی خشتە بە لیستی دیاریکراو
-function renderTable(students = getCurrentStudents()) {
-    const studentTableBody = document.querySelector('#studentTable tbody');
-    studentTableBody.innerHTML = '';
-
-    students.forEach((student, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${student.name}</td>
-            <td>${student.department}</td>
-            <td>${student.group}</td>
-            <td>${student.absences}</td>
-            <td>${student.absenceDates.join('<br>')}</td>
-            <td>
-                <button class="btn btn-warning btn-sm" onclick="markAbsent(${index})">نەهاتن</button>
-                <button class="btn btn-success btn-sm" onclick="markPresent(${index})">هاتوو</button>
-                <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
-            </td>
-        `;
-        studentTableBody.appendChild(row);
-    });
-}
     // فەرمان بۆ هێنانەوەی داتا لە Local Storage
     function getCurrentStudents() {
         const stage = stageSelect.value;
@@ -70,7 +30,31 @@ function renderTable(students = getCurrentStudents()) {
         const key = `students${stage}${department}${group}`;
         localStorage.setItem(key, JSON.stringify(students));
     }
-
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase(); // نرخی ئینپوتی گەڕان بە پیتی بچووک
+        const rows = document.querySelectorAll('#studentTable tbody tr'); // هەموو ڕیزەکانی لیستی قوتابیان
+    
+        rows.forEach(row => {
+            const name = row.querySelector('td').textContent.toLowerCase(); // ناوی قوتابی لە ڕیزەکە
+            if (name.startsWith(searchValue)) {
+                row.style.display = ''; // نیشاندانی ڕیزەکە ئەگەر ناوەکە دەستپێبکات بە نرخی گەڕان
+            } else {
+                row.style.display = 'none'; // شاردنەوەی ڕیزەکە ئەگەر ناوەکە نەگونجێت
+            }
+        });
+    
+        // ڕیزکردنی ڕیزەکان بەپێی ناوەکە
+        const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+        const hiddenRows = Array.from(rows).filter(row => row.style.display === 'none');
+    
+        const tbody = document.querySelector('#studentTable tbody');
+        tbody.innerHTML = ''; // پاککردنەوەی لیستەکە
+    
+        // زیادکردنی ڕیزەکانی نیشاندراوەکان بۆ سەرەتا
+        visibleRows.forEach(row => tbody.appendChild(row));
+        // زیادکردنی ڕیزەکانی شاردراوەکان بۆ دووا
+        hiddenRows.forEach(row => tbody.appendChild(row));
+    });
     // فەرمان بۆ دیارکردنی ناوی دەرس
     function updateLessonDisplay(lessonName) {
         if (lessonName) {
