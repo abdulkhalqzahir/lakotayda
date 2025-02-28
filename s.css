@@ -1,17 +1,17 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #4158D0;
-    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+ 
+    background-image: linear-gradient(43deg, #e988ca 0%, #b168ad 46%, #a49272 100%);
     padding: 20px;
     direction: rtl;
     text-align: right;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 8px ridge rgb(231, 54, 54);
-    border-radius: 20px;
+   
+  
 }
 
-.ontainer {
+.container {
     border: 8px ridge rgb(197, 50, 205);
     width: 90%;
     max-width: 1200px;
