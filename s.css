@@ -1,22 +1,17 @@
 body {
     margin: 0;
     padding: 0;
-    border: 8px ridge rgb(197, 50, 205);
-    width: 90%;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #4158D0;
-    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    background-color: #889af3;
+    background-image: linear-gradient(43deg, #aab2dc 0%, #bd8dba 46%, #ffa600 100%);
     padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     direction: rtl;
     text-align: right;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  
+    border: 8px ridge rgb(231, 54, 54);
+    border-radius: 20px;
 }
 
-.ontainer {
+.container {
     border: 8px ridge rgb(197, 50, 205);
     width: 90%;
     max-width: 1200px;
