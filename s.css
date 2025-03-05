@@ -10,7 +10,17 @@ body {
     border: 8px ridge rgb(231, 54, 54);
     border-radius: 20px;
 }
+#studentTable th, #studentTable td {
+    padding: 8px;
+    font-size: 12px;
+}
 
+@media only screen and (max-width: 480px) {
+    #studentTable th, #studentTable td {
+        padding: 6px;
+        font-size: 10px;
+    }
+}
 .container {
     border: 8px ridge rgb(197, 50, 205);
     width: 90%;
