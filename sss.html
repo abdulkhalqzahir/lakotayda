@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دکتۆر کارزان کازم 
-        /عبدالخالق زاهیر
-    </title>
+    <title>سیستەمی غیاباتی قوتابیان</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="s.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -13,7 +11,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">سیستەمی غیاباتی قوتابیانی کۆلێژی کارگێڕی و ئابووری</h1>
-       
+
         <!-- فۆرمی زیادکردنی قوتابی -->
         <div class="form-group">
             <label for="stageSelect">هەڵبژاردنی قۆناغ:</label>
@@ -52,17 +50,27 @@
             <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
         </div>
 
-        <div class="form-group">
-            <label for="lessonName">ناوی دەرس:</label>
-            <input type="text" id="lessonName" class="form-control" placeholder="ناوی دەرس بنووسە">
-        </div>
+        <button id="saveButton" class="btn-grad btn-success mb-3"><i class="fas fa-save"></i> تۆمارکردن</button>
+        <button onclick="clearAllData()" class="btn-grad btn-danger mb-3"><i class="fas fa-trash-alt"></i> سڕینەوەی هەموو داتاکان</button>
 
-        <button id="saveButton" class="btn-grad btn-success mb-3"><i class="fas fa-save"></i> <img src="to.jpg" alt="" style="width: 50px;height: 50px; border-radius: 10px;"></button>
-        
-        <button onclick="clearAllData()" class="btn-grad btn-danger mb-3"><i class="fas fa-trash-alt"></i> <img src="cc.png" alt="" style="width: 50px;height: 50px;"></button>
+        <!-- لیستی دەرسەکان -->
+        <h2 class="text-center mb-4">لیستی دەرسەکان</h2>
+        <button onclick="addLesson()" class="btn-grad btn-primary mb-3">زیادکردنی دەرس</button>
+        <table id="lessonTable" class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>ناوی دەرس</th>
+                    <th>کردارەکان</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- لیستی دەرسەکان لێرە دەخرێتەوە -->
+            </tbody>
+        </table>
+
         <!-- شوێنی نیشاندانی ناوی دەرس -->
-        <div id="lessonDisplay" class="alert alert-info mt-3" style="display: none;">
-            <strong>ناوی دەرس:</strong> <span id="lessonNameDisplay"></span>
+        <div id="selectedLessonDisplay" class="alert alert-info mt-3" style="display: none;">
+            <strong>دەرسە هەڵبژێردراوە:</strong> <span id="selectedLessonName"></span>
         </div>
 
         <!-- لیستی قوتابیان -->
@@ -86,6 +94,9 @@
                 <!-- لیستی قوتابیان لێرە دەخرێتەوە -->
             </tbody>
         </table>
+
+        <!-- دووگمەی پرینتکردن -->
+        <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
