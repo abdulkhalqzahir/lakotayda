@@ -1,3 +1,64 @@
+
+/* گۆڕانکارییەکان بۆ مۆبایل */
+@media only screen and (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .btn-grad {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    #studentTable th, #studentTable td {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    #lessonTable th, #lessonTable td {
+        padding: 6px;
+        font-size: 12px;
+    }
+}
+
+/* گۆڕانکارییەکان بۆ تابلێت */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-grad {
+        width: 48%;
+        margin: 5px 1%;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    #studentTable th, #studentTable td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    #lessonTable th, #lessonTable td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -23,7 +84,7 @@ body {
 }
 .container {
     border: 8px ridge rgb(197, 50, 205);
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
     margin: 20px auto;
     background-color: #4158D0;
