@@ -68,8 +68,7 @@ body {
     direction: rtl;
     text-align: right;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 8px ridge rgb(231, 54, 54);
-    border-radius: 20px;
+    
 }
 #studentTable th, #studentTable td {
     padding: 8px;
