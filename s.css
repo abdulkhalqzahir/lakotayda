@@ -1,4 +1,3 @@
-
 /* گۆڕانکارییەکان بۆ مۆبایل */
 @media only screen and (max-width: 600px) {
     .container {
@@ -62,62 +61,55 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #889af3;
-    background-image: linear-gradient(43deg, #aab2dc 0%, #bd8dba 46%, #ffa600 100%);
+    background-color: #000; /* ڕەش */
+    color: #fff; /* سپی */
     padding: 20px;
     direction: rtl;
     text-align: right;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
-}
-#studentTable th, #studentTable td {
-    padding: 8px;
-    font-size: 12px;
 }
 
-@media only screen and (max-width: 480px) {
-    #studentTable th, #studentTable td {
-        padding: 6px;
-        font-size: 10px;
-    }
-}
 .container {
-    border: 8px ridge rgb(197, 50, 205);
+    background-image: linear-gradient(to right, #6a0dad 0%, #000 51%, #6a0dad 100%); /* مۆر و ڕەش */
+    border: 8px ridge #6a0dad; /* مۆر */
     width: 100%;
     max-width: 1200px;
     margin: 20px auto;
-    background-color: #4158D0;
-    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    background-color: #000; /* ڕەش */
     padding: 20px;
     border-radius: 20px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 20px rgba(106, 13, 173, 0.5); /* مۆر */
 }
 
 h1, h2 {
-    color: #343a40;
+    color: #bdbcbe; /* مۆر */
     text-align: center;
     margin-bottom: 20px;
     font-family: 'Noto Naskh Arabic', 'Noto Sans Kurdish', 'Scheherazade', serif;
 }
 
 .table {
+    box-shadow: 0px 0px 30px 0px rgb(18, 4, 210);
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border: 3px ridge #6a0dad 0% ;
+   
 }
 
 .table thead {
-    background-color: #007bff;
-    color: white;
+    
+    background-color: #6a0dad; /* مۆر */
+    color: #fff; /* سپی */
 }
 
 .table th, .table td {
     padding: 12px 15px;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 1px solid #6a0dad; /* مۆر */
+    color: #fff; /* سپی */
 }
 
 .table th {
@@ -125,50 +117,54 @@ h1, h2 {
 }
 
 .table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #111; /* ڕەش تۆخ */
 }
 
 .table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #222; /* ڕەش تۆختر */
     transition: background-color 0.3s ease;
 }
-
+.img-fluid{
+    width: 150px;
+    border-radius: 2010px;
+    height: 100px;
+}
 .btn-grad {
-    background-image: linear-gradient(to right, #fc00ff 0%, #00dbde 51%, #fc00ff 100%);
+    background-image: linear-gradient(to right, #9000ff 0%, #00dbde 51%, #1100ff 100%);
     margin: 10px;
     padding: 15px 45px;
     text-align: center;
     text-transform: uppercase;
     transition: 0.5s;
     background-size: 200% auto;
-    color: white;
-    box-shadow: 0 0 20px #eee;
+    color: #fff; /* سپی */
+    box-shadow: 0 0 20px #6a0dad; /* مۆر */
     border-radius: 10px;
     display: inline-block;
 }
 
 .btn-grad:hover {
     background-position: right center;
-    color: #fff;
+    color: #fff; /* سپی */
     text-decoration: none;
 }
 
 .delete-icon {
     cursor: pointer;
-    color: #dc3545;
+    color: #ff0000; /* سوور */
     margin-left: 10px;
     font-size: 18px;
     transition: color 0.3s ease;
 }
 
 .delete-icon:hover {
-    color: #a71d2a;
+    color: #cc0000; /* سوور تۆخ */
 }
 
 #selectedLessonDisplay {
     border-radius: 10px;
     padding: 15px;
-    background-color: #e9f7ff;
-    border: 1px solid #b3e5fc;
-    color: #31708f;
+    background-color: #111; /* ڕەش تۆخ */
+    border: 1px solid #6a0dad; /* مۆر */
+    color: #fff; /* سپی */
 }
