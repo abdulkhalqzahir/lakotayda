@@ -68,7 +68,21 @@ body {
     text-align: right;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+/* نوێ: ڕێکخستنی دوگمەی تێبینی */
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
 
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+/* نوێ: ڕێگەگرتن لە شکانەوەی دوگمەکان */
+#studentTable td {
+    white-space: nowrap;
+}
 .container {
     background-image: linear-gradient(to right, #6a0dad 0%, #000 51%, #6a0dad 100%); /* مۆر و ڕەش */
     border: 8px ridge #6a0dad; /* مۆر */
