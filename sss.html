@@ -36,38 +36,7 @@
                 font-size: 12px;
             }
         }
-/* زیادکردنی شێوازی نوێ بۆ دووگمەی ئیمەیڵ */
-.btn-email {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-    margin: 0 3px;
-    transition: all 0.3s ease;
-}
 
-.btn-email:hover {
-    background-color: #138496;
-    border-color: #117a8b;
-}
-
-/* گۆڕانکاری بۆ شاشە بچووکەکان */
-@media only screen and (max-width: 768px) {
-    .btn-email {
-        padding: 3px 6px;
-        font-size: 12px;
-    }
-    
-    .btn-email .fa-envelope {
-        margin-right: 0; /* لابردنی مارجین لە ئایکۆنەکە */
-    }
-    
-    .btn-email span {
-        display: none; /* نیشان نەدانی دەق لە شاشە بچووکەکان */
-    }
-}
         /* گۆڕانکارییەکان بۆ تابلێت */
         @media only screen and (min-width: 601px) and (max-width: 1024px) {
             .container {
@@ -117,11 +86,6 @@
         .btn-info:hover {
             background-color: #138496;
             border-color: #117a8b;
-        }
-
-        #studentEmail {
-            direction: ltr;
-            text-align: left;
         }
 
         .container {
@@ -272,11 +236,6 @@
             <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
         </div>
 
-        <div class="form-group">
-            <label for="studentEmail">ئیمەیڵی قوتابی:</label>
-            <input type="email" id="studentEmail" class="form-control" placeholder="ئیمەیڵی قوتابی بنووسە">
-        </div>
-
         <div class="d-flex flex-wrap">
             <button id="saveButton" class="btn-grad btn-success mb-3 flex-grow-1"><i class="fas fa-save"></i> تۆمارکردن</button>
             <button onclick="clearAllData()" class="btn-grad btn-danger mb-3 flex-grow-1"><i class="fas fa-trash-alt"></i> سڕینەوەی هەموو داتاکان</button>
@@ -310,7 +269,6 @@
                 <thead class="thead-light">
                     <tr>
                         <th>ناو</th>
-                        <th>ئیمەیڵ</th>
                         <th>بەش</th>
                         <th>گروپ</th>
                         <th>ژمارەی غیاب</th>
@@ -446,7 +404,6 @@
             // تۆمارکردنی قوتابی
             saveButton.addEventListener('click', function () {
                 const name = studentNameInput.value;
-                const email = document.getElementById('studentEmail').value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
@@ -471,15 +428,11 @@
 
                 const student = {
                     name: name,
-                    email: email,
                     department: department,
                     group: group,
-                    lessonAbsences: {}
-                };
-
-                student.lessonAbsences[currentLessonName] = {
-                    count: 0,
-                    dates: []
+                    lessonName: currentLessonName,
+                    absences: 0,
+                    absenceDates: []
                 };
 
                 const students = getCurrentStudents();
@@ -487,59 +440,39 @@
                 saveCurrentStudents(students);
                 renderTable();
                 studentNameInput.value = '';
-                document.getElementById('studentEmail').value = '';
             });
 
             // نیشاندانی لیستی قوتابیان
             function renderTable() {
-    const students = getCurrentStudents();
-    studentTableBody.innerHTML = '';
-    students.forEach((student, index) => {
-        const row = document.createElement('tr');
-        
-        const absencesForCurrentLesson = student.lessonAbsences && student.lessonAbsences[currentLessonName] 
-            ? student.lessonAbsences[currentLessonName].count 
-            : 0;
-            
-        const absenceDatesForCurrentLesson = student.lessonAbsences && student.lessonAbsences[currentLessonName] 
-            ? student.lessonAbsences[currentLessonName].dates.join('<br>') 
-            : '';
+                const students = getCurrentStudents();
+                studentTableBody.innerHTML = '';
+                students.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td>${student.department}</td>
+                        <td>${student.group}</td>
+                        <td>${student.absences}</td>
+                        <td>${student.absenceDates.join('<br>')}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="markAbsent(${index})">نەهاتن</button>
+                            <button class="btn btn-success btn-sm" onclick="markPresent(${index})">هاتوو</button>
+                            <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
+                        </td>
+                    `;
+                    studentTableBody.appendChild(row);
+                });
+            }
 
-        row.innerHTML = `
-            <td>${student.name}</td>
-            <td>${student.email}</td>
-            <td>${student.department}</td>
-            <td>${student.group}</td>
-            <td>${absencesForCurrentLesson}</td>
-            <td>${absenceDatesForCurrentLesson}</td>
-            <td>
-                <button class="btn btn-warning btn-sm" onclick="markAbsent(${index})">نەهاتن</button>
-                <button class="btn btn-success btn-sm" onclick="markPresent(${index})">هاتوو</button>
-                <button class="btn btn-email btn-sm" onclick="sendEmailNotification(${index})">
-                    <i class="fas fa-envelope"></i> <span>ناردن</span>
-                </button>
-                <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
-            </td>
-        `;
-        studentTableBody.appendChild(row);
-    });
-}
             // نیشانەکردنی غیاب
             window.markAbsent = function (index) {
                 const students = getCurrentStudents();
                 const currentTime = new Date().getTime();
 
-                if (!students[index].lessonAbsences[currentLessonName]) {
-                    students[index].lessonAbsences[currentLessonName] = {
-                        count: 0,
-                        dates: []
-                    };
-                }
-
                 if (currentTime - lastAbsentClickTime < 1000) {
                     const dateString = new Date().toLocaleString();
-                    students[index].lessonAbsences[currentLessonName].count += 2;
-                    students[index].lessonAbsences[currentLessonName].dates.push(`${dateString} (محازەرەی ٢ سەعاتی نەهاتوو)`);
+                    students[index].absences += 2;
+                    students[index].absenceDates.push(`${dateString} (محازەرەی ٢ سەعاتی نەهاتوو)`);
                     saveCurrentStudents(students);
                     renderTable();
 
@@ -550,16 +483,15 @@
                     });
                 } else {
                     const dateString = new Date().toLocaleString();
-                    students[index].lessonAbsences[currentLessonName].count++;
-                    students[index].lessonAbsences[currentLessonName].dates.push(dateString);
+                    students[index].absences++;
+                    students[index].absenceDates.push(dateString);
                     saveCurrentStudents(students);
                     renderTable();
                 }
 
                 lastAbsentClickTime = currentTime;
 
-                const absencesForLesson = students[index].lessonAbsences[currentLessonName].count;
-                if (absencesForLesson === 4) {
+                if (students[index].absences === 4) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'ئاگاداری',
@@ -567,7 +499,7 @@
                     });
                 }
 
-                if (absencesForLesson === 6) {
+                if (students[index].absences === 6) {
                     Swal.fire({
                         icon: 'error',
                         title: 'کۆتایی هاتنەوە',
@@ -580,8 +512,7 @@
             window.markPresent = function (index) {
                 const students = getCurrentStudents();
                 
-                if (!students[index].lessonAbsences[currentLessonName] || 
-                    students[index].lessonAbsences[currentLessonName].count <= 0) {
+                if (students[index].absences <= 0) {
                     Swal.fire({
                         icon: 'error',
                         title: 'هەڵە',
@@ -590,60 +521,31 @@
                     return;
                 }
 
-                students[index].lessonAbsences[currentLessonName].count--;
-                students[index].lessonAbsences[currentLessonName].dates.pop();
+                students[index].absences--;
+                students[index].absenceDates.pop();
                 saveCurrentStudents(students);
                 renderTable();
             };
 
-            // ناردنی ئیمەیڵ
-            window.sendEmailNotification = function(index) {
-    const students = getCurrentStudents();
-    const student = students[index];
-    
-    if (!student.email) {
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'ئیمەیڵی قوتابی تۆمارنەکراوە!',
-        });
-        return;
-    }
-
-    Swal.fire({
-        title: 'ناردنی ئیمەیڵ',
-        html: `
-            <p>ئەتەوێ ئیمەیڵ بۆ <strong>${student.name}</strong> بنێری؟</p>
-            <p>ئیمەیڵ: ${student.email}</p>
-            <textarea id="emailMessage" class="form-control mt-3" rows="3" placeholder="پەیامەکە بنووسە..."></textarea>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'ناردن',
-        cancelButtonText: 'پاشگەزبوونەوە',
-        preConfirm: () => {
-            const message = document.getElementById('emailMessage').value;
-            const emailSubject = `ئاگاداری غیاب - ${student.name}`;
-            const defaultMessage = `ئازیز ${student.name},\n\nئێوە لە دەرسی ${currentLessonName} غیابت کردووە.\n\nژمارەی غیابەکان: ${student.lessonAbsences[currentLessonName].count}\n\nکۆلێژی کارگێڕی و ئابووری`;
-            const emailBody = message || defaultMessage;
-            
-            return { message: emailBody, subject: emailSubject };
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const emailBody = result.value.message;
-            const emailSubject = result.value.subject;
-            
-            window.open(`mailto:${student.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`);
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'ئیمەیڵ نێردرا',
-                text: 'ئیمەیڵەکە بۆ قوتابی نێردرا',
-                timer: 2000
-            });
-        }
-    });
-};
+            // دڵنیاکردنەوە لەسڕینەوەی قوتابی
+            window.confirmDelete = function (studentName, index) {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: `دڵنیایت دەتەوێت قوتابی "${studentName}" بسڕیتەوە؟`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let students = getCurrentStudents();
+                        students.splice(index, 1);
+                        saveCurrentStudents(students);
+                        renderTable();
+                        Swal.fire('سڕایەوە!', `قوتابی "${studentName}" سڕایەوە.`, 'success');
+                    }
+                });
+            };
 
             // سڕینەوەی هەموو داتاکان
             window.clearAllData = function () {
@@ -689,7 +591,6 @@
                         <thead>
                             <tr>
                                 <th>ناو</th>
-                                <th>ئیمەیڵ</th>
                                 <th>بەش</th>
                                 <th>گروپ</th>
                                 <th>ژمارەی غیاب</th>
@@ -697,24 +598,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${students.map(student => {
-                                const absences = student.lessonAbsences && student.lessonAbsences[lessonName] 
-                                    ? student.lessonAbsences[lessonName].count 
-                                    : 0;
-                                const dates = student.lessonAbsences && student.lessonAbsences[lessonName] 
-                                    ? student.lessonAbsences[lessonName].dates.join('<br>') 
-                                    : '';
-                                return `
-                                    <tr>
-                                        <td>${student.name}</td>
-                                        <td>${student.email}</td>
-                                        <td>${student.department}</td>
-                                        <td>${student.group}</td>
-                                        <td>${absences}</td>
-                                        <td>${dates}</td>
-                                    </tr>
-                                `;
-                            }).join('')}
+                            ${students.map(student => `
+                                <tr>
+                                    <td>${student.name}</td>
+                                    <td>${student.department}</td>
+                                    <td>${student.group}</td>
+                                    <td>${student.absences}</td>
+                                    <td>${student.absenceDates.join('<br>')}</td>
+                                </tr>
+                            `).join('')}
                         </tbody>
                     </table>
                 `;
