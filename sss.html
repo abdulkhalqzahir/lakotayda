@@ -5,8 +5,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستەمی غیاباتی قوتابیان</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی غیاباتی قوتابیان - کۆلێژی کارگێری و ئابووری</title>
     <style>
+        :root {
+            --main-red: #d40000;
+            --dark-red: #8a0000;
+            --light-red: #ff4d4d;
+            --black: #090305;
+            --gray: #bcbbac;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('k.png') no-repeat center center fixed, 
+                        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+            background-size: contain, cover;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 10px ridge var(--main-red);
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--main-red);
+        }
+
+        .university-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--main-red);
+        }
+
+        .university-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px ridge var(--main-red);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1, h2 {
+            color: var(--gray);
+            text-shadow: 0 0 10px var(--main-red);
+            font-family: 'Times New Roman', serif;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 20px var(--main-red);
+        }
+
+        .table th {
+            background-color: var(--dark-red);
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--main-red);
+            text-align: center;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+
+        .table tr:hover {
+            background-color: rgba(139, 0, 0, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--main-red);
+            color: white;
+            border: 2px ridge var(--light-red);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-red);
+            box-shadow: 0 0 15px var(--light-red);
+        }
+
+        .btn-danger {
+            background-color: var(--black);
+            color: white;
+            border: 2px ridge var(--main-red);
+        }
+
+        .btn-danger:hover {
+            background-color: #333;
+            box-shadow: 0 0 15px var(--main-red);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0px;
+            margin: 15px 0;
+            border: 2px ridge var(--main-red);
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: right;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--light-red);
+        }
+
+        .absence-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--dark-red);
+            color: white;
+            border-radius: 50px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                border-radius: 10px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="university-header">
+            <img src="k.png" alt="زانکۆی دین">
+            <h1>سیستەمی غیاباتی قوتابیان</h1>
+            <h2>کۆلێژی کارگێری و ئابووری</h2>
+            <p>زانکۆی سەلاحەدین - هەولێر</p>
+        </div>
+
+        <!-- ناوەڕۆکی سیستەمەکە لێرە دادەنرێت -->
+        
+    </div>
+</body>
+</html>
+    <style>
+
         /* ڕێکخستن بۆ مۆبایل */
         @media only screen and (max-width: 600px) {
             .container {
@@ -31,7 +212,21 @@
                 font-size: 12px;
             }
         }
+        
+/* زیادکردنی ستایلی نوێ بۆ بۆکسەکان */
+.info-box {
+    background-color: rgba(106, 13, 173, 0.2);
+    border-left: 5px solid #6a0dad;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
 
+/* زیادکردنی ئەنیمەیشن بۆ کلیککردن */
+.btn-grad:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
         /* ڕێکخستن بۆ تابلێت */
         @media only screen and (min-width: 601px) and (max-width: 1024px) {
             .container {
@@ -113,7 +308,7 @@
         }
 
         .table th, .table td {
-            padding: 12px 15px;
+            padding: 15px 15px;
             text-align: center;
             border: 1px solid #6a0dad;
             color: #fff;
@@ -200,9 +395,33 @@
             font-style: italic;
         }
     </style>
+    <!-- لە بەشی <head> -->
+<style>
+    .university-logo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .university-logo img {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
+        border: 3px solid #6a0dad;
+    }
+    .university-info {
+        color: white;
+        text-align: center;
+        margin-top: 10px;
+        font-family: 'Arial', sans-serif;
+    }
+</style>
+
+<!-- لە بەشی <body> لە سەرەتای کۆنتەینەر -->
+
 </head>
 
+
 <body>
+    
     <div class="container mt-5">
         <h1 class="text-center mb-4">سیستەمی غیاباتی قوتابیانی کۆلێژی کارگێڕی و ئابووری</h1>
 
@@ -791,6 +1010,39 @@
             departmentSelect.addEventListener('change', renderTable);
             groupSelect.addEventListener('change', renderTable);
         });
+        // زیادکردنی سیستەمی هەڵسەنگاندن بۆ قوتابیان
+function evaluateStudent(studentId, lessonId, evaluation) {
+    const students = getCurrentStudents();
+    const student = students.find(s => s.id === studentId);
+    
+    if (student) {
+        if (!student.evaluations) student.evaluations = {};
+        student.evaluations[lessonId] = evaluation;
+        saveCurrentStudents(students);
+    }
+}
+
+// زیادکردنی سیستەمی ئاگادارکردنەوە
+function checkAbsenceWarnings() {
+    const students = getCurrentStudents();
+    students.forEach(student => {
+        if (student.lessons && student.lessons[currentLessonName]) {
+            const absences = student.lessons[currentLessonName].absences;
+            if (absences >= 4) {
+                showWarning(student.name, absences);
+            }
+        }
+    });
+}
+
+function showWarning(studentName, absences) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'ئاگاداری غیاب',
+        html: `قوتابی <b>${studentName}</b> بە <b>${absences}</b> غیاب تۆمارکراوە!`,
+        confirmButtonText: 'باشە'
+    });
+}
     </script>
 </body>
 </html>
