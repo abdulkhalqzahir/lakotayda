@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی غیاباتی قوتابیان - بەڕێوەبردن</title>
+    <script src="https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <style>
+        :root {
+            --main-red: #d40000;
+            --dark-red: #8a0000;
+            --light-red: #ff4d4d;
+            --black: #090305;
+            --gray: #bcbbac;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23090305"/><text x="50" y="50" font-family="Arial" font-size="10" fill="%23bcbbac" text-anchor="middle" dominant-baseline="middle">KU</text></svg>') no-repeat center center fixed, 
+                        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+            background-size: contain, cover;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 10px ridge var(--main-red);
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--main-red);
+        }
+
+        .university-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--main-red);
+        }
+
+        .university-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px ridge var(--main-red);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1, h2, h3 {
+            color: var(--gray);
+            text-shadow: 0 0 10px var(--main-red);
+            font-family: 'Times New Roman', serif;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 20px var(--main-red);
+        }
+
+        .table th {
+            background-color: var(--dark-red);
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--main-red);
+            text-align: center;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+
+        .table tr:hover {
+            background-color: rgba(139, 0, 0, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--main-red);
+            color: white;
+            border: 2px ridge var(--light-red);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-red);
+            box-shadow: 0 0 15px var(--light-red);
+        }
+
+        .btn-danger {
+            background-color: var(--black);
+            color: white;
+            border: 2px ridge var(--main-red);
+        }
+
+        .btn-danger:hover {
+            background-color: #333;
+            box-shadow: 0 0 15px var(--main-red);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 2px ridge var(--main-red);
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: right;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--light-red);
+        }
+
+        .absence-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--dark-red);
+            color: white;
+            border-radius: 50px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+
+        .tab-container {
+            margin-top: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: var(--dark-red);
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--main-red);
+            box-shadow: 0 0 10px var(--light-red);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 5px ridge var(--main-red);
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--main-red);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                border-radius: 10px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="university-header">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><rect width='150' height='150' fill='%23090305'/><text x='75' y='75' font-family='Arial' font-size='20' fill='%23bcbbac' text-anchor='middle' dominant-baseline='middle'>KU</text></svg>" alt="زانکۆی دین">
+            <h1>سیستەمی غیاباتی قوتابیان</h1>
+            <h2>کۆلێژی کارگێری و ئابووری</h2>
+            <p>زانکۆی سەلاحەدین - هەولێر</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showTab('loginTab')">چوونەژوورەوە</button>
+                <button class="tab-btn" onclick="showTab('adminTab')">بەڕێوەبردن</button>
+            </div>
+
+            <div id="loginTab" class="tab-content active">
+                <div class="login-container">
+                    <h2>چوونەژوورەوە بۆ سیستەم</h2>
+                    <form id="loginForm">
+                        <input type="text" id="username" class="form-control" placeholder="ناوی بەکارهێنەر" required>
+                        <input type="password" id="password" class="form-control" placeholder="وشەی نهێنی" required>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">چوونەژوورەوە</button>
+                    </form>
+                    <p id="loginMessage" style="text-align: center; margin-top: 15px; color: var(--light-red);"></p>
+                </div>
+            </div>
+
+            <div id="adminTab" class="tab-content">
+                <h2 class="text-center">بەڕێوەبردنی مامۆستایان</h2>
+                
+                <h3>زیادکردنی مامۆستای نوێ</h3>
+                <form id="addTeacherForm">
+                    <input type="text" id="teacherName" class="form-control" placeholder="ناوی مامۆستا" required>
+                    <input type="text" id="teacherUsername" class="form-control" placeholder="ناوی بەکارهێنەر" required>
+                    <input type="password" id="teacherPassword" class="form-control" placeholder="وشەی نهێنی" required>
+                    <button type="submit" class="btn btn-primary">زیادکردنی مامۆستا</button>
+                </form>
+                
+                <h3>لیستی مامۆستایان</h3>
+                <div class="table-responsive">
+                    <table id="teachersTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>ناوی مامۆستا</th>
+                                <th>ناوی بەکارهێنەر</th>
+                                <th>کردارەکان</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- لیستی مامۆستایان لێرە دەخرێتەوە -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // گەرەکانی داتابەیس
+        let db = null;
+        
+        // داتاکانی تێستکردن
+        const initData = {
+            teachers: [
+                { name: "مامۆستای سەرەکی", username: "admin", password: "admin123" }
+            ],
+            students: [],
+            lessons: []
+        };
+
+        // دەستپێکردنی داتابەیس
+        function initDatabase() {
+            try {
+                // دروستکردنی یان وەرگرتنی داتابەیس
+                const databaseData = localStorage.getItem('attendance_database');
+                
+                if (databaseData) {
+                    db = JSON.parse(databaseData);
+                } else {
+                    db = {
+                        teachers: initData.teachers,
+                        students: initData.students,
+                        lessons: initData.lessons,
+                        attendance: []
+                    };
+                    localStorage.setItem('attendance_database', JSON.stringify(db));
+                }
+                
+                renderTeachersTable();
+            } catch (error) {
+                console.error("هەڵە لە کارکردنی داتابەیس:", error);
+            }
+        }
+
+        // نیشاندانی تاب
+        function showTab(tabId) {
+            // لەکارخستنی هەموو تابەکان
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // چالاککردنی تابە دیاریکراوەکە
+            document.getElementById(tabId).classList.add('active');
+            
+            // چالاککردن/لەکارخستنی دوگمەکانی تاب
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+        }
+
+        // نیشاندانی لیستی مامۆستایان
+        function renderTeachersTable() {
+            const teachersTable = document.getElementById('teachersTable').querySelector('tbody');
+            teachersTable.innerHTML = '';
+            
+            if (db.teachers.length === 0) {
+                teachersTable.innerHTML = '<tr><td colspan="3" class="text-center">هیچ مامۆستایەک تۆمارنەکراوە</td></tr>';
+                return;
+            }
+            
+            db.teachers.forEach((teacher, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${teacher.name}</td>
+                    <td>${teacher.username}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTeacher(${index})">سڕینەوە</button>
+                    </td>
+                `;
+                teachersTable.appendChild(row);
+            });
+        }
+
+        // زیادکردنی مامۆستای نوێ
+        document.getElementById('addTeacherForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('teacherName').value.trim();
+            const username = document.getElementById('teacherUsername').value.trim();
+            const password = document.getElementById('teacherPassword').value;
+            
+            if (!name || !username || !password) {
+                alert('تکایە هەموو خانەکان پڕبکەرەوە');
+                return;
+            }
+            
+            // پشکنین بۆ ئەوەی ناوی بەکارهێنەر پێشتر هەبێت
+            const usernameExists = db.teachers.some(teacher => teacher.username === username);
+            if (usernameExists) {
+                alert('ئەم ناوی بەکارهێنەرە پێشتر تۆمارکراوە');
+                return;
+            }
+            
+            // زیادکردنی مامۆستای نوێ
+            db.teachers.push({ name, username, password });
+            localStorage.setItem('attendance_database', JSON.stringify(db));
+            
+            renderTeachersTable();
+            
+            // پاککردنەوەی فۆڕمەکە
+            document.getElementById('addTeacherForm').reset();
+            
+            alert('مامۆستا بە سەرکەوتوویی زیادکرا');
+        });
+
+        // سڕینەوەی مامۆستا
+        function deleteTeacher(index) {
+            if (confirm('دڵنیایت دەتەوێت ئەم مامۆستاە بسڕیتەوە؟')) {
+                db.teachers.splice(index, 1);
+                localStorage.setItem('attendance_database', JSON.stringify(db));
+                renderTeachersTable();
+            }
+        }
+
+        // چوونەژوورەوە
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            const teacher = db.teachers.find(t => t.username === username && t.password === password);
+            
+            if (teacher) {
+                // چوونەژوورەوەی سەرکەوتوو
+                document.getElementById('loginMessage').textContent = 'چوونەژوورەوە سەرکەوتوو بوو!';
+                document.getElementById('loginMessage').style.color = 'lightgreen';
+                
+                // گواستنەوە بۆ پەڕەی سەرەکی (لەم نموونەدا تەنها ئاگاداریە)
+                setTimeout(() => {
+                    alert(`بەخێربێیت ${teacher.name}! ئێستا دەچیتە ناو سیستەمی غیاباتی قوتابیان.`);
+                    // لە ڕیالیەتدا، ئێرە پێویستە بچیتە سەر پەڕەی سەرەکی سیستەمەکە
+                }, 1000);
+            } else {
+                document.getElementById('loginMessage').textContent = 'ناوی بەکارهێنەر یان وشەی نهێنی هەڵەیە!';
+                document.getElementById('loginMessage').style.color = 'var(--light-red)';
+            }
+        });
+
+        // دەستپێکردنی داتابەیس کاتێک پەڕە بارکرا
+        document.addEventListener('DOMContentLoaded', initDatabase);
+    </script>
+</body>
+</html>

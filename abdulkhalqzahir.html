@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی غیاباتی قوتابیان</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی غیاباتی قوتابیان - کۆلێژی کارگێری و ئابووری</title>
+    <style>
+        :root {
+            --main-red: #d40000;
+            --dark-red: #8a0000;
+            --light-red: #ff4d4d;
+            --black: #090305;
+            --gray: #bcbbac;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('k.png') no-repeat center center fixed, 
+                        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+            background-size: contain, cover;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 10px ridge var(--main-red);
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--main-red);
+        }
+
+        .university-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--main-red);
+        }
+
+        .university-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px ridge var(--main-red);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1, h2 {
+            color: var(--gray);
+            text-shadow: 0 0 10px var(--main-red);
+            font-family: 'Times New Roman', serif;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 20px var(--main-red);
+        }
+
+        .table th {
+            background-color: var(--dark-red);
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--main-red);
+            text-align: center;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+
+        .table tr:hover {
+            background-color: rgba(139, 0, 0, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--main-red);
+            color: white;
+            border: 2px ridge var(--light-red);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-red);
+            box-shadow: 0 0 15px var(--light-red);
+        }
+
+        .btn-danger {
+            background-color: var(--black);
+            color: white;
+            border: 2px ridge var(--main-red);
+        }
+
+        .btn-danger:hover {
+            background-color: #333;
+            box-shadow: 0 0 15px var(--main-red);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0px;
+            margin: 15px 0;
+            border: 2px ridge var(--main-red);
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: right;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--light-red);
+        }
+
+        .absence-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--dark-red);
+            color: white;
+            border-radius: 50px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                border-radius: 10px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="university-header">
+            <img src="k.png" alt="زانکۆی دین">
+            <h1>سیستەمی غیاباتی قوتابیان</h1>
+            <h2>کۆلێژی کارگێری و ئابووری</h2>
+            <p>زانکۆی سەلاحەدین - هەولێر</p>
+        </div>
+
+        <!-- ناوەڕۆکی سیستەمەکە لێرە دادەنرێت -->
+        
+    </div>
+</body>
+</html>
+    <style>
+
+        /* ڕێکخستن بۆ مۆبایل */
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .form-group {
+                margin-bottom: 10px;
+            }
+            .btn-grad {
+                width: 100%;
+                margin: 5px 0;
+            }
+            .table-responsive {
+                overflow-x: auto;
+            }
+            #studentTable th, #studentTable td {
+                padding: 6px;
+                font-size: 12px;
+            }
+            #lessonTable th, #lessonTable td {
+                padding: 6px;
+                font-size: 12px;
+            }
+        }
+        
+/* زیادکردنی ستایلی نوێ بۆ بۆکسەکان */
+.info-box {
+    background-color: rgba(106, 13, 173, 0.2);
+    border-left: 5px solid #6a0dad;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* زیادکردنی ئەنیمەیشن بۆ کلیککردن */
+.btn-grad:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
+        /* ڕێکخستن بۆ تابلێت */
+        @media only screen and (min-width: 601px) and (max-width: 1024px) {
+            .container {
+                padding: 15px;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            .btn-grad {
+                width: 48%;
+                margin: 5px 1%;
+            }
+            .table-responsive {
+                overflow-x: auto;
+            }
+            #studentTable th, #studentTable td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            #lessonTable th, #lessonTable td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            direction: rtl;
+            text-align: right;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+        .container {
+            background-image: linear-gradient(to right, #6a0dad 0%, #000 51%, #6a0dad 100%);
+            border: 8px ridge #6a0dad;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #000;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 20px rgba(106, 13, 173, 0.5);
+        }
+
+        h1, h2 {
+            color: #bdbcbe;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Noto Naskh Arabic', 'Noto Sans Kurdish', 'Scheherazade', serif;
+        }
+
+        .table {
+            box-shadow: 0px 0px 30px 0px rgb(18, 4, 210);
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px ridge #6a0dad 0%;
+        }
+
+        .table thead {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        .table th, .table td {
+            padding: 15px 15px;
+            text-align: center;
+            border: 1px solid #6a0dad;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .table th {
+            font-weight: bold;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #111;
+        }
+
+        .table tbody tr:hover {
+            background-color: #222;
+            transition: background-color 0.3s ease;
+        }
+
+        .img-fluid {
+            width: 150px;
+            border-radius: 2010px;
+            height: 100px;
+        }
+
+        .btn-grad {
+            background-image: linear-gradient(to right, #9000ff 0%, #00dbde 51%, #1100ff 100%);
+            margin: 10px;
+            padding: 15px 45px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 200% auto;
+            color: #fff;
+            box-shadow: 0 0 20px #6a0dad;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .btn-grad:hover {
+            background-position: right center;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .delete-icon {
+            cursor: pointer;
+            color: #ff0000;
+            margin-left: 10px;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .delete-icon:hover {
+            color: #cc0000;
+        }
+
+        #selectedLessonDisplay {
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #111;
+            border: 1px solid #6a0dad;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        
+        .lesson-absence {
+            background-color: #2a0a4a;
+            padding: 5px;
+            margin: 2px;
+            border-radius: 5px;
+        }
+        
+        .btn-action {
+            min-width: 80px;
+            margin: 2px;
+        }
+        
+        .no-lesson {
+            color: #ff6b6b;
+            font-style: italic;
+        }
+    </style>
+    <!-- لە بەشی <head> -->
+<style>
+    .university-logo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .university-logo img {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
+        border: 3px solid #6a0dad;
+    }
+    .university-info {
+        color: white;
+        text-align: center;
+        margin-top: 10px;
+        font-family: 'Arial', sans-serif;
+    }
+</style>
+
+<!-- لە بەشی <body> لە سەرەتای کۆنتەینەر -->
+
+</head>
+
+
+<body>
+    
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">سیستەمی غیاباتی قوتابیانی کۆلێژی کارگێڕی و ئابووری</h1>
+
+        <!-- فۆرمی زیادکردنی قوتابی -->
+        <div class="form-group">
+            <label for="stageSelect">هەڵبژاردنی قۆناغ:</label>
+            <select id="stageSelect" class="form-control">
+                <option value="1">قۆناغی 1</option>
+                <option value="2">قۆناغی 2</option>
+                <option value="3">قۆناغی 3</option>
+                <option value="4">قۆناغی 4</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="departmentSelect">هەڵبژاردنی بەش:</label>
+            <select id="departmentSelect" class="form-control">
+                <option value="ژمێریاری">ژمێریاری</option>
+                <option value="ئامار">ئامار</option>
+                <option value="ئابوری">ئابوری</option>
+                <option value="کارگێڕی کار">کارگێڕی کار</option>
+                <option value="دارای بانک">دارای بانک</option>
+                <option value="بازاڕگەری">بازاڕگەری</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="groupSelect">هەڵبژاردنی گروپ:</label>
+            <select id="groupSelect" class="form-control">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="studentName">ناوی قوتابی:</label>
+            <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
+        </div>
+
+        <div class="d-flex flex-wrap">
+            <button id="saveButton" class="btn-grad btn-success mb-3 flex-grow-1"><i class="fas fa-save"></i> تۆمارکردن</button>
+            <button onclick="clearAllData()" class="btn-grad btn-danger mb-3 flex-grow-1"><i class="fas fa-trash-alt"></i> سڕینەوەی هەموو داتاکان</button>
+        </div>
+
+        <!-- لیستی دەرسەکان -->
+        <h2 class="text-center mb-4">لیستی دەرسەکان</h2>
+        <button onclick="addLesson()" class="btn-grad btn-primary mb-3">زیادکردنی دەرس</button>
+        <div class="table-responsive">
+            <table id="lessonTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ناوی دەرس</th>
+                        <th>کردارەکان</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- لیستی دەرسەکان لێرە دەخرێتەوە -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- لیستی قوتابیان -->
+        <h2 class="text-center mb-4">لیستی قوتابیان</h2>
+        <div class="form-group">
+            <label for="searchInput">گەڕان بۆ ناوی قوتابی:</label>
+            <input type="text" id="searchInput" class="form-control" placeholder="گەڕان بۆ ناوی قوتابی...">
+        </div>
+        <div id="selectedLessonDisplay" class="text-center">
+            <strong>دەرسی هەڵبژێردراو: </strong>
+            <span id="currentLessonSpan" class="no-lesson">هیچ دەرسێک هەڵنەبژێردراوە</span>
+        </div>
+        <div class="table-responsive">
+            <table id="studentTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ناو</th>
+                        <th>بەش</th>
+                        <th>گروپ</th>
+                        <th>ژمارەی غیاب (ئەم دەرسە)</th>
+                        <th>کاتی نەهاتنی قوتابی</th>
+                        <th>کردارەکان</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- لیستی قوتابیان لێرە دەخرێتەوە -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- دووگمەی پرینتکردن -->
+        <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const saveButton = document.getElementById('saveButton');
+            const studentNameInput = document.getElementById('studentName');
+            const stageSelect = document.getElementById('stageSelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            const groupSelect = document.getElementById('groupSelect');
+            const studentTableBody = document.querySelector('#studentTable tbody');
+            const searchInput = document.getElementById('searchInput');
+            const lessonTableBody = document.querySelector('#lessonTable tbody');
+            const currentLessonSpan = document.getElementById('currentLessonSpan');
+
+            let currentLessonName = '';
+            let lastAbsentClickTime = 0;
+
+            // وەرگرتنی لیستی قوتابیان لە localStorage
+            function getCurrentStudents() {
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const key = `students_${stage}_${department}_${group}`;
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            }
+
+            // هەڵگرتنی لیستی قوتابیان لە localStorage
+            function saveCurrentStudents(students) {
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const key = `students_${stage}_${department}_${group}`;
+                localStorage.setItem(key, JSON.stringify(students));
+            }
+
+            // وەرگرتنی لیستی دەرسەکان لە localStorage
+            function getLessons() {
+                const data = localStorage.getItem('lessons');
+                return data ? JSON.parse(data) : [];
+            }
+
+            // هەڵگرتنی لیستی دەرسەکان لە localStorage
+            function saveLessons(lessons) {
+                localStorage.setItem('lessons', JSON.stringify(lessons));
+            }
+
+            // نیشاندانی لیستی دەرسەکان
+            function renderLessonTable() {
+                const lessons = getLessons();
+                lessonTableBody.innerHTML = '';
+                
+                if (lessons.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="2" class="text-center">هیچ دەرسێک تۆمارنەکراوە</td>
+                    `;
+                    lessonTableBody.appendChild(row);
+                    return;
+                }
+                
+                lessons.forEach((lesson, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${lesson}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="selectLesson('${lesson}')">هەڵبژاردن</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteLesson(${index})">سڕینەوە</button>
+                        </td>
+                    `;
+                    lessonTableBody.appendChild(row);
+                });
+            }
+
+            // زیادکردنی دەرس
+            window.addLesson = function () {
+                const lessonName = prompt("ناوی دەرسەکە بنووسە:");
+                if (!lessonName || lessonName.trim() === '') return;
+
+                const lessons = getLessons();
+                if (lessons.includes(lessonName)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم دەرسە پێشتر تۆمارکراوە!',
+                    });
+                    return;
+                }
+
+                lessons.push(lessonName);
+                saveLessons(lessons);
+                renderLessonTable();
+                
+                // ئەگەر هیچ دەرسێک هەڵنەبژێردرابوو، ئەوا ئەم دەرسە هەڵبژێرە
+                if (currentLessonName === '') {
+                    selectLesson(lessonName);
+                }
+            };
+
+            // هەڵبژاردنی دەرس
+            window.selectLesson = function (lessonName) {
+                currentLessonName = lessonName;
+                currentLessonSpan.textContent = lessonName;
+                currentLessonSpan.classList.remove('no-lesson');
+                renderTable();
+            };
+
+            // سڕینەوەی دەرس
+            window.deleteLesson = function (index) {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: 'دڵنیایت دەتەوێت ئەم دەرسە بسڕیتەوە؟',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const lessons = getLessons();
+                        const lessonToDelete = lessons[index];
+                        
+                        // سڕینەوەی دەرسەکە لە هەموو قوتابیان
+                        const stages = ['1', '2', '3', '4'];
+                        const departments = ['ژمێریاری', 'ئامار', 'ئابوری', 'کارگێڕی کار', 'دارای بانک', 'بازاڕگەری'];
+                        const groups = ['A', 'B', 'C', 'D'];
+                        
+                        stages.forEach(stage => {
+                            departments.forEach(department => {
+                                groups.forEach(group => {
+                                    const key = `students_${stage}_${department}_${group}`;
+                                    const students = JSON.parse(localStorage.getItem(key)) || [];
+                                    
+                                    students.forEach(student => {
+                                        if (student.lessons && student.lessons[lessonToDelete]) {
+                                            delete student.lessons[lessonToDelete];
+                                        }
+                                    });
+                                    
+                                    localStorage.setItem(key, JSON.stringify(students));
+                                });
+                            });
+                        });
+                        
+                        // سڕینەوەی دەرسەکە لە لیستی دەرسەکان
+                        lessons.splice(index, 1);
+                        saveLessons(lessons);
+                        renderLessonTable();
+                        
+                        if (currentLessonName === lessonToDelete) {
+                            currentLessonName = '';
+                            currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
+                            currentLessonSpan.classList.add('no-lesson');
+                        }
+                        
+                        renderTable();
+                        Swal.fire('سڕایەوە!', 'دەرسەکە سڕایەوە.', 'success');
+                    }
+                });
+            };
+
+            // گەڕان بەدوای قوتابی
+            searchInput.addEventListener('input', function () {
+                const searchValue = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('#studentTable tbody tr');
+
+                rows.forEach(row => {
+                    const name = row.querySelector('td:first-child').textContent.toLowerCase();
+                    if (name.includes(searchValue)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // تۆمارکردنی قوتابی
+            saveButton.addEventListener('click', function () {
+                const name = studentNameInput.value.trim();
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+
+                if (!name) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە ناوی قوتابی بنووسە!',
+                    });
+                    return;
+                }
+
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
+
+                const students = getCurrentStudents();
+                
+                // پشکنین بۆ ئەوەی قوتابی پێشتر تۆمارکرابێت
+                let student = students.find(s => s.name === name);
+                
+                if (!student) {
+                    // ئەگەر قوتابی تازە بێت
+                    student = {
+                        name: name,
+                        department: department,
+                        group: group,
+                        lessons: {}
+                    };
+                    students.push(student);
+                }
+                
+                // زیادکردنی دەرسەکە بۆ قوتابی (ئەگەر پێشتر نەکرابێت)
+                if (!student.lessons[currentLessonName]) {
+                    student.lessons[currentLessonName] = {
+                        absences: 0,
+                        absenceDates: []
+                    };
+                    
+                    saveCurrentStudents(students);
+                    renderTable();
+                    studentNameInput.value = '';
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سەرکەوتوو',
+                        text: 'قوتابی بۆ دەرسەکە تۆمارکرا',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم قوتابیە پێشتر بۆ ئەم دەرسە تۆمارکراوە!',
+                    });
+                }
+            });
+
+            // نیشاندانی لیستی قوتابیان
+            function renderTable() {
+                const students = getCurrentStudents();
+                studentTableBody.innerHTML = '';
+                
+                if (students.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="6" class="text-center">هیچ قوتابیەک تۆمارنەکراوە</td>
+                    `;
+                    studentTableBody.appendChild(row);
+                    return;
+                }
+                
+                students.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // پشکنین بۆ ئەوەی قوتابی لەم دەرسەدا تۆمارکرابێت
+                    const hasLesson = student.lessons && student.lessons[currentLessonName];
+                    const absences = hasLesson ? student.lessons[currentLessonName].absences : 0;
+                    const absenceDates = hasLesson ? student.lessons[currentLessonName].absenceDates : [];
+                    
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td>${student.department}</td>
+                        <td>${student.group}</td>
+                        <td>${hasLesson ? absences : '<span class="no-lesson">-</span>'}</td>
+                        <td>${hasLesson ? 
+                            (absenceDates.length > 0 ? 
+                                absenceDates.map(date => `<div class="lesson-absence">${date}</div>`).join('') : 
+                                '<span class="text-muted">هیچ غیابێک نییە</span>') : 
+                            '<span class="no-lesson">تۆمارنەکراوە</span>'}</td>
+                        <td>
+                            ${hasLesson ? `
+                                <button class="btn btn-warning btn-sm btn-action" onclick="markAbsent(${index})">نەهاتن</button>
+                                <button class="btn btn-success btn-sm btn-action" onclick="markPresent(${index})" ${absences <= 0 ? 'disabled' : ''}>هاتوو</button>
+                            ` : `
+                                <button class="btn btn-secondary btn-sm btn-action" disabled>نەهاتن</button>
+                                <button class="btn btn-secondary btn-sm btn-action" disabled>هاتوو</button>
+                            `}
+                            <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('${student.name}', ${index})"></i>
+                        </td>
+                    `;
+                    studentTableBody.appendChild(row);
+                });
+            }
+
+            // نیشانەکردنی غیاب
+            window.markAbsent = function (index) {
+                const students = getCurrentStudents();
+                const student = students[index];
+                
+                if (!student.lessons || !student.lessons[currentLessonName]) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم قوتابیە بۆ ئەم دەرسە تۆمارنەکراوە!',
+                    });
+                    return;
+                }
+
+                const currentTime = new Date().getTime();
+                const lessonAttendance = student.lessons[currentLessonName];
+                
+                if (currentTime - lastAbsentClickTime < 1000) {
+                    // دوو کلیکی خێرا - 2 غیاب
+                    const dateString = new Date().toLocaleString();
+                    lessonAttendance.absences += 2;
+                    lessonAttendance.absenceDates.push(`${dateString} (محازەرەی ٢ سەعاتی نەهاتوو)`);
+                    saveCurrentStudents(students);
+                    renderTable();
+
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'تێبینی',
+                        text: 'بە دوو غیاب بۆت دەنوسرێت لەبەر ئەوەی محازەرەی دوو سەعاتی نەهاتوویت.',
+                    });
+                } else {
+                    // کلیکی ئاسایی - 1 غیاب
+                    const dateString = new Date().toLocaleString();
+                    lessonAttendance.absences++;
+                    lessonAttendance.absenceDates.push(dateString);
+                    saveCurrentStudents(students);
+                    renderTable();
+                }
+
+                lastAbsentClickTime = currentTime;
+
+                // ئاگاداری لەسەر ژمارەی غیابەکان
+                if (lessonAttendance.absences >= 4) {
+                    Swal.fire({
+                        icon: lessonAttendance.absences >= 6 ? 'error' : 'warning',
+                        title: lessonAttendance.absences >= 6 ? 'کۆتایی هاتنەوە' : 'ئاگاداری',
+                        text: lessonAttendance.absences >= 6 ? 
+                            'قوتابی بەڕێز، کۆتایت بۆ هاتۆتەوە!' : 
+                            'ژمارەی غیابەکان زۆر بووە!',
+                    });
+                }
+            };
+
+            // نیشانەکردنی هاتوو
+            window.markPresent = function (index) {
+                const students = getCurrentStudents();
+                const student = students[index];
+                
+                if (!student.lessons || !student.lessons[currentLessonName]) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم قوتابیە بۆ ئەم دەرسە تۆمارنەکراوە!',
+                    });
+                    return;
+                }
+
+                const lessonAttendance = student.lessons[currentLessonName];
+                
+                if (lessonAttendance.absences <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'قوتابی ناتوانێت کەمتر لە ٠ غیاب بکات!',
+                    });
+                    return;
+                }
+
+                lessonAttendance.absences--;
+                lessonAttendance.absenceDates.pop();
+                saveCurrentStudents(students);
+                renderTable();
+            };
+
+            // دڵنیاکردنەوە لەسڕینەوەی قوتابی
+            window.confirmDelete = function (studentName, index) {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: `دڵنیایت دەتەوێت قوتابی "${studentName}" بسڕیتەوە؟`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const students = getCurrentStudents();
+                        students.splice(index, 1);
+                        saveCurrentStudents(students);
+                        renderTable();
+                        Swal.fire('سڕایەوە!', `قوتابی "${studentName}" سڕایەوە.`, 'success');
+                    }
+                });
+            };
+
+            // سڕینەوەی هەموو داتاکان
+            window.clearAllData = function () {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: 'دڵنیایت دەتەوێت هەموو داتاکە بسڕیتەوە؟',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.clear();
+                        currentLessonName = '';
+                        currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
+                        currentLessonSpan.classList.add('no-lesson');
+                        renderTable();
+                        renderLessonTable();
+                        Swal.fire('سڕایەوە!', 'هەموو داتاکە سڕایەوە.', 'success');
+                    }
+                });
+            };
+
+            // فەنکشنی پرینتکردنی لیستی قوتابیان
+            window.printStudentTable = function () {
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
+
+                const students = getCurrentStudents();
+                if (students.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'هیچ قوتابیەک بۆ پرینتکردن نییە!',
+                    });
+                    return;
+                }
+
+                const printContents = `
+                    <div style="direction: rtl; text-align: right; font-family: Arial, sans-serif;">
+                        <h2 style="text-align: center;">لیستی قوتابیان</h2>
+                        <h3 style="text-align: center;">قۆناغ: ${stage}، بەش: ${department}، گروپ: ${group}</h3>
+                        <h3 style="text-align: center;">دەرس: ${currentLessonName}</h3>
+                        <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">ناو</th>
+                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">بەش</th>
+                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">گروپ</th>
+                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">ژمارەی غیاب</th>
+                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">کاتی نەهاتنی قوتابی</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${students.map(student => {
+                                    const lessonData = student.lessons && student.lessons[currentLessonName];
+                                    const absences = lessonData ? lessonData.absences : 0;
+                                    const absenceDates = lessonData ? lessonData.absenceDates : [];
+                                    
+                                    return `
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">${student.name}</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">${student.department}</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">${student.group}</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${absences}</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">${absenceDates.join('<br>') || '-'}</td>
+                                    </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                        <p style="text-align: left; margin-top: 20px; font-size: 12px;">تاریخ: ${new Date().toLocaleDateString()}</p>
+                    </div>
+                `;
+
+                const originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+            };
+
+            // دەستپێکردنی پەڕەکە
+            renderLessonTable();
+            renderTable();
+
+            // گۆڕانکاری لە هەڵبژاردنەکان
+            stageSelect.addEventListener('change', renderTable);
+            departmentSelect.addEventListener('change', renderTable);
+            groupSelect.addEventListener('change', renderTable);
+        });
+        // زیادکردنی سیستەمی هەڵسەنگاندن بۆ قوتابیان
+function evaluateStudent(studentId, lessonId, evaluation) {
+    const students = getCurrentStudents();
+    const student = students.find(s => s.id === studentId);
+    
+    if (student) {
+        if (!student.evaluations) student.evaluations = {};
+        student.evaluations[lessonId] = evaluation;
+        saveCurrentStudents(students);
+    }
+}
+
+// زیادکردنی سیستەمی ئاگادارکردنەوە
+function checkAbsenceWarnings() {
+    const students = getCurrentStudents();
+    students.forEach(student => {
+        if (student.lessons && student.lessons[currentLessonName]) {
+            const absences = student.lessons[currentLessonName].absences;
+            if (absences >= 4) {
+                showWarning(student.name, absences);
+            }
+        }
+    });
+}
+
+function showWarning(studentName, absences) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'ئاگاداری غیاب',
+        html: `قوتابی <b>${studentName}</b> بە <b>${absences}</b> غیاب تۆمارکراوە!`,
+        confirmButtonText: 'باشە'
+    });
+}
+    </script>
+</body>
+</html>
