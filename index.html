@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فۆڕمی لۆگین - کۆلێژی کارگێری و ئابووری</title>
     <style>
         body {
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL3ly7eSDlRZJ6dw3Y_vV2rVvoBG8Z5f9AvQ&s');
-            background-color: #cccccc;
+            background: linear-gradient(-45deg, #2d1b69, #4b0082, #1a1a1a, #6a0dad);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            text-shadow: 0px 0px 10px 0px rgba(106, 13, 173, 0.8);
             font-family: Arial, sans-serif;
-            animation: gradientBG 15s ease infinite;
             text-align: right;
         }
 
         @keyframes gradientBG {
-            0% { background-color: #2d1b69; }
-            50% { background-color: #4b0082; }
-            100% { background-color: #1a1a1a; }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         html, body {
@@ -45,11 +44,24 @@
             width: 90%;
             max-width: 400px;
             text-align: center;
+            animation: containerPulse 3s infinite alternate;
+        }
+
+        @keyframes containerPulse {
+            0% { box-shadow: 0px 0px 30px 0px rgba(106, 13, 173, 0.6); }
+            100% { box-shadow: 0px 0px 60px 0px rgba(106, 13, 173, 1); }
         }
 
         .login-container h2 {
             margin-bottom: 20px;
             color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            animation: textGlow 2s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            100% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
         }
 
         .login-container input[type="text"],
@@ -62,6 +74,29 @@
             font-size: 16px;
             text-align: right;
             background-color: rgba(75, 0, 130, 0.5) !important;
+            transition: all 0.3s ease;
+            animation: inputSlide 0.5s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes inputSlide {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container input[type="text"] {
+            animation-delay: 0.3s;
+        }
+
+        .login-container input[type="password"] {
+            animation-delay: 0.5s;
+        }
+
+        .login-container input[type="text"]:focus,
+        .login-container input[type="password"]:focus {
+            outline: none;
+            border-color: #9370db;
+            box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);
         }
 
         .login-container input[type="submit"] {
@@ -73,16 +108,32 @@
             font-size: 16px;
             cursor: pointer;
             border: 3px solid #9370db;
+            transition: all 0.3s ease;
+            animation: buttonFade 0.8s forwards;
+            opacity: 0;
+            animation-delay: 0.7s;
+        }
+
+        @keyframes buttonFade {
+            to { opacity: 1; }
         }
 
         .login-container input[type="submit"]:hover {
             background-color: #4b0082;
             box-shadow: 0px 0px 15px 0px rgba(106, 13, 173, 0.8);
+            transform: scale(1.05);
         }
 
         .login-container .error-message {
             color: #ff6b6b;
             margin-top: 10px;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
 
         img {
@@ -90,11 +141,20 @@
             max-width: 100%;
             height: auto;
             border: 3px solid #6a0dad;
+            animation: imageRotate 10s infinite linear;
+        }
+
+        @keyframes imageRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .password-container {
             position: relative;
             width: 100%;
+            animation: inputSlide 0.5s forwards;
+            opacity: 0;
+            animation-delay: 0.5s;
         }
 
         .toggle-password {
@@ -105,10 +165,19 @@
             cursor: pointer;
             font-size: 18px;
             color: #9370db;
+            transition: all 0.3s ease;
+            animation: fadeIn 1s forwards;
+            opacity: 0;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
 
         .toggle-password:hover {
             color: #6a0dad;
+            transform: translateY(-50%) scale(1.2);
         }
 
         label {
@@ -116,6 +185,23 @@
             direction: rtl;
             text-align: left;
             font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            display: block;
+            margin-bottom: 5px;
+            animation: labelSlide 0.5s forwards;
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        @keyframes labelSlide {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        form label:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        form label:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
         /* Media Queries بۆ مۆبایل */
@@ -143,13 +229,13 @@
 <body>
     <div class="login-container">
         <img src="logo.jpg" alt="">
-        <h2>کۆلێژی کارگێری و ئابووری</h2>
+        <h2>SALLAHADIN UNIVERSITY</h2>
         <form id="loginForm">
-            <label for="">(ناوی بەکارهێنەر)</label>
-            <input type="text" id="username" required>
+            <label for="">USER</label>
+            <input type="text" id="username" required="">
             <div class="password-container">
-                <label for="">(وشەی نهێنی)</label>
-                <input type="password" id="password" required>
+                <label for="">PASS</label>
+                <input type="password" id="password" required="">
                 <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
             </div>
             <br>

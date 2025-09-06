@@ -3,519 +3,566 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستەمی غیاباتی قوتابیان</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!DOCTYPE html>
-<html lang="ku">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستەمی غیاباتی قوتابیان - کۆلێژی کارگێری و ئابووری</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --main-red: #d40000;
-            --dark-red: #8a0000;
-            --light-red: #ff4d4d;
-            --black: #090305;
-            --gray: #bcbbac;
+            --main-purple: #6a0dad;
+            --dark-purple: #4b0082;
+            --light-purple: #9370db;
+            --accent-color: #ff5722;
+            --black: #222;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #cccccc;
+            --dark-gray: #555;
         }
-        
+
         body {
             margin: 0;
             padding: 0;
             background: url('k.png') no-repeat center center fixed, 
-                        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+                        linear-gradient(135deg, rgba(106, 13, 173, 0.85), rgba(75, 0, 130, 0.9));
             background-size: contain, cover;
-            color: white;
-            font-family: 'Arial', sans-serif;
+            color: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             direction: rtl;
             text-align: right;
             min-height: 100vh;
         }
 
         .container {
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 10px ridge var(--main-red);
+            background-color: rgba(0, 0, 0, 0.75);
+            border: 2px solid var(--main-purple);
             width: 95%;
             max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px var(--main-red);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(106, 13, 173, 0.6);
+            backdrop-filter: blur(5px);
         }
 
         .university-header {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 3px solid var(--main-red);
+            border-bottom: 2px solid var(--main-purple);
+            position: relative;
         }
 
-        .university-header img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 5px ridge var(--main-red);
-            object-fit: cover;
+        .logo-container {
+            position: relative;
+            display: inline-block;
             margin-bottom: 15px;
         }
 
+        .logo-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--main-purple);
+            object-fit: cover;
+            box-shadow: 0 0 25px var(--light-purple);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .logo-container img:hover {
+            transform: rotate(360deg);
+            box-shadow: 0 0 30px var(--light-purple);
+        }
+
         h1, h2 {
-            color: var(--gray);
-            text-shadow: 0 0 10px var(--main-red);
+            color: var(--white);
+            text-shadow: 0 0 10px var(--main-purple);
             font-family: 'Times New Roman', serif;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--main-purple);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.4);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            border-bottom: 1px solid var(--main-purple);
+            border-radius: 10px 10px 0 0 !important;
+            padding: 12px 20px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border: 2px solid var(--main-purple);
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: var(--white);
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--light-purple);
+            border-color: var(--light-purple);
         }
 
         .table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin: 20px 0;
-            box-shadow: 0 0 20px var(--main-red);
+            box-shadow: 0 0 20px rgba(106, 13, 173, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .table th {
-            background-color: var(--dark-red);
-            color: white;
-            padding: 12px;
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            padding: 15px;
             text-align: center;
+            font-weight: 600;
+            border: none;
         }
 
         .table td {
-            padding: 10px;
-            border-bottom: 1px solid var(--main-red);
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(106, 13, 173, 0.3);
             text-align: center;
+            color: var(--white);
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease;
         }
 
-        .table tr:nth-child(even) {
-            background-color: rgba(139, 0, 0, 0.1);
+        .table tr:nth-child(even) td {
+            background-color: rgba(106, 13, 173, 0.15);
         }
 
-        .table tr:hover {
-            background-color: rgba(139, 0, 0, 0.3);
+        .table tr:hover td {
+            background-color: rgba(106, 13, 173, 0.3);
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
             margin: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .btn-primary {
-            background-color: var(--main-red);
-            color: white;
-            border: 2px ridge var(--light-red);
+            background: linear-gradient(to right, var(--main-purple), var(--dark-purple));
+            color: var(--white);
+            border: 2px solid var(--light-purple);
         }
 
         .btn-primary:hover {
-            background-color: var(--dark-red);
-            box-shadow: 0 0 15px var(--light-red);
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            box-shadow: 0 0 15px var(--light-purple);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
-            background-color: var(--black);
-            color: white;
-            border: 2px ridge var(--main-red);
+            background: linear-gradient(to right, var(--accent-color), #d63b18);
+            color: var(--white);
+            border: 2px solid var(--accent-color);
         }
 
         .btn-danger:hover {
-            background-color: #333;
-            box-shadow: 0 0 15px var(--main-red);
+            background: linear-gradient(to right, #d63b18, var(--accent-color));
+            box-shadow: 0 0 15px var(--accent-color);
+            transform: translateY(-2px);
         }
 
-        .form-control {
-            width: 100%;
-            padding: 0px;
-            margin: 15px 0;
-            border: 2px ridge var(--main-red);
-            border-radius: 50px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            text-align: right;
+        .btn-success {
+            background: linear-gradient(to right, #28a745, #20c997);
+            color: var(--white);
+            border: 2px solid #28a745;
         }
 
-        .form-control:focus {
-            outline: none;
-            box-shadow: 0 0 10px var(--light-red);
+        .btn-success:hover {
+            background: linear-gradient(to right, #20c997, #28a745);
+            box-shadow: 0 0 15px #28a745;
+            transform: translateY(-2px);
         }
 
-        .absence-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            background-color: var(--dark-red);
-            color: white;
-            border-radius: 50px;
-            margin: 2px;
-            font-size: 0.8em;
+        .btn-warning {
+            background: linear-gradient(to right, #ffc107, #fd7e14);
+            color: var(--white);
+            border: 2px solid #ffc107;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                border-radius: 10px;
-            }
-            
-            .table th, .table td {
-                padding: 6px;
-                font-size: 12px;
-            }
-            
-            .btn {
-                padding: 8px 15px;
-                font-size: 12px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="university-header">
-            <img src="k.png" alt="زانکۆی دین">
-            <h1>سیستەمی غیاباتی قوتابیان</h1>
-            <h2>کۆلێژی کارگێری و ئابووری</h2>
-            <p>زانکۆی سەلاحەدین - هەولێر</p>
-        </div>
-
-        <!-- ناوەڕۆکی سیستەمەکە لێرە دادەنرێت -->
-        
-    </div>
-</body>
-</html>
-    <style>
-
-        /* ڕێکخستن بۆ مۆبایل */
-        @media only screen and (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            .form-group {
-                margin-bottom: 10px;
-            }
-            .btn-grad {
-                width: 100%;
-                margin: 5px 0;
-            }
-            .table-responsive {
-                overflow-x: auto;
-            }
-            #studentTable th, #studentTable td {
-                padding: 6px;
-                font-size: 12px;
-            }
-            #lessonTable th, #lessonTable td {
-                padding: 6px;
-                font-size: 12px;
-            }
-        }
-        
-/* زیادکردنی ستایلی نوێ بۆ بۆکسەکان */
-.info-box {
-    background-color: rgba(106, 13, 173, 0.2);
-    border-left: 5px solid #6a0dad;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-/* زیادکردنی ئەنیمەیشن بۆ کلیککردن */
-.btn-grad:active {
-    transform: scale(0.95);
-    transition: transform 0.1s;
-}
-        /* ڕێکخستن بۆ تابلێت */
-        @media only screen and (min-width: 601px) and (max-width: 1024px) {
-            .container {
-                padding: 15px;
-            }
-            .form-group {
-                margin-bottom: 15px;
-            }
-            .btn-grad {
-                width: 48%;
-                margin: 5px 1%;
-            }
-            .table-responsive {
-                overflow-x: auto;
-            }
-            #studentTable th, #studentTable td {
-                padding: 8px;
-                font-size: 14px;
-            }
-            #lessonTable th, #lessonTable td {
-                padding: 8px;
-                font-size: 14px;
-            }
+        .btn-warning:hover {
+            background: linear-gradient(to right, #fd7e14, #ffc107);
+            box-shadow: 0 0 15px #ffc107;
+            transform: translateY(-2px);
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            color: #fff;
-            padding: 20px;
-            direction: rtl;
-            text-align: right;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .btn-info {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-        }
-
-        .btn-info:hover {
-            background-color: #138496;
-            border-color: #117a8b;
-        }
-
-        .container {
-            background-image: linear-gradient(to right, #6a0dad 0%, #000 51%, #6a0dad 100%);
-            border: 8px ridge #6a0dad;
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto;
-            background-color: #000;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0px 0px 20px rgba(106, 13, 173, 0.5);
-        }
-
-        h1, h2 {
-            color: #bdbcbe;
-            text-align: center;
-            margin-bottom: 20px;
-            font-family: 'Noto Naskh Arabic', 'Noto Sans Kurdish', 'Scheherazade', serif;
-        }
-
-        .table {
-            box-shadow: 0px 0px 30px 0px rgb(18, 4, 210);
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 3px ridge #6a0dad 0%;
-        }
-
-        .table thead {
-            background-color: #6a0dad;
-            color: #fff;
-        }
-
-        .table th, .table td {
-            padding: 15px 15px;
-            text-align: center;
-            border: 1px solid #6a0dad;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
-        }
-
-        .table th {
-            font-weight: bold;
-        }
-
-        .table tbody tr:nth-child(even) {
-            background-color: #111;
-        }
-
-        .table tbody tr:hover {
-            background-color: #222;
-            transition: background-color 0.3s ease;
-        }
-
-        .img-fluid {
-            width: 150px;
-            border-radius: 2010px;
-            height: 100px;
+        .btn-action {
+            min-width: 90px;
+            margin: 3px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
         }
 
         .btn-grad {
-            background-image: linear-gradient(to right, #9000ff 0%, #00dbde 51%, #1100ff 100%);
+            background-image: linear-gradient(to right, var(--main-purple) 0%, var(--light-purple) 51%, var(--dark-purple) 100%);
             margin: 10px;
             padding: 15px 45px;
             text-align: center;
             text-transform: uppercase;
             transition: 0.5s;
             background-size: 200% auto;
-            color: #fff;
-            box-shadow: 0 0 20px #6a0dad;
-            border-radius: 10px;
+            color: var(--white);
+            box-shadow: 0 0 20px var(--main-purple);
+            border-radius: 50px;
             display: inline-block;
+            border: none;
+            font-weight: bold;
         }
 
         .btn-grad:hover {
             background-position: right center;
-            color: #fff;
+            color: var(--white);
             text-decoration: none;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--light-purple);
+        }
+
+        .btn-grad:active {
+            transform: scale(0.98);
+            transition: transform 0.1s;
+        }
+
+        .absence-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            border-radius: 50px;
+            margin: 3px;
+            font-size: 0.85em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .selected-lesson {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            padding: 12px 20px;
+            border-radius: 50px;
+            margin: 10px 0;
+            display: inline-block;
+            box-shadow: 0 0 15px var(--main-purple);
+        }
+
+        .no-lesson {
+            color: var(--medium-gray);
+            font-style: italic;
         }
 
         .delete-icon {
             cursor: pointer;
-            color: #ff0000;
+            color: var(--accent-color);
             margin-left: 10px;
             font-size: 18px;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .delete-icon:hover {
-            color: #cc0000;
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+
+        .lesson-absence {
+            background-color: rgba(106, 13, 173, 0.3);
+            padding: 6px 10px;
+            margin: 3px;
+            border-radius: 5px;
+            color: var(--white);
+            font-size: 0.9em;
         }
 
         #selectedLessonDisplay {
             border-radius: 10px;
-            padding: 15px;
-            background-color: #111;
-            border: 1px solid #6a0dad;
-            color: #fff;
+            padding: 15px 20px;
+            background: linear-gradient(to right, rgba(75, 0, 130, 0.7), rgba(106, 13, 173, 0.7));
+            border: 1px solid var(--main-purple);
+            color: var(--white);
             margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--main-purple);
         }
-        
-        .lesson-absence {
-            background-color: #2a0a4a;
-            padding: 5px;
-            margin: 2px;
-            border-radius: 5px;
+
+        .animated-border {
+            position: relative;
+            overflow: hidden;
         }
-        
-        .btn-action {
-            min-width: 80px;
-            margin: 2px;
+
+        .animated-border::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
         }
-        
-        .no-lesson {
-            color: #ff6b6b;
-            font-style: italic;
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(106, 13, 173, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(106, 13, 173, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(106, 13, 173, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            .table th, .table td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            .btn-grad {
+                padding: 12px 30px;
+                font-size: 14px;
+            }
+        }
+
+        .stats-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--main-purple);
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.3);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--light-purple);
+            text-shadow: 0 0 10px var(--main-purple);
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--main-purple);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100px;
+            height: 2px;
+            background: var(--light-purple);
         }
     </style>
-    <!-- لە بەشی <head> -->
-<style>
-    .university-logo {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .university-logo img {
-        width: 150px;
-        height: auto;
-        border-radius: 50%;
-        border: 3px solid #6a0dad;
-    }
-    .university-info {
-        color: white;
-        text-align: center;
-        margin-top: 10px;
-        font-family: 'Arial', sans-serif;
-    }
-</style>
-
-<!-- لە بەشی <body> لە سەرەتای کۆنتەینەر -->
-
 </head>
-
-
 <body>
-    
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">سیستەمی غیاباتی قوتابیانی کۆلێژی کارگێڕی و ئابووری</h1>
-
-        <!-- فۆرمی زیادکردنی قوتابی -->
-        <div class="form-group">
-            <label for="stageSelect">هەڵبژاردنی قۆناغ:</label>
-            <select id="stageSelect" class="form-control">
-                <option value="1">قۆناغی 1</option>
-                <option value="2">قۆناغی 2</option>
-                <option value="3">قۆناغی 3</option>
-                <option value="4">قۆناغی 4</option>
-            </select>
+    <div class="container">
+        <div class="university-header">
+            <div class="logo-container floating">
+                <img src="logo.jpg" alt="زانکۆی دین" class="pulse">
+            </div>
+            <h1>سیستەمی غیاباتی قوتابیان</h1>
+            <p>زانکۆی سەلاحەدین - هەولێر</p>
         </div>
 
-        <div class="form-group">
-            <label for="departmentSelect">هەڵبژاردنی بەش:</label>
-            <select id="departmentSelect" class="form-control">
-                <option value="ژمێریاری">ژمێریاری</option>
-                <option value="ئامار">ئامار</option>
-                <option value="ئابوری">ئابوری</option>
-                <option value="کارگێڕی کار">کارگێڕی کار</option>
-                <option value="دارای بانک">دارای بانک</option>
-                <option value="بازاڕگەری">بازاڕگەری</option>
-            </select>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card animated-border">
+                    <div class="card-header">
+                        <i class="fas fa-user-plus"></i> فۆرمی زیادکردنی قوتابی
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="collegeSelect"><i class="fas fa-building"></i> هەڵبژاردنی کۆلێژ:</label>
+                                    <select id="collegeSelect" class="form-control">
+                                        <option value="کارگێری و ئابووری">کۆلێژی کارگێری و ئابووری</option>
+                                        <option value="ئاداب">کۆلێژی ئاداب</option>
+                                        <option value="زمان">کۆلێژی زمان</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="stageSelect"><i class="fas fa-graduation-cap"></i> هەڵبژاردنی قۆناغ:</label>
+                                    <select id="stageSelect" class="form-control">
+                                        <option value="1">قۆناغی 1</option>
+                                        <option value="2">قۆناغی 2</option>
+                                        <option value="3">قۆناغی 3</option>
+                                        <option value="4">قۆناغی 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="departmentSelect"><i class="fas fa-book"></i> هەڵبژاردنی بەش:</label>
+                                    <select id="departmentSelect" class="form-control">
+                                        <!-- بەشەکان بەپێی کۆلێژ دەگۆڕدرێن -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="groupSelect"><i class="fas fa-users"></i> هەڵبژاردنی گروپ:</label>
+                                    <select id="groupSelect" class="form-control">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="studentName"><i class="fas fa-user"></i> ناوی قوتابی:</label>
+                                    <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap justify-content-center mt-4">
+                            <button id="saveButton" class="btn-grad btn-success mb-3 flex-grow-1 mx-2"><i class="fas fa-save"></i> تۆمارکردن</button>
+                            <button onclick="clearAllData()" class="btn-grad btn-danger mb-3 flex-grow-1 mx-2"><i class="fas fa-trash-alt"></i> سڕینەوەی هەموو داتاکان</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="groupSelect">هەڵبژاردنی گروپ:</label>
-            <select id="groupSelect" class="form-control">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-            </select>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2 class="section-title"><i class="fas fa-book-open"></i> لیستی دەرسەکان</h2>
+                <button onclick="addLesson()" class="btn-grad btn-primary mb-3"><i class="fas fa-plus-circle"></i> زیادکردنی دەرس</button>
+                
+                <div class="table-responsive">
+                    <table id="lessonTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ناوی دەرس</th>
+                                <th>کردارەکان</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- لیستی دەرسەکان لێرە دەخرێتەوە -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="studentName">ناوی قوتابی:</label>
-            <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2 class="section-title"><i class="fas fa-user-graduate"></i> لیستی قوتابیان</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="searchInput"><i class="fas fa-search"></i> گەڕان بۆ ناوی قوتابی:</label>
+                            <input type="text" id="searchInput" class="form-control" placeholder="گەڕان بۆ ناوی قوتابی...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="selectedLessonDisplay" class="text-center">
+                            <strong>دەرسی هەڵبژێردراو: </strong>
+                            <span id="currentLessonSpan" class="no-lesson">هیچ دەرسێک هەڵنەبژێردراوە</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="studentTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ناو</th>
+                                <th>کۆلێژ</th>
+                                <th>بەش</th>
+                                <th>گروپ</th>
+                                <th>ژمارەی غیاب (ئەم دەرسە)</th>
+                                <th>کاتی نەهاتنی قوتابی</th>
+                                <th>کردارەکان</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- لیستی قوتابیان لێرە دەخرێتەوە -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
+                </div>
+            </div>
         </div>
-
-        <div class="d-flex flex-wrap">
-            <button id="saveButton" class="btn-grad btn-success mb-3 flex-grow-1"><i class="fas fa-save"></i> تۆمارکردن</button>
-            <button onclick="clearAllData()" class="btn-grad btn-danger mb-3 flex-grow-1"><i class="fas fa-trash-alt"></i> سڕینەوەی هەموو داتاکان</button>
-        </div>
-
-        <!-- لیستی دەرسەکان -->
-        <h2 class="text-center mb-4">لیستی دەرسەکان</h2>
-        <button onclick="addLesson()" class="btn-grad btn-primary mb-3">زیادکردنی دەرس</button>
-        <div class="table-responsive">
-            <table id="lessonTable" class="table table-bordered table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th>ناوی دەرس</th>
-                        <th>کردارەکان</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- لیستی دەرسەکان لێرە دەخرێتەوە -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- لیستی قوتابیان -->
-        <h2 class="text-center mb-4">لیستی قوتابیان</h2>
-        <div class="form-group">
-            <label for="searchInput">گەڕان بۆ ناوی قوتابی:</label>
-            <input type="text" id="searchInput" class="form-control" placeholder="گەڕان بۆ ناوی قوتابی...">
-        </div>
-        <div id="selectedLessonDisplay" class="text-center">
-            <strong>دەرسی هەڵبژێردراو: </strong>
-            <span id="currentLessonSpan" class="no-lesson">هیچ دەرسێک هەڵنەبژێردراوە</span>
-        </div>
-        <div class="table-responsive">
-            <table id="studentTable" class="table table-bordered table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th>ناو</th>
-                        <th>بەش</th>
-                        <th>گروپ</th>
-                        <th>ژمارەی غیاب (ئەم دەرسە)</th>
-                        <th>کاتی نەهاتنی قوتابی</th>
-                        <th>کردارەکان</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- لیستی قوتابیان لێرە دەخرێتەوە -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- دووگمەی پرینتکردن -->
-        <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
     </div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -525,6 +572,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const saveButton = document.getElementById('saveButton');
             const studentNameInput = document.getElementById('studentName');
+            const collegeSelect = document.getElementById('collegeSelect');
             const stageSelect = document.getElementById('stageSelect');
             const departmentSelect = document.getElementById('departmentSelect');
             const groupSelect = document.getElementById('groupSelect');
@@ -535,23 +583,55 @@
 
             let currentLessonName = '';
             let lastAbsentClickTime = 0;
+            
+            // پێرستی بەشەکان بەپێی کۆلێژ
+            const collegeDepartments = {
+                "کارگێری و ئابووری": ["ژمێریاری", "ئامار", "ئابوری", "کارگێڕی کار", "دارای بانک", "بازاڕگەری"],
+                "ئاداب": ["مێژوو", "جوگرافیا", "فەلسەفە", "کاری کۆمەڵایەتی", "دەرونزانی", "ڕاگەیاندن", "شوێنەوار"],
+                "زمان": ["زمانی کوردی", "زمانی ئینگلیزی", "زمانی ئەڵمانی", "زمانی فارسی", "زمانی عربی", "زمانی تورکی", "زمانی فەڕەنسی"]
+            };
+            
+            // دانانی بەشەکان کاتێک کۆلێژ دەگۆڕدرێت
+            collegeSelect.addEventListener('change', function() {
+                updateDepartments();
+                renderTable();
+            });
+            
+            // نوێکردنەوەی لیستی بەشەکان
+            function updateDepartments() {
+                const college = collegeSelect.value;
+                const departments = collegeDepartments[college] || [];
+                
+                departmentSelect.innerHTML = '';
+                departments.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept;
+                    option.textContent = dept;
+                    departmentSelect.appendChild(option);
+                });
+            }
+            
+            // دەستپێکردنی لیستی بەشەکان
+            updateDepartments();
 
             // وەرگرتنی لیستی قوتابیان لە localStorage
             function getCurrentStudents() {
+                const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
-                const key = `students_${stage}_${department}_${group}`;
+                const key = `students_${college}_${stage}_${department}_${group}`;
                 const data = localStorage.getItem(key);
                 return data ? JSON.parse(data) : [];
             }
 
             // هەڵگرتنی لیستی قوتابیان لە localStorage
             function saveCurrentStudents(students) {
+                const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
-                const key = `students_${stage}_${department}_${group}`;
+                const key = `students_${college}_${stage}_${department}_${group}`;
                 localStorage.setItem(key, JSON.stringify(students));
             }
 
@@ -641,14 +721,16 @@
                         const lessonToDelete = lessons[index];
                         
                         // سڕینەوەی دەرسەکە لە هەموو قوتابیان
+                        const colleges = ['کارگێری و ئابووری', 'ئاداب', 'زمان'];
                         const stages = ['1', '2', '3', '4'];
-                        const departments = ['ژمێریاری', 'ئامار', 'ئابوری', 'کارگێڕی کار', 'دارای بانک', 'بازاڕگەری'];
+                        const departmentsAll = collegeDepartments;
                         const groups = ['A', 'B', 'C', 'D'];
                         
-                        stages.forEach(stage => {
-                            departments.forEach(department => {
+                        colleges.forEach(college => {
+                            const depts = collegeDepartments[college] || [];
+                            depts.forEach(department => {
                                 groups.forEach(group => {
-                                    const key = `students_${stage}_${department}_${group}`;
+                                    const key = `students_${college}_${stage}_${department}_${group}`;
                                     const students = JSON.parse(localStorage.getItem(key)) || [];
                                     
                                     students.forEach(student => {
@@ -697,6 +779,7 @@
             // تۆمارکردنی قوتابی
             saveButton.addEventListener('click', function () {
                 const name = studentNameInput.value.trim();
+                const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
@@ -728,6 +811,7 @@
                     // ئەگەر قوتابی تازە بێت
                     student = {
                         name: name,
+                        college: college,
                         department: department,
                         group: group,
                         lessons: {}
@@ -768,7 +852,7 @@
                 if (students.length === 0) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td colspan="6" class="text-center">هیچ قوتابیەک تۆمارنەکراوە</td>
+                        <td colspan="7" class="text-center">هیچ قوتابیەک تۆمارنەکراوە</td>
                     `;
                     studentTableBody.appendChild(row);
                     return;
@@ -784,6 +868,7 @@
                     
                     row.innerHTML = `
                         <td>${student.name}</td>
+                        <td>${student.college}</td>
                         <td>${student.department}</td>
                         <td>${student.group}</td>
                         <td>${hasLesson ? absences : '<span class="no-lesson">-</span>'}</td>
@@ -935,6 +1020,7 @@
 
             // فەنکشنی پرینتکردنی لیستی قوتابیان
             window.printStudentTable = function () {
+                const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
@@ -958,91 +1044,73 @@
                     return;
                 }
 
-                const printContents = `
-                    <div style="direction: rtl; text-align: right; font-family: Arial, sans-serif;">
-                        <h2 style="text-align: center;">لیستی قوتابیان</h2>
-                        <h3 style="text-align: center;">قۆناغ: ${stage}، بەش: ${department}، گروپ: ${group}</h3>
-                        <h3 style="text-align: center;">دەرس: ${currentLessonName}</h3>
-                        <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html dir="rtl">
+                    <head>
+                        <title>لیستی غیابەکانی قوتابیان - ${currentLessonName}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; direction: rtl; text-align: right; padding: 20px; }
+                            h1, h2 { text-align: center; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                            th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                            th { background-color: #f2f2f2; }
+                            .no-print { display: none; }
+                            @media print {
+                                body { padding: 0; }
+                                .no-print { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>زانکۆی سەلاحەدین - هەولێر</h1>
+                        <h2>کۆلێژی ${college} - بەشی ${department}</h2>
+                        <h2>لیستی غیابەکانی دەرسی ${currentLessonName}</h2>
+                        <h3>قۆناغ: ${stage} - گروپ: ${group}</h3>
+                        <table>
                             <thead>
                                 <tr>
-                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">ناو</th>
-                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">بەش</th>
-                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">گروپ</th>
-                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">ژمارەی غیاب</th>
-                                    <th style="padding: 8px; background-color: #6a0dad; color: white;">کاتی نەهاتنی قوتابی</th>
+                                    <th>ناو</th>
+                                    <th>ژمارەی غیاب</th>
+                                    <th>کاتی نەهاتن</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${students.map(student => {
-                                    const lessonData = student.lessons && student.lessons[currentLessonName];
-                                    const absences = lessonData ? lessonData.absences : 0;
-                                    const absenceDates = lessonData ? lessonData.absenceDates : [];
+                                    const hasLesson = student.lessons && student.lessons[currentLessonName];
+                                    const absences = hasLesson ? student.lessons[currentLessonName].absences : 0;
+                                    const absenceDates = hasLesson ? student.lessons[currentLessonName].absenceDates : [];
                                     
                                     return `
-                                    <tr>
-                                        <td style="padding: 8px; border: 1px solid #ddd;">${student.name}</td>
-                                        <td style="padding: 8px; border: 1px solid #ddd;">${student.department}</td>
-                                        <td style="padding: 8px; border: 1px solid #ddd;">${student.group}</td>
-                                        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${absences}</td>
-                                        <td style="padding: 8px; border: 1px solid #ddd;">${absenceDates.join('<br>') || '-'}</td>
-                                    </tr>
+                                        <tr>
+                                            <td>${student.name}</td>
+                                            <td>${hasLesson ? absences : '-'}</td>
+                                            <td>${hasLesson ? 
+                                                (absenceDates.length > 0 ? 
+                                                    absenceDates.map(date => `<div>${date}</div>`).join('') : 
+                                                    'هیچ غیابێک نییە') : 
+                                                'تۆمارنەکراوە'}</td>
+                                        </tr>
                                     `;
                                 }).join('')}
                             </tbody>
                         </table>
-                        <p style="text-align: left; margin-top: 20px; font-size: 12px;">تاریخ: ${new Date().toLocaleDateString()}</p>
-                    </div>
-                `;
-
-                const originalContents = document.body.innerHTML;
-                document.body.innerHTML = printContents;
-                window.print();
-                document.body.innerHTML = originalContents;
+                        <p>بەرواری پرینت: ${new Date().toLocaleString()}</p>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.focus();
+                setTimeout(() => {
+                    printWindow.print();
+                    printWindow.close();
+                }, 500);
             };
 
-            // دەستپێکردنی پەڕەکە
+            // دەستپێکردنی پێشکەشکردنەکە
             renderLessonTable();
             renderTable();
-
-            // گۆڕانکاری لە هەڵبژاردنەکان
-            stageSelect.addEventListener('change', renderTable);
-            departmentSelect.addEventListener('change', renderTable);
-            groupSelect.addEventListener('change', renderTable);
         });
-        // زیادکردنی سیستەمی هەڵسەنگاندن بۆ قوتابیان
-function evaluateStudent(studentId, lessonId, evaluation) {
-    const students = getCurrentStudents();
-    const student = students.find(s => s.id === studentId);
-    
-    if (student) {
-        if (!student.evaluations) student.evaluations = {};
-        student.evaluations[lessonId] = evaluation;
-        saveCurrentStudents(students);
-    }
-}
-
-// زیادکردنی سیستەمی ئاگادارکردنەوە
-function checkAbsenceWarnings() {
-    const students = getCurrentStudents();
-    students.forEach(student => {
-        if (student.lessons && student.lessons[currentLessonName]) {
-            const absences = student.lessons[currentLessonName].absences;
-            if (absences >= 4) {
-                showWarning(student.name, absences);
-            }
-        }
-    });
-}
-
-function showWarning(studentName, absences) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'ئاگاداری غیاب',
-        html: `قوتابی <b>${studentName}</b> بە <b>${absences}</b> غیاب تۆمارکراوە!`,
-        confirmButtonText: 'باشە'
-    });
-}
     </script>
 </body>
 </html>
