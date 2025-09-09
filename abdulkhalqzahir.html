@@ -17,6 +17,9 @@
             --light-gray: #f5f5f5;
             --medium-gray: #cccccc;
             --dark-gray: #555;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --success-color: #4caf50;
         }
 
         body {
@@ -261,6 +264,20 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
+        .absence-warning {
+            background: linear-gradient(to right, var(--warning-color), #e68900);
+        }
+
+        .absence-danger {
+            background: linear-gradient(to right, var(--danger-color), #c62828);
+        }
+
+        .absence-max {
+            background: linear-gradient(to right, #000000, #333333);
+            color: #ff0000;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
         .selected-lesson {
             background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
             color: var(--white);
@@ -449,6 +466,32 @@
             box-shadow: 0 0 15px #25D366;
             transform: translateY(-2px);
         }
+
+        .excuse-form {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid var(--main-purple);
+        }
+
+        .two-hour-btn {
+            background: linear-gradient(to right, #9c27b0, #673ab7);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 5px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .two-hour-btn:hover {
+            background: linear-gradient(to right, #673ab7, #9c27b0);
+            box-shadow: 0 0 15px #9c27b0;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -469,17 +512,18 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="collegeSelect"><i class="fas fa-building"></i> هەڵبژاردنی کۆلێژ:</label>
                                     <select id="collegeSelect" class="form-control">
                                         <option value="کارگێری و ئابووری">کۆلێژی کارگێری و ئابووری</option>
                                         <option value="ئاداب">کۆلێژی ئاداب</option>
                                         <option value="زمان">کۆلێژی زمان</option>
+                                        <option value="کشتوکاڵ">کۆلێژی کشتوکاڵ</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="stageSelect"><i class="fas fa-graduation-cap"></i> هەڵبژاردنی قۆناغ:</label>
                                     <select id="stageSelect" class="form-control">
@@ -490,7 +534,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="departmentSelect"><i class="fas fa-book"></i> هەڵبژاردنی بەش:</label>
                                     <select id="departmentSelect" class="form-control">
@@ -498,7 +542,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="groupSelect"><i class="fas fa-users"></i> هەڵبژاردنی گروپ:</label>
                                     <select id="groupSelect" class="form-control">
@@ -509,16 +553,22 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="studentName"><i class="fas fa-user"></i> ناوی قوتابی:</label>
                                     <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="studentPhone"><i class="fas fa-phone"></i> ژمارەی مۆبایل:</label>
                                     <input type="tel" id="studentPhone" class="form-control" placeholder="٠٧٧٠ ١٢٣ ٤٥٦٧">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="studentEmail"><i class="fas fa-envelope"></i> ئیمەیڵ:</label>
+                                    <input type="email" id="studentEmail" class="form-control" placeholder="example@gmail.com">
                                 </div>
                             </div>
                         </div>
@@ -578,11 +628,11 @@
                             <tr>
                                 <th>ناو</th>
                                 <th>ژمارەی مۆبایل</th>
+                                <th>ئیمەیڵ</th>
                                 <th>کۆلێژ</th>
                                 <th>بەش</th>
                                 <th>گروپ</th>
                                 <th>ژمارەی غیاب (ئەم دەرسە)</th>
-                                <th>کاتی نەهاتنی قوتابی</th>
                                 <th>کردارەکان</th>
                             </tr>
                         </thead>
@@ -595,6 +645,7 @@
                 <div class="text-center mt-4">
                     <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
                     <button onclick="sendWhatsAppNotifications()" class="whatsapp-btn mb-3"><i class="fab fa-whatsapp"></i> ناردنی ئاگاداری بە واتسئەپ</button>
+                    <button onclick="sendEmailNotifications()" class="btn-grad btn-warning mb-3"><i class="fas fa-envelope"></i> ناردنی ئاگاداری بە ئیمەیڵ</button>
                 </div>
             </div>
         </div>
@@ -640,6 +691,7 @@
             const saveButton = document.getElementById('saveButton');
             const studentNameInput = document.getElementById('studentName');
             const studentPhoneInput = document.getElementById('studentPhone');
+            const studentEmailInput = document.getElementById('studentEmail');
             const collegeSelect = document.getElementById('collegeSelect');
             const stageSelect = document.getElementById('stageSelect');
             const departmentSelect = document.getElementById('departmentSelect');
@@ -660,7 +712,8 @@
             const collegeDepartments = {
                 "کارگێری و ئابووری": ["ژمێریاری", "ئامار", "ئابوری", "کارگێڕی کار", "دارای بانک", "بازاڕگەری"],
                 "ئاداب": ["مێژوو", "جوگرافیا", "فەلسەفە", "کاری کۆمەڵایەتی", "دەرونزانی", "ڕاگەیاندن", "شوێنەوار", "کۆمەڵناسی"],
-                "زمان": ["زمانی کوردی", "زمانی ئینگلیزی", "زمانی ئەڵمانی", "زمانی فارسی", "زمانی عربی", "زمانی تورکی", "زمانی فەڕەنسی"]
+                "زمان": ["زمانی کوردی", "زمانی ئینگلیزی", "زمانی ئەڵمانی", "زمانی فارسی", "زمانی عربی", "زمانی تورکی", "زمانی فەڕەنسی", "زمانی چینی"],
+                "کشتوکاڵ": ["سامانی ئاژەڵ", "پاراستنی ڕوەک", "پیشەسازی خۆراک", "خاک و ئاو", "بەرووبوومی کێڵگەکان", "دارستان", "ڕەزکەری", "سامانی ماسی و گیانەوەرە ئاوییەکان"]
             };
             
             // دانانی بەشەکان کاتێک کۆلێژ دەگۆڕدرێت
@@ -787,103 +840,62 @@
                     text: 'دڵنیایت دەتەوێت ئەم دەرسە بسڕیتەوە؟',
                     icon: 'warning',
                     showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
                     confirmButtonText: 'بەڵێ، بسڕەوە',
                     cancelButtonText: 'نەخێر'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const lessons = getLessons();
-                        const lessonToDelete = lessons[index];
-                        
-                        // سڕینەوەی دەرسەکە لە هەموو قوتابیان
-                        const colleges = ['کارگێری و ئابووری', 'ئاداب', 'زمان'];
-                        const stages = ['1', '2', '3', '4'];
-                        const departmentsAll = collegeDepartments;
-                        const groups = ['A', 'B', 'C', 'D'];
-                        
-                        colleges.forEach(college => {
-                            const depts = collegeDepartments[college] || [];
-                            depts.forEach(department => {
-                                groups.forEach(group => {
-                                    const key = `students_${college}_${stage}_${department}_${group}`;
-                                    const students = JSON.parse(localStorage.getItem(key)) || [];
-                                    
-                                    students.forEach(student => {
-                                        if (student.lessons && student.lessons[lessonToDelete]) {
-                                            delete student.lessons[lessonToDelete];
-                                        }
-                                    });
-                                    
-                                    localStorage.setItem(key, JSON.stringify(students));
-                                });
-                            });
-                        });
-                        
-                        // سڕینەوەی دەرسەکە لە لیستی دەرسەکان
                         lessons.splice(index, 1);
                         saveLessons(lessons);
-                        renderLessonTable();
                         
-                        if (currentLessonName === lessonToDelete) {
+                        // ئەگەر دەرسی سڕاوەکە هەر هەڵبژێردراو بوو، ئەوا هیچ دەرسێک هەڵمەبژێرە
+                        if (currentLessonName === lessons[index]) {
                             currentLessonName = '';
                             currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
                             currentLessonSpan.classList.add('no-lesson');
                         }
                         
+                        renderLessonTable();
                         renderTable();
-                        updateEmailLink();
-                        Swal.fire('سڕایەوە!', 'دەرسەکە سڕایەوە.', 'success');
                     }
                 });
             };
 
-            // گەڕان بەدوای قوتابی
-            searchInput.addEventListener('input', function () {
-                const searchValue = this.value.toLowerCase().trim();
-                const rows = document.querySelectorAll('#studentTable tbody tr');
-
-                rows.forEach(row => {
-                    const name = row.querySelector('td:first-child').textContent.toLowerCase();
-                    if (name.includes(searchValue)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
-            // تۆمارکردنی قوتابی
+            // زیادکردنی قوتابی
             saveButton.addEventListener('click', function () {
                 const name = studentNameInput.value.trim();
                 const phone = studentPhoneInput.value.trim();
+                const email = studentEmailInput.value.trim();
                 const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
 
-                if (!name) {
+                if (!name || !phone || !email) {
                     Swal.fire({
                         icon: 'error',
                         title: 'هەڵە',
-                        text: 'تکایە ناوی قوتابی بنووسە!',
+                        text: 'تکایە هەموو خانەکان پڕبکەوە!',
                     });
                     return;
                 }
 
-                if (!currentLessonName) {
+                if (!isValidEmail(email)) {
                     Swal.fire({
                         icon: 'error',
                         title: 'هەڵە',
-                        text: 'تکایە یەکێک لە دەرسەکان هەڵبژێرە!',
+                        text: 'تکایە ئیمەیڵێکی دروست بنووسە!',
                     });
                     return;
                 }
 
                 const students = getCurrentStudents();
                 
-                // پشکنینی ئەوەی کە قوتابی پێشتر تۆمارکراوە
-                const existingStudentIndex = students.findIndex(s => s.name === name);
-                
-                if (existingStudentIndex !== -1) {
+                // پشکنینی ئەوەی ئەم قوتابیە پێشتر تۆمارکراوە
+                const existingStudent = students.find(s => s.name === name && s.phone === phone);
+                if (existingStudent) {
                     Swal.fire({
                         icon: 'error',
                         title: 'هەڵە',
@@ -892,111 +904,50 @@
                     return;
                 }
 
-                const newStudent = {
+                students.push({
                     name,
                     phone,
+                    email,
                     college,
                     stage,
                     department,
                     group,
-                    lessons: {}
-                };
-                
-                newStudent.lessons[currentLessonName] = 0;
-                
-                students.push(newStudent);
+                    absences: {}
+                });
+
                 saveCurrentStudents(students);
                 renderTable();
-                updateEmailLink();
                 
+                // پاککردنەوەی خانەکان
                 studentNameInput.value = '';
                 studentPhoneInput.value = '';
+                studentEmailInput.value = '';
                 
                 Swal.fire({
                     icon: 'success',
-                    title: 'سەرکەوتووبوو!',
-                    text: 'قوتابیەکە بە سەرکەوتوویی تۆمارکرا.',
-                    timer: 1500,
-                    showConfirmButton: false
+                    title: 'سەرکەوتووبوو',
+                    text: 'قوتابیەکە بە سەرکەوتوویی تۆمارکرا!',
                 });
             });
 
-            // زیادکردنی غیاب
-            window.addAbsence = function (index) {
-                const now = Date.now();
-                if (now - lastAbsentClickTime < 1000) return; // ڕێگریکردن لە کلیلی دووبارە
-                lastAbsentClickTime = now;
-                
-                if (!currentLessonName) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'هەڵە',
-                        text: 'تکایە یەکێک لە دەرسەکان هەڵبژێرە!',
-                    });
-                    return;
-                }
-
-                const students = getCurrentStudents();
-                if (!students[index].lessons) {
-                    students[index].lessons = {};
-                }
-                
-                if (!students[index].lessons[currentLessonName]) {
-                    students[index].lessons[currentLessonName] = 0;
-                }
-                
-                students[index].lessons[currentLessonName]++;
-                saveCurrentStudents(students);
-                renderTable();
-                updateEmailLink();
-            };
-
-            // کەمکردنەوەی غیاب
-            window.removeAbsence = function (index) {
-                if (!currentLessonName) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'هەڵە',
-                        text: 'تکایە یەکێک لە دەرسەکان هەڵبژێرە!',
-                    });
-                    return;
-                }
-
-                const students = getCurrentStudents();
-                if (!students[index].lessons || !students[index].lessons[currentLessonName] || students[index].lessons[currentLessonName] <= 0) {
-                    return;
-                }
-                
-                students[index].lessons[currentLessonName]--;
-                saveCurrentStudents(students);
-                renderTable();
-                updateEmailLink();
-            };
-
-            // سڕینەوەی قوتابی
-            window.deleteStudent = function (index) {
-                Swal.fire({
-                    title: 'دڵنیایت؟',
-                    text: 'دڵنیایت دەتەوێت ئەم قوتابیە بسڕیتەوە؟',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'بەڵێ، بسڕەوە',
-                    cancelButtonText: 'نەخێر'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const students = getCurrentStudents();
-                        students.splice(index, 1);
-                        saveCurrentStudents(students);
-                        renderTable();
-                        updateEmailLink();
-                        Swal.fire('سڕایەوە!', 'قوتابیەکە سڕایەوە.', 'success');
-                    }
-                });
-            };
+            // پشکنینی ئیمەیڵ
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
 
             // نیشاندانی لیستی قوتابیان
             function renderTable() {
-                const students = getCurrentStudents();
+                let students = getCurrentStudents();
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                // گەڕان بە ناو
+                if (searchTerm) {
+                    students = students.filter(student => 
+                        student.name.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
                 studentTableBody.innerHTML = '';
                 
                 if (students.length === 0) {
@@ -1009,41 +960,192 @@
                 }
                 
                 students.forEach((student, index) => {
-                    const absenceCount = currentLessonName && student.lessons && student.lessons[currentLessonName] 
-                        ? student.lessons[currentLessonName] 
-                        : 0;
-                    
                     const row = document.createElement('tr');
+                    
+                    // ژمارەی غیابەکان بۆ دەرسی هەڵبژێردراو
+                    const absenceCount = currentLessonName ? (student.absences[currentLessonName] || 0) : 0;
+                    
+                    // دیاریکردنی ڕەنگی غیابەکان
+                    let badgeClass = 'absence-badge';
+                    if (absenceCount >= 7) {
+                        badgeClass += ' absence-max';
+                    } else if (absenceCount >= 5) {
+                        badgeClass += ' absence-danger';
+                    } else if (absenceCount >= 3) {
+                        badgeClass += ' absence-warning';
+                    }
+                    
                     row.innerHTML = `
                         <td>${student.name}</td>
-                        <td>${student.phone || '---'}</td>
+                        <td>${student.phone}</td>
+                        <td>${student.email}</td>
                         <td>${student.college}</td>
                         <td>${student.department}</td>
                         <td>${student.group}</td>
                         <td>
-                            <span class="absence-badge">${absenceCount}</span>
+                            <span class="${badgeClass}">${absenceCount} غیاب</span>
                         </td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="addAbsence(${index})">زیادکردنی غیاب</button>
-                            <button class="btn btn-info btn-sm" onclick="removeAbsence(${index})">کەمکردنەوەی غیاب</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" onclick="deleteStudent(${index})">سڕینەوە</button>
+                            <button class="btn btn-primary btn-sm btn-action" onclick="addAbsence(${index})"><i class="fas fa-user-minus"></i> غیاب</button>
+                            <button class="btn btn-warning btn-sm btn-action" onclick="showExcuseForm(${index})"><i class="fas fa-file-alt"></i> بەتن</button>
+                            <button class="btn btn-danger btn-sm btn-action" onclick="deleteStudent(${index})"><i class="fas fa-trash"></i> سڕینەوە</button>
                         </td>
                     `;
                     studentTableBody.appendChild(row);
                 });
             }
 
+            // زیادکردنی غیاب
+            window.addAbsence = function (index) {
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
+                
+                const now = Date.now();
+                // ڕێگە نەدەین لە 500 ملی چرکە لە ناوەڕاستدا دوو جار کلیک بکەیت
+                if (now - lastAbsentClickTime < 500) {
+                    return;
+                }
+                lastAbsentClickTime = now;
+                
+                const students = getCurrentStudents();
+                const student = students[index];
+                
+                // زیادکردنی غیاب بۆ دەرسی هەڵبژێردراو
+                if (!student.absences[currentLessonName]) {
+                    student.absences[currentLessonName] = 0;
+                }
+                
+                student.absences[currentLessonName]++;
+                
+                // پشکنینی ژمارەی غیابەکان و ئاگاداری
+                const absenceCount = student.absences[currentLessonName];
+                
+                if (absenceCount === 3) {
+                    // ئاگاداری بۆ ٣ غیاب
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'ئاگاداری',
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتە <strong>٣ غیاب</strong>! ئاگاداری دەبێتەوە.`,
+                    });
+                } else if (absenceCount === 5) {
+                    // کۆتایی هاتن بۆ ٥ غیاب
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'کۆتایی هاتن',
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتە <strong>٥ غیاب</strong>! کۆتایی بە خوێندن دێت.`,
+                    });
+                } else if (absenceCount === 7) {
+                    // قەدەغەکردنی غیاب بۆ ٧ غیاب
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'قەدەغەکردن',
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتە <strong>٧ غیاب</strong>! چیتر غیاب نادرێتەوە.`,
+                    });
+                }
+                
+                saveCurrentStudents(students);
+                renderTable();
+            };
+
+            // پیشاندانی فۆرمی بەتن
+            window.showExcuseForm = function (index) {
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
+                
+                const students = getCurrentStudents();
+                const student = students[index];
+                
+                Swal.fire({
+                    title: 'ناردنی بەتن',
+                    html: `بۆ قوتابی: <strong>${student.name}</strong><br>ژمارەی غیابەکان: <strong>${student.absences[currentLessonName] || 0}</strong>`,
+                    input: 'textarea',
+                    inputLabel: 'بەتنەکەت لێرە بنووسە:',
+                    inputPlaceholder: 'بەتنەکەت لێرە بنووسە...',
+                    showCancelButton: true,
+                    confirmButtonText: 'ناردنی بەتن',
+                    cancelButtonText: 'پاشگەزبوونەوە',
+                    preConfirm: (excuse) => {
+                        if (!excuse) {
+                            Swal.showValidationMessage('تکایە بەتنێک بنووسە');
+                        }
+                        return excuse;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // کەمکردنەوەی غیاب بە ١
+                        if (!student.absences[currentLessonName]) {
+                            student.absences[currentLessonName] = 0;
+                        }
+                        
+                        if (student.absences[currentLessonName] > 0) {
+                            student.absences[currentLessonName]--;
+                        }
+                        
+                        saveCurrentStudents(students);
+                        renderTable();
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سەرکەوتووبوو',
+                            html: `بەتنەکەت نێردرا و ژمارەی غیابەکانی <strong>${student.name}</strong> کەمکرایەوە بۆ <strong>${student.absences[currentLessonName]}</strong>`,
+                        });
+                    }
+                });
+            };
+
+            // سڕینەوەی قوتابی
+            window.deleteStudent = function (index) {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: 'دڵنیایت دەتەوێت ئەم قوتابیە بسڕیتەوە؟',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const students = getCurrentStudents();
+                        students.splice(index, 1);
+                        saveCurrentStudents(students);
+                        renderTable();
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سڕایەوە',
+                            text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە',
+                        });
+                    }
+                });
+            };
+
+            // گەڕان لە لیستی قوتابیان
+            searchInput.addEventListener('input', renderTable);
+
             // سڕینەوەی هەموو داتاکان
             window.clearAllData = function () {
                 Swal.fire({
                     title: 'دڵنیایت؟',
-                    text: 'ئەم کارە هەموو داتاکان دەسڕێتەوە و ناتوانیت بیانگێڕیتەوە!',
+                    text: 'ئەم کارە هەموو داتاکان دەسڕێتەوە و ناتوانیت بیانگەڕێنیتەوە!',
                     icon: 'warning',
                     showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
                     confirmButtonText: 'بەڵێ، هەموو داتاکان بسڕەوە',
-                    cancelButtonText: 'نەخێر'
+                    cancelButtonText: 'پاشگەزبوونەوە'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         localStorage.clear();
@@ -1052,15 +1154,81 @@
                         currentLessonName = '';
                         currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
                         currentLessonSpan.classList.add('no-lesson');
-                        updateEmailLink();
-                        Swal.fire('سڕایەوە!', 'هەموو داتاکان سڕایەوە.', 'success');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سڕایەوە',
+                            text: 'هەموو داتاکان بە سەرکەوتوویی سڕدرایەوە',
+                        });
                     }
                 });
             };
 
             // پرینتکردنی لیستی قوتابیان
             window.printStudentTable = function () {
-                window.print();
+                const printWindow = window.open('', '_blank');
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                
+                let content = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>لیستی قوتابیان - ${college} - ${department}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; direction: rtl; }
+                            h1, h2, h3 { text-align: center; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                            th { background-color: #f2f2f2; }
+                            .footer { text-align: center; margin-top: 30px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>زانکۆی سەلاحەدین - هەولێر</h1>
+                        <h2>لیستی قوتابیان</h2>
+                        <h3>کۆلێژ: ${college} - بەش: ${department} - قۆناغ: ${stage} - گروپ: ${group}</h3>
+                        <h3>دەرس: ${currentLessonName || 'هیچ دەرسێک'}</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ناو</th>
+                                    <th>ژمارەی مۆبایل</th>
+                                    <th>ئیمەیڵ</th>
+                                    <th>ژمارەی غیاب</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                const students = getCurrentStudents();
+                students.forEach(student => {
+                    const absenceCount = currentLessonName ? (student.absences[currentLessonName] || 0) : 0;
+                    content += `
+                        <tr>
+                            <td>${student.name}</td>
+                            <td>${student.phone}</td>
+                            <td>${student.email}</td>
+                            <td>${absenceCount}</td>
+                        </tr>
+                    `;
+                });
+                
+                content += `
+                            </tbody>
+                        </table>
+                        <div class="footer">
+                            <p>بەرواری پرینت: ${new Date().toLocaleDateString('ar-IQ')}</p>
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                printWindow.document.write(content);
+                printWindow.document.close();
+                printWindow.print();
             };
 
             // ناردنی ئاگاداری بە واتسئەپ
@@ -1069,95 +1237,141 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'هەڵە',
-                        text: 'تکایە یەکێک لە دەرسەکان هەڵبژێرە!',
+                        text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
                     });
                     return;
                 }
                 
                 const students = getCurrentStudents();
-                const absentStudents = students.filter(student => 
-                    student.lessons && student.lessons[currentLessonName] && student.lessons[currentLessonName] > 0
-                );
+                const studentsWithAbsence = students.filter(student => {
+                    const absenceCount = student.absences[currentLessonName] || 0;
+                    return absenceCount >= 3;
+                });
                 
-                if (absentStudents.length === 0) {
+                if (studentsWithAbsence.length === 0) {
                     Swal.fire({
                         icon: 'info',
-                        title: 'هیچ غیابێک نیە',
-                        text: 'هیچ قوتابیەک غیابی ئەم دەرسە نیە بۆ ناردنی ئاگاداری.',
+                        title: 'هیچ ئاگادارییەک نیە',
+                        text: 'هیچ قوتابیەک نیە کە ژمارەی غیابەکانی ٣ یان زیاتر بێت',
                     });
                     return;
                 }
                 
-                let message = `*ئاگاداری غیاب - ${currentLessonName}*\n\n`;
-                message += `ژمارەی کۆی غیابەکان بۆ هەر قوتابیەک:\n\n`;
+                let message = `ئاگاداری غیاب - دەرس: ${currentLessonName}\n\n`;
                 
-                absentStudents.forEach(student => {
-                    message += `👤 ${student.name}: ${student.lessons[currentLessonName]} غیاب\n`;
+                studentsWithAbsence.forEach(student => {
+                    const absenceCount = student.absences[currentLessonName] || 0;
+                    message += `قوتابی: ${student.name} - ژمارەی غیاب: ${absenceCount}\n`;
                 });
-                
-                message += `\nتکایە غیابەکان چاک بکەنەوە.`;
                 
                 // دروستکردنی لینکی واتسئەپ
                 const encodedMessage = encodeURIComponent(message);
                 const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
                 
-                // کردنەوەی لینک لە تابێکی نوێ
+                // کردنەوەی لینکی واتسئەپ لە تابێکی نوێ
                 window.open(whatsappUrl, '_blank');
+            };
+
+            // ناردنی ئاگاداری بە ئیمەیڵ
+            window.sendEmailNotifications = function () {
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
                 
-                // ئاگاداری سەرکەوتووبوون
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ئاگاداریەکان نێردرا',
-                    text: 'ئاگاداری غیابەکان بە سەرکەوتوویی نێردرا بۆ واتسئەپ.',
+                const students = getCurrentStudents();
+                const studentsWithAbsence = students.filter(student => {
+                    const absenceCount = student.absences[currentLessonName] || 0;
+                    return absenceCount >= 3;
                 });
+                
+                if (studentsWithAbsence.length === 0) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'هیچ ئاگادارییەک نیە',
+                        text: 'هیچ قوتابیەک نیە کە ژمارەی غیابەکانی ٣ یان زیاتر بێت',
+                    });
+                    return;
+                }
+                
+                let subject = `ئاگاداری غیاب - دەرس: ${currentLessonName}`;
+                let body = `ئاگاداری غیاب بۆ دەرسی ${currentLessonName}\n\n`;
+                
+                studentsWithAbsence.forEach(student => {
+                    const absenceCount = student.absences[currentLessonName] || 0;
+                    body += `قوتابی: ${student.name} - ژمارەی غیاب: ${absenceCount}\n`;
+                });
+                
+                body += `\nبەروار: ${new Date().toLocaleDateString('ar-IQ')}`;
+                
+                // دروستکردنی لینکی ئیمەیڵ
+                const encodedSubject = encodeURIComponent(subject);
+                const encodedBody = encodeURIComponent(body);
+                const emailUrl = `mailto:?subject=${encodedSubject}&body=${encodedBody}`;
+                
+                // کردنەوەی لینکی ئیمەیڵ
+                window.location.href = emailUrl;
             };
 
             // نوێکردنەوەی لینکی ئیمەیڵ
             function updateEmailLink() {
-                const students = getCurrentStudents();
-                const absentStudents = students.filter(student => 
-                    currentLessonName && student.lessons && student.lessons[currentLessonName] && student.lessons[currentLessonName] > 0
-                );
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
                 
-                let emailBody = `لیستی غیابەکانی قوتابیان بۆ دەرسی ${currentLessonName}:\n\n`;
+                let subject = `لیستی غیابەکانی قوتابیان - ${college} - ${department}`;
+                let body = `لیستی غیابەکانی قوتابیان\n\n`;
+                body += `کۆلێژ: ${college}\n`;
+                body += `بەش: ${department}\n`;
+                body += `قۆناغ: ${stage}\n`;
+                body += `گروپ: ${group}\n`;
                 
-                if (absentStudents.length === 0) {
-                    emailBody += 'هیچ غیابێک تۆمارنەکراوە.\n';
+                if (currentLessonName) {
+                    subject += ` - ${currentLessonName}`;
+                    body += `دەرس: ${currentLessonName}\n\n`;
                 } else {
-                    absentStudents.forEach(student => {
-                        emailBody += `- ${student.name}: ${student.lessons[currentLessonName]} غیاب\n`;
-                    });
+                    body += `دەرس: هەموو دەرسەکان\n\n`;
                 }
                 
-                emailBody += `\n\nئەم ئیمەیڵە لەلایەن سیستەمی غیاباتی قوتابیانەوە دروست کراوە.`;
+                const students = getCurrentStudents();
                 
-                const subject = emailSubject.value || `لیستی غیابەکانی قوتابیان - ${currentLessonName}`;
-                const message = emailMessage.value || emailBody;
+                if (students.length > 0) {
+                    body += "ناو\tژمارەی مۆبایل\tئیمەیڵ\tژمارەی غیاب\n";
+                    
+                    students.forEach(student => {
+                        let absenceCount = 0;
+                        if (currentLessonName) {
+                            absenceCount = student.absences[currentLessonName] || 0;
+                        } else {
+                            // کۆی گشتی غیابەکان لە هەموو دەرسەکان
+                            absenceCount = Object.values(student.absences).reduce((sum, count) => sum + count, 0);
+                        }
+                        
+                        body += `${student.name}\t${student.phone}\t${student.email}\t${absenceCount}\n`;
+                    });
+                } else {
+                    body += "هیچ قوتابیەک تۆمارنەکراوە\n";
+                }
                 
-                const mailtoLink = `mailto:${emailInput.value}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
-                emailLink.href = mailtoLink;
+                body += `\nبەروار: ${new Date().toLocaleDateString('ar-IQ')}`;
+                
+                emailSubject.value = subject;
+                emailMessage.value = body;
+                
+                const encodedSubject = encodeURIComponent(subject);
+                const encodedBody = encodeURIComponent(body);
+                emailLink.href = `mailto:${emailInput.value || ''}?subject=${encodedSubject}&body=${encodedBody}`;
             }
 
-            // زیادکردنی گوێگرتنەکانی گۆڕانکاری بۆ نوێکردنەوەی لینکی ئیمەیڵ
+            // گۆڕانکاری لە ناونیشانی ئیمەیڵ
             emailInput.addEventListener('input', updateEmailLink);
             emailSubject.addEventListener('input', updateEmailLink);
             emailMessage.addEventListener('input', updateEmailLink);
-            
-            // گوێگرتن لە گۆڕانکاری لە هەڵبژاردنەکان بۆ نوێکردنەوەی لیستەکان
-            stageSelect.addEventListener('change', function() {
-                renderTable();
-                updateEmailLink();
-            });
-            
-            departmentSelect.addEventListener('change', function() {
-                renderTable();
-                updateEmailLink();
-            });
-            
-            groupSelect.addEventListener('change', function() {
-                renderTable();
-                updateEmailLink();
-            });
 
             // دەستپێکردنی سەرەتا
             renderLessonTable();
