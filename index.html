@@ -1,319 +1,1101 @@
 <!DOCTYPE html>
-<html lang="ku" dir="rtl">
+<html lang="ku">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فۆڕمی لۆگین - کۆلێژی کارگێری و ئابووری</title>
+    <title>سیستەمی غیاباتی قوتابیان - کۆلێژی کارگێری و ئابووری</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --main-purple: #6a0dad;
+            --dark-purple: #4b0082;
+            --light-purple: #9370db;
+            --accent-color: #ff5722;
+            --black: #222;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #cccccc;
+            --dark-gray: #555;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --success-color: #4caf50;
+        }
+
         body {
-            background: linear-gradient(-45deg, #2d1b69, #4b0082, #1a1a1a, #6a0dad);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            text-align: right;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        html, body {
+            padding: 0;
+            background: linear-gradient(135deg, rgba(106, 13, 173, 0.85), rgba(75, 0, 130, 0.9));
             background-size: cover;
-            background-repeat: no-repeat;
-            height: 100%;
-            font-family: 'Numans', sans-serif;
-        }
-
-        input {
-            color: aliceblue;
-        }
-
-        .login-container {
-            background-color: rgba(0, 0, 0, 0.5) !important;
-            border: 10px ridge #6a0dad;
-            padding: 20px 40px;
-            border-radius: 90px;
-            box-shadow: 0px 0px 50px 0px rgba(106, 13, 173, 0.8);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            animation: containerPulse 3s infinite alternate;
-        }
-
-        @keyframes containerPulse {
-            0% { box-shadow: 0px 0px 30px 0px rgba(106, 13, 173, 0.6); }
-            100% { box-shadow: 0px 0px 60px 0px rgba(106, 13, 173, 1); }
-        }
-
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-            animation: textGlow 2s infinite alternate;
-        }
-
-        @keyframes textGlow {
-            0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
-            100% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
-        }
-
-        .login-container input[type="text"],
-        .login-container input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 2px solid #4b0082;
-            border-radius: 100px;
-            font-size: 16px;
+            color: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
             text-align: right;
-            background-color: rgba(75, 0, 130, 0.5) !important;
-            transition: all 0.3s ease;
-            animation: inputSlide 0.5s forwards;
-            opacity: 0;
-            transform: translateY(20px);
+            min-height: 100vh;
         }
 
-        @keyframes inputSlide {
-            to { opacity: 1; transform: translateY(0); }
+        .container {
+            background-color: rgba(0, 0, 0, 0.75);
+            border: 2px solid var(--main-purple);
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(106, 13, 173, 0.6);
         }
 
-        .login-container input[type="text"] {
-            animation-delay: 0.3s;
-        }
-
-        .login-container input[type="password"] {
-            animation-delay: 0.5s;
-        }
-
-        .login-container input[type="text"]:focus,
-        .login-container input[type="password"]:focus {
-            outline: none;
-            border-color: #9370db;
-            box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);
-        }
-
-        .login-container input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: rgba(106, 13, 173, 0.7) !important;
-            border-radius: 90px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            border: 3px solid #9370db;
-            transition: all 0.3s ease;
-            animation: buttonFade 0.8s forwards;
-            opacity: 0;
-            animation-delay: 0.7s;
-        }
-
-        @keyframes buttonFade {
-            to { opacity: 1; }
-        }
-
-        .login-container input[type="submit"]:hover {
-            background-color: #4b0082;
-            box-shadow: 0px 0px 15px 0px rgba(106, 13, 173, 0.8);
-            transform: scale(1.05);
-        }
-
-        .login-container .error-message {
-            color: #ff6b6b;
-            margin-top: 10px;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
-        img {
-            border-radius: 400px;
-            max-width: 100%;
-            height: auto;
-            border: 3px solid #6a0dad;
-            animation: imageRotate 10s infinite linear;
-        }
-
-        @keyframes imageRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .password-container {
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 2px solid var(--main-purple);
             position: relative;
-            width: 100%;
-            animation: inputSlide 0.5s forwards;
-            opacity: 0;
-            animation-delay: 0.5s;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 18px;
-            color: #9370db;
-            transition: all 0.3s ease;
-            animation: fadeIn 1s forwards;
-            opacity: 0;
-            animation-delay: 0.8s;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         @keyframes fadeIn {
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .toggle-password:hover {
-            color: #6a0dad;
-            transform: translateY(-50%) scale(1.2);
+        .logo-container {
+            margin: 0 auto 20px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid var(--main-purple);
+            box-shadow: 0 0 25px var(--light-purple);
         }
 
-        label {
-            color: #ffffff;
-            direction: rtl;
-            text-align: left;
-            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            display: block;
-            margin-bottom: 5px;
-            animation: labelSlide 0.5s forwards;
-            opacity: 0;
-            transform: translateX(20px);
+        .logo-container img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        @keyframes labelSlide {
-            to { opacity: 1; transform: translateX(0); }
+        h1, h2 {
+            color: var(--white);
+            text-shadow: 0 0 10px var(--main-purple);
+            font-family: 'Times New Roman', serif;
+            margin-bottom: 20px;
         }
 
-        form label:nth-child(1) {
-            animation-delay: 0.2s;
+        .card {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--main-purple);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.4);
         }
 
-        form label:nth-child(3) {
-            animation-delay: 0.4s;
+        .card-header {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            border-bottom: 1px solid var(--main-purple);
+            border-radius: 10px 10px 0 0 !important;
+            padding: 12px 20px;
+            font-weight: bold;
         }
 
-        /* Media Queries بۆ مۆبایل */
-        @media only screen and (max-width: 600px) {
-            .login-container {
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border: 2px solid var(--main-purple);
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: var(--white);
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--light-purple);
+            border-color: var(--light-purple);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(106, 13, 173, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table th {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            border: none;
+        }
+
+        .table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(106, 13, 173, 0.3);
+            text-align: center;
+            color: var(--white);
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease;
+        }
+
+        .table tr:nth-child(even) td {
+            background-color: rgba(106, 13, 173, 0.15);
+        }
+
+        .table tr:hover td {
+            background-color: rgba(106, 13, 173, 0.3);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--main-purple), var(--dark-purple));
+            color: var(--white);
+            border: 2px solid var(--light-purple);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            box-shadow: 0 0 15px var(--light-purple);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(to right, var(--accent-color), #d63b18);
+            color: var(--white);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(to right, #d63b18, var(--accent-color));
+            box-shadow: 0 0 15px var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(to right, #28a745, #20c997);
+            color: var(--white);
+            border: 2px solid #28a745;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(to right, #20c997, #28a745);
+            box-shadow: 0 0 15px #28a745;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: linear-gradient(to right, #ffc107, #fd7e14);
+            color: var(--white);
+            border: 2px solid #ffc107;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(to right, #fd7e14, #ffc107);
+            box-shadow: 0 0 15px #ffc107;
+            transform: translateY(-2px);
+        }
+
+        .btn-action {
+            min-width: 90px;
+            margin: 3px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .btn-grad {
+            background-image: linear-gradient(to right, var(--main-purple) 0%, var(--light-purple) 51%, var(--dark-purple) 100%);
+            margin: 10px;
+            padding: 15px 45px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 200% auto;
+            color: var(--white);
+            box-shadow: 0 0 20px var(--main-purple);
+            border-radius: 50px;
+            display: inline-block;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-grad:hover {
+            background-position: right center;
+            color: var(--white);
+            text-decoration: none;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--light-purple);
+        }
+
+        .btn-grad:active {
+            transform: scale(0.98);
+            transition: transform 0.1s;
+        }
+
+        .absence-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            border-radius: 50px;
+            margin: 3px;
+            font-size: 0.85em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .absence-warning {
+            background: linear-gradient(to right, var(--warning-color), #e68900);
+        }
+
+        .absence-danger {
+            background: linear-gradient(to right, var(--danger-color), #c62828);
+        }
+
+        .absence-max {
+            background: linear-gradient(to right, #000000, #333333);
+            color: #ff0000;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .selected-lesson {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            color: var(--white);
+            padding: 12px 20px;
+            border-radius: 50px;
+            margin: 10px 0;
+            display: inline-block;
+            box-shadow: 0 0 15px var(--main-purple);
+        }
+
+        .no-lesson {
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        .delete-icon {
+            cursor: pointer;
+            color: var(--accent-color);
+            margin-left: 10px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-icon:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+
+        .lesson-absence {
+            background-color: rgba(106, 13, 173, 0.3);
+            padding: 6px 10px;
+            margin: 3px;
+            border-radius: 5px;
+            color: var(--white);
+            font-size: 0.9em;
+        }
+
+        #selectedLessonDisplay {
+            border-radius: 10px;
+            padding: 15px 20px;
+            background: linear-gradient(to right, rgba(75, 0, 130, 0.7), rgba(106, 13, 173, 0.7));
+            border: 1px solid var(--main-purple);
+            color: var(--white);
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--main-purple);
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--main-purple);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100px;
+            height: 2px;
+            background: var(--light-purple);
+        }
+
+        @media (max-width: 768px) {
+            .container {
                 padding: 15px;
-                border-radius: 50px;
+                border-radius: 10px;
             }
-
-            .login-container h2 {
-                font-size: 1.5em;
+            
+            .table th, .table td {
+                padding: 8px 10px;
+                font-size: 14px;
             }
-
-            .login-container input[type="text"],
-            .login-container input[type="password"] {
+            
+            .btn {
+                padding: 10px 18px;
                 font-size: 14px;
             }
 
-            .login-container input[type="submit"] {
+            .btn-grad {
+                padding: 12px 30px;
                 font-size: 14px;
             }
+        }
+
+        .stats-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--main-purple);
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.3);
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--light-purple);
+            text-shadow: 0 0 10px var(--main-purple);
+        }
+
+        .welcome-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .teacher-name {
+            color: var(--light-purple);
+            font-weight: bold;
+        }
+
+        .email-icon {
+            color: #D44638;
+            font-size: 20px;
+            margin-right: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .email-icon:hover {
+            color: #ff6b6b;
+            transform: scale(1.2);
+        }
+
+        .email-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <img src="logo.jpg" alt="">
-        <h2>SALLAHADIN UNIVERSITY</h2>
-        <form id="loginForm">
-            <label for="">USER</label>
-            <input type="text" id="username" required="">
-            <div class="password-container">
-                <label for="">PASS</label>
-                <input type="password" id="password" required="">
-                <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+    <div class="container">
+        <div class="welcome-header">
+            <div class="logo-container">
+                <!-- شوێن بۆ لۆگۆ -->
+                <div style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; color: var(--light-purple); font-size: 14px; text-align: center;">
+                    لۆگۆی کۆلێژ
+                </div>
             </div>
-            <br>
-            <input type="submit" value="چوونەژوورەوە">
-        </form>
-        <p class="error-message" id="errorMessage"></p>
+            <h1>سیستەمی غیاباتی قوتابیان</h1>
+            <div class="welcome-message">
+                <p>بەخێربێیت <span class="teacher-name">مامۆستای بەڕێز</span></p>
+                <p>تکایە بە وردی کار لەسەر غیابی قوتابیان بکە</p>
+            </div>
+            <p>زانکۆی سەلاحەدین - هەولێر</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-plus"></i> فۆرمی زیادکردنی قوتابی
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="collegeSelect"><i class="fas fa-building"></i> هەڵبژاردنی کۆلێژ:</label>
+                                    <select id="collegeSelect" class="form-control">
+                                        <option value="کارگێری و ئابووری">کۆلێژی کارگێری و ئابووری</option>
+                                        <option value="ئاداب">کۆلێژی ئاداب</option>
+                                        <option value="زمان">کۆلێژی زمان</option>
+                                        <option value="کشتوکاڵ">کۆلێژی کشتوکاڵ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="stageSelect"><i class="fas fa-graduation-cap"></i> هەڵبژاردنی قۆناغ:</label>
+                                    <select id="stageSelect" class="form-control">
+                                        <option value="1">قۆناغی 1</option>
+                                        <option value="2">قۆناغی 2</option>
+                                        <option value="3">قۆناغی 3</option>
+                                        <option value="4">قۆناغی 4</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="departmentSelect"><i class="fas fa-book"></i> هەڵبژاردنی بەش:</label>
+                                    <select id="departmentSelect" class="form-control">
+                                        <!-- بەشەکان بەپێی کۆلێژ دەگۆڕدرێن -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="groupSelect"><i class="fas fa-users"></i> هەڵبژاردنی گروپ:</label>
+                                    <select id="groupSelect" class="form-control">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="studentName"><i class="fas fa-user"></i> ناوی قوتابی:</label>
+                                    <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="studentEmail"><i class="fas fa-envelope"></i> ئیمەیڵ:</label>
+                                    <input type="email" id="studentEmail" class="form-control" placeholder="example@gmail.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap justify-content-center mt-4">
+                            <button id="saveButton" class="btn-grad btn-success mb-3 flex-grow-1 mx-2"><i class="fas fa-save"></i> تۆمارکردن</button>
+                            <button onclick="clearAllData()" class="btn-grad btn-danger mb-3 flex-grow-1 mx-2"><i class="fas fa-trash-alt"></i> سڕینەوەی هەموو داتاکان</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2 class="section-title"><i class="fas fa-book-open"></i> لیستی دەرسەکان</h2>
+                <button onclick="addLesson()" class="btn-grad btn-primary mb-3"><i class="fas fa-plus-circle"></i> زیادکردنی دەرس</button>
+                
+                <div class="table-responsive">
+                    <table id="lessonTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ناوی دەرس</th>
+                                <th>کردارەکان</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- لیستی دەرسەکان لێرە دەخرێتەوە -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2 class="section-title"><i class="fas fa-user-graduate"></i> لیستی قوتابیان</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="searchInput"><i class="fas fa-search"></i> گەڕان بۆ ناوی قوتابی:</label>
+                            <input type="text" id="searchInput" class="form-control" placeholder="گەڕان بۆ ناوی قوتابی...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="selectedLessonDisplay" class="text-center">
+                            <strong>دەرسی هەڵبژێردراو: </strong>
+                            <span id="currentLessonSpan" class="no-lesson">هیچ دەرسێک هەڵنەبژێردراوە</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="studentTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ناو</th>
+                                <th>ئیمەیڵ</th>
+                                <th>کۆلێژ</th>
+                                <th>بەش</th>
+                                <th>گروپ</th>
+                                <th>ژمارەی غیاب (ئەم دەرسە)</th>
+                                <th>کردارەکان</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- لیستی قوتابیان لێرە دەخرێتەوە -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // فەنکشنی پەڕگەی داتابەیس
-        function getDatabase() {
-            const database = localStorage.getItem('attendance_database');
-            return database ? JSON.parse(database) : null;
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const saveButton = document.getElementById('saveButton');
+            const studentNameInput = document.getElementById('studentName');
+            const studentEmailInput = document.getElementById('studentEmail');
+            const collegeSelect = document.getElementById('collegeSelect');
+            const stageSelect = document.getElementById('stageSelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            const groupSelect = document.getElementById('groupSelect');
+            const studentTableBody = document.querySelector('#studentTable tbody');
+            const searchInput = document.getElementById('searchInput');
+            const lessonTableBody = document.querySelector('#lessonTable tbody');
+            const currentLessonSpan = document.getElementById('currentLessonSpan');
 
-        // فەنکشنی گۆڕینی دەرخستنی وشەی نهێنی
-        function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.querySelector('.toggle-password');
+            let currentLessonName = '';
+            let lastAbsentClickTime = 0;
             
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.textContent = '🔒';
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.textContent = '👁️';
-            }
-        }
-
-        // فەنکشنی چوونەژوورەوە
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            // پێرستی بەشەکان بەپێی کۆلێژ
+            const collegeDepartments = {
+                "کارگێری و ئابووری": ["ژمێریاری", "ئامار", "ئابوری", "کارگێڕی کار", "دارای بانک", "بازاڕگەری"],
+                "ئاداب": ["مێژوو", "جوگرافیا", "فەلسەفە", "کاری کۆمەڵایەتی", "دەرونزانی", "ڕاگەیاندن", "شوێنەوار", "کۆمەڵناسی"],
+                "زمان": ["زمانی کوردی", "زمانی ئینگلیزی", "زمانی ئەڵمانی", "زمانی فارسی", "زمانی عربی", "زمانی تورکی", "زمانی فەڕەنسی", "زمانی چینی"],
+                "کشتوکاڵ": ["سامانی ئاژەڵ", "پاراستنی ڕوەک", "پیشەسازی خۆراک", "خاک و ئاو", "بەرووبوومی کێڵگەکان", "دارستان", "ڕەزکەری", "سامانی ماسی و گیانەوەرە ئاوییەکان"]
+            };
             
-            // وەرگرتنی داتابەیسەکە
-            const db = getDatabase();
+            // دانانی بەشەکان کاتێک کۆلێژ دەگۆڕدرێت
+            collegeSelect.addEventListener('change', function() {
+                updateDepartments();
+                renderTable();
+            });
             
-            if (!db || !db.teachers) {
-                document.getElementById('errorMessage').textContent = "هیچ داتابەیسێک بوونی نییە! تکایە پەیوەندی بە بەڕێوەبەرەوە بکە.";
-                return;
-            }
-            
-            // پشکنینی یوزەر و پاسۆرد لە داتابەیسەکە
-            const teacher = db.teachers.find(t => t.username === username && t.password === password);
-            
-            if (teacher) {
-                // چوونەژوورەوە سەرکەوتوو بوو
-                document.getElementById('errorMessage').textContent = "";
-                alert(`بەخێربێیت ${teacher.name}! چوونەژوورەوە سەرکەوتوو بوو.`);
+            // نوێکردنەوەی لیستی بەشەکان
+            function updateDepartments() {
+                const college = collegeSelect.value;
+                const departments = collegeDepartments[college] || [];
                 
-                // گواستنەوە بۆ پەڕەی سیستەمی غیاباتی قوتابیان
-                window.location.href = "abdulkhalqzahir.html";
-            } else {
-                // چوونەژوورەوە سەرکەوتوو نەبوو
-                document.getElementById('errorMessage').textContent = "ناوی بەکارهێنەر یان پاسوۆرد هەڵەیە!";
+                departmentSelect.innerHTML = '';
+                departments.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept;
+                    option.textContent = dept;
+                    departmentSelect.appendChild(option);
+                });
             }
-        });
-
-        // دروستکردنی داتای نموونەیی ئەگەر داتابەیسەکە بوونی نییە
-        document.addEventListener('DOMContentLoaded', function() {
-            const db = getDatabase();
             
-            if (!db) {
-                // داتای نموونەیی بۆ تێستکردن
-                const sampleData = {
-                    teachers: [
-                        { name: "مامۆستای سەرەکی", username: "admin", password: "admin123" },
-                        { name: "عەبدولخالق زاهیر", username: "abdulkhalq", password: "password123" }
-                    ],
-                    students: [],
-                    lessons: [],
-                    attendance: []
-                };
-                
-                localStorage.setItem('attendance_database', JSON.stringify(sampleData));
-                console.log("داتابەیسێکی نموونەی دروستکرا بۆ تێستکردن");
+            // دەستپێکردنی لیستی بەشەکان
+            updateDepartments();
+
+            // وەرگرتنی لیستی قوتابیان لە localStorage
+            function getCurrentStudents() {
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const key = `students_${college}_${stage}_${department}_${group}`;
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
             }
+
+            // هەڵگرتنی لیستی قوتابیان لە localStorage
+            function saveCurrentStudents(students) {
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const key = `students_${college}_${stage}_${department}_${group}`;
+                localStorage.setItem(key, JSON.stringify(students));
+            }
+
+            // وەرگرتنی لیستی دەرسەکان لە localStorage
+            function getLessons() {
+                const data = localStorage.getItem('lessons');
+                return data ? JSON.parse(data) : [];
+            }
+
+            // هەڵگرتنی لیستی دەرسەکان لە localStorage
+            function saveLessons(lessons) {
+                localStorage.setItem('lessons', JSON.stringify(lessons));
+            }
+
+            // نیشاندانی لیستی دەرسەکان
+            function renderLessonTable() {
+                const lessons = getLessons();
+                lessonTableBody.innerHTML = '';
+                
+                if (lessons.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="2" class="text-center">هیچ دەرسێک تۆمارنەکراوە</td>
+                    `;
+                    lessonTableBody.appendChild(row);
+                    return;
+                }
+                
+                lessons.forEach((lesson, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${lesson}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="selectLesson('${lesson}')">هەڵبژاردن</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteLesson(${index})">سڕینەوە</button>
+                        </td>
+                    `;
+                    lessonTableBody.appendChild(row);
+                });
+            }
+
+            // زیادکردنی دەرس
+            window.addLesson = function () {
+                const lessonName = prompt("ناوی دەرسەکە بنووسە:");
+                if (!lessonName || lessonName.trim() === '') return;
+
+                const lessons = getLessons();
+                if (lessons.includes(lessonName)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم دەرسە پێشتر تۆمارکراوە!',
+                    });
+                    return;
+                }
+
+                lessons.push(lessonName);
+                saveLessons(lessons);
+                renderLessonTable();
+                
+                // ئەگەر هیچ دەرسێک هەڵنەبژێردرابوو، ئەوا ئەم دەرسە هەڵبژێرە
+                if (currentLessonName === '') {
+                    selectLesson(lessonName);
+                }
+            };
+
+            // هەڵبژاردنی دەرس
+            window.selectLesson = function (lessonName) {
+                currentLessonName = lessonName;
+                currentLessonSpan.textContent = lessonName;
+                currentLessonSpan.classList.remove('no-lesson');
+                renderTable();
+            };
+
+            // سڕینەوەی دەرس
+            window.deleteLesson = function (index) {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: 'دڵنیایت دەتەوێت ئەم دەرسە بسڕیتەوە؟',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const lessons = getLessons();
+                        lessons.splice(index, 1);
+                        saveLessons(lessons);
+                        
+                        // ئەگەر دەرسی سڕاوەکە هەر هەڵبژێردراو بوو، ئەوا هیچ دەرسێک هەڵمەبژێرە
+                        if (currentLessonName === lessons[index]) {
+                            currentLessonName = '';
+                            currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
+                            currentLessonSpan.classList.add('no-lesson');
+                        }
+                        
+                        renderLessonTable();
+                        renderTable();
+                    }
+                });
+            };
+
+            // زیادکردنی قوتابی
+            saveButton.addEventListener('click', function () {
+                const name = studentNameInput.value.trim();
+                const email = studentEmailInput.value.trim();
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+
+                if (!name || !email) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە هەموو خانەکان پڕبکەوە!',
+                    });
+                    return;
+                }
+
+                if (!isValidEmail(email)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە ئیمەیڵێکی دروست بنووسە!',
+                    });
+                    return;
+                }
+
+                const students = getCurrentStudents();
+                
+                // پشکنینی ئەوەی ئەم قوتابیە پێشتر تۆمارکراوە
+                const existingStudent = students.find(s => s.name === name && s.email === email);
+                if (existingStudent) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم قوتابیە پێشتر تۆمارکراوە!',
+                    });
+                    return;
+                }
+
+                students.push({
+                    name,
+                    email,
+                    college,
+                    stage,
+                    department,
+                    group,
+                    absences: {}
+                });
+
+                saveCurrentStudents(students);
+                renderTable();
+                
+                // پاککردنەوەی خانەکان
+                studentNameInput.value = '';
+                studentEmailInput.value = '';
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'سەرکەوتووبوو',
+                    text: 'قوتابیەکە بە سەرکەوتوویی تۆمارکرا!',
+                });
+            });
+
+            // پشکنینی ئیمەیڵ
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // نیشاندانی لیستی قوتابیان
+            function renderTable() {
+                let students = getCurrentStudents();
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                // گەڕان بە ناو
+                if (searchTerm) {
+                    students = students.filter(student => 
+                        student.name.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                studentTableBody.innerHTML = '';
+                
+                if (students.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="7" class="text-center">هیچ قوتابیەک تۆمارنەکراوە</td>
+                    `;
+                    studentTableBody.appendChild(row);
+                    return;
+                }
+                
+                students.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // ژمارەی غیابەکان بۆ دەرسی هەڵبژێردراو
+                    const absenceCount = currentLessonName ? (student.absences[currentLessonName] || 0) : 0;
+                    
+                    // دیاریکردنی ڕەنگی غیابەکان
+                    let badgeClass = 'absence-badge';
+                    if (absenceCount >= 7) {
+                        badgeClass += ' absence-max';
+                    } else if (absenceCount >= 5) {
+                        badgeClass += ' absence-danger';
+                    } else if (absenceCount >= 3) {
+                        badgeClass += ' absence-warning';
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td class="email-cell">
+                            <i class="fas fa-envelope email-icon" onclick="sendEmailNotification('${student.email}', '${student.name}', ${absenceCount})"></i>
+                            ${student.email}
+                        </td>
+                        <td>${student.college}</td>
+                        <td>${student.department}</td>
+                        <td>${student.group}</td>
+                        <td>
+                            <span class="${badgeClass}">${absenceCount} غیاب</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm btn-action" onclick="addAbsence(${index})"><i class="fas fa-user-minus"></i> غیاب</button>
+                            <button class="btn btn-warning btn-sm btn-action" onclick="removeAbsence(${index})"><i class="fas fa-user-plus"></i> لابردنی غیاب</button>
+                            <button class="btn btn-danger btn-sm btn-action" onclick="deleteStudent(${index})"><i class="fas fa-trash-alt"></i> سڕینەوە</button>
+                        </td>
+                    `;
+                    studentTableBody.appendChild(row);
+                });
+            }
+
+            // ناردنی ئاگاداری بە ئیمەیڵ
+            window.sendEmailNotification = function (email, name, absenceCount) {
+                let subject, body;
+                
+                if (absenceCount >= 7) {
+                    subject = `ئاگاداری کۆتایی - ${name}`;
+                    body = `قوتابی بەڕێز ${name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت. ژمارەی غیابەکان: ${absenceCount}`;
+                } else if (absenceCount >= 5) {
+                    subject = `ئاگاداری دووەم - ${name}`;
+                    body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. ئەگەر ژمارەی غیابەکان زیاتر بێت، کۆتایی بە خوێندن دێت.`;
+                } else if (absenceCount >= 3) {
+                    subject = `ئاگاداری یەکەم - ${name}`;
+                    body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. تکایە پابەند بە کاتی دەرسەکە بە.`;
+                } else {
+                    subject = `زانیاری غیاب - ${name}`;
+                    body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت ${absenceCount}ە.`;
+                }
+                
+                const encodedSubject = encodeURIComponent(subject);
+                const encodedBody = encodeURIComponent(body);
+                window.location.href = `mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`;
+            };
+
+            // زیادکردنی غیاب
+            window.addAbsence = function (index) {
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
+                
+                const currentTime = new Date().getTime();
+                if (currentTime - lastAbsentClickTime < 1000) {
+                    return; // ڕێگەنەگرە لە ماوەی 1 چرکە زیاتر لە جارێک فشاربدرێت
+                }
+                lastAbsentClickTime = currentTime;
+                
+                const students = getCurrentStudents();
+                const student = students[index];
+                
+                if (!student.absences) {
+                    student.absences = {};
+                }
+                
+                if (!student.absences[currentLessonName]) {
+                    student.absences[currentLessonName] = 0;
+                }
+                
+                student.absences[currentLessonName]++;
+                saveCurrentStudents(students);
+                renderTable();
+                
+                // ئاگاداری بەرزکردنەوەی ژمارەی غیابەکان
+                const absenceCount = student.absences[currentLessonName];
+                if (absenceCount === 3) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'ئاگاداری یەکەم',
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>٣ غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
+                        <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
+                        showCancelButton: true,
+                        confirmButtonText: 'هەڵگرتنی تێبینی',
+                        cancelButtonText: 'پاشخست',
+                        preConfirm: () => {
+                            return {
+                                note: document.getElementById('warningNote').value
+                            };
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // لێرە دەتوانیت تێبینیەکە هەڵبگریت یان بنێریت بۆ ئیمەیڵ
+                            console.log('تێبینی بۆ ٣ غیاب:', result.value.note);
+                        }
+                    });
+                } else if (absenceCount === 5) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'ئاگاداری دووەم',
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>٥ غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
+                        <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
+                        showCancelButton: true,
+                        confirmButtonText: 'هەڵگرتنی تێبینی',
+                        cancelButtonText: 'پاشخست',
+                        preConfirm: () => {
+                            return {
+                                note: document.getElementById('warningNote').value
+                            };
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // لێرە دەتوانیت تێبینیەکە هەڵبگریت یان بنێریت بۆ ئیمەیڵ
+                            console.log('تێبینی بۆ ٥ غیاب:', result.value.note);
+                        }
+                    });
+                } else if (absenceCount === 7) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ئاگاداری کۆتایی',
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>٧ غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
+                        <textarea id="warningNote" class="form-control" rows="4" placeholder="تێبینی بنووسە...">قوتابی بەڕێز ${student.name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت.</textarea>`,
+                        showCancelButton: true,
+                        confirmButtonText: 'هەڵگرتنی تێبینی',
+                        cancelButtonText: 'پاشخست',
+                        preConfirm: () => {
+                            return {
+                                note: document.getElementById('warningNote').value
+                            };
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // لێرە دەتوانیت تێبینیەکە هەڵبگریت یان بنێریت بۆ ئیمەیڵ
+                            console.log('تێبینی بۆ ٧ غیاب:', result.value.note);
+                        }
+                    });
+                }
+            };
+
+            // لابردنی غیاب
+            window.removeAbsence = function (index) {
+                if (!currentLessonName) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+                    });
+                    return;
+                }
+                
+                const students = getCurrentStudents();
+                const student = students[index];
+                
+                if (!student.absences || !student.absences[currentLessonName] || student.absences[currentLessonName] <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئەم قوتابیە هیچ غیابێکی نیە لەم دەرسەدا!',
+                    });
+                    return;
+                }
+                
+                student.absences[currentLessonName]--;
+                saveCurrentStudents(students);
+                renderTable();
+            };
+
+            // سڕینەوەی قوتابی
+            window.deleteStudent = function (index) {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: 'دڵنیایت دەتەوێت ئەم قوتابیە بسڕیتەوە؟',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بەڵێ، بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const students = getCurrentStudents();
+                        students.splice(index, 1);
+                        saveCurrentStudents(students);
+                        renderTable();
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سڕایەوە',
+                            text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                        });
+                    }
+                });
+            };
+
+            // سڕینەوەی هەموو داتاکان
+            window.clearAllData = function () {
+                Swal.fire({
+                    title: 'دڵنیایت؟',
+                    text: 'ئەم کارە هەموو داتاکان دەسڕێتەوە و ناتوانیت بیانگەڕێنیتەوە!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بەڵێ، هەموو داتاکان بسڕەوە',
+                    cancelButtonText: 'نەخێر'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.clear();
+                        renderTable();
+                        renderLessonTable();
+                        currentLessonName = '';
+                        currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
+                        currentLessonSpan.classList.add('no-lesson');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سڕایەوە',
+                            text: 'هەموو داتاکان بە سەرکەوتوویی سڕدرایەوە.',
+                        });
+                    }
+                });
+            };
+
+            // پرینتکردنی لیستی قوتابیان
+            window.printStudentTable = function () {
+                window.print();
+            };
+
+            // گەڕان لە لیستی قوتابیان
+            searchInput.addEventListener('input', renderTable);
+
+            // گۆڕانکاری لە هەڵبژاردنەکان
+            collegeSelect.addEventListener('change', renderTable);
+            stageSelect.addEventListener('change', renderTable);
+            departmentSelect.addEventListener('change', renderTable);
+            groupSelect.addEventListener('change', renderTable);
+
+            // دەستپێکردنی سەرەتایی
+            renderLessonTable();
+            renderTable();
         });
     </script>
 </body>
