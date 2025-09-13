@@ -413,15 +413,49 @@
             align-items: center;
             justify-content: center;
         }
+
+        .absence-notes {
+            max-width: 200px;
+            word-wrap: break-word;
+        }
+
+        .notes-toggle {
+            cursor: pointer;
+            color: var(--light-purple);
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .notes-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--main-purple);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 0;
+            font-size: 0.85em;
+        }
+
+        .note-date {
+            color: var(--light-purple);
+            font-size: 0.8em;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="welcome-header">
             <div class="logo-container">
-                <img src="logo.jpg" alt="">
+                <img src="logo.jpg" alt="لۆگۆی کۆلێژ">
                 <div style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; color: var(--light-purple); font-size: 14px; text-align: center;">
-                    
+                  
                 </div>
             </div>
             <h1>سیستەمی غیاباتی قوتابیان</h1>
@@ -514,6 +548,7 @@
                         <thead>
                             <tr>
                                 <th>ناوی دەرس</th>
+                                <th>ژمارەی قوتابی غایب</th>
                                 <th>کردارەکان</th>
                             </tr>
                         </thead>
@@ -554,6 +589,7 @@
                                 <th>بەش</th>
                                 <th>گروپ</th>
                                 <th>ژمارەی غیاب (ئەم دەرسە)</th>
+                                <th>تێبینییەکان</th>
                                 <th>کردارەکان</th>
                             </tr>
                         </thead>
@@ -565,6 +601,7 @@
                 
                 <div class="text-center mt-4">
                     <button onclick="printStudentTable()" class="btn-grad btn-primary mb-3"><i class="fas fa-print"></i> پرینتکردنی لیستی قوتابیان</button>
+                    <button onclick="exportToExcel()" class="btn-grad btn-success mb-3"><i class="fas fa-file-excel"></i> هەڵگرتنی Excel</button>
                 </div>
             </div>
         </div>
@@ -574,6 +611,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const saveButton = document.getElementById('saveButton');
@@ -603,6 +641,7 @@
             collegeSelect.addEventListener('change', function() {
                 updateDepartments();
                 renderTable();
+                renderLessonTable();
             });
             
             // نوێکردنەوەی لیستی بەشەکان
@@ -662,16 +701,27 @@
                 if (lessons.length === 0) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td colspan="2" class="text-center">هیچ دەرسێک تۆمارنەکراوە</td>
+                        <td colspan="3" class="text-center">هیچ دەرسێک تۆمارنەکراوە</td>
                     `;
                     lessonTableBody.appendChild(row);
                     return;
                 }
                 
+                const students = getCurrentStudents();
+                
                 lessons.forEach((lesson, index) => {
+                    // ژمارەی قوتابیە غایبەکان بۆ هەر دەرسێک
+                    let absentCount = 0;
+                    students.forEach(student => {
+                        if (student.absences && student.absences[lesson] && student.absences[lesson].count > 0) {
+                            absentCount++;
+                        }
+                    });
+                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${lesson}</td>
+                        <td><span class="absence-badge">${absentCount} قوتابی</span></td>
                         <td>
                             <button class="btn btn-primary btn-sm" onclick="selectLesson('${lesson}')">هەڵبژاردن</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteLesson(${index})">سڕینەوە</button>
@@ -728,11 +778,26 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const lessons = getLessons();
+                        const lessonToDelete = lessons[index];
                         lessons.splice(index, 1);
                         saveLessons(lessons);
                         
+                        // سڕینەوەی غیابەکانی ئەم دەرسە لە هەموو قوتابیان
+                        const allStudents = getAllStudents();
+                        for (const key in allStudents) {
+                            if (allStudents.hasOwnProperty(key)) {
+                                const students = allStudents[key];
+                                students.forEach(student => {
+                                    if (student.absences && student.absences[lessonToDelete]) {
+                                        delete student.absences[lessonToDelete];
+                                    }
+                                });
+                                localStorage.setItem(key, JSON.stringify(students));
+                            }
+                        }
+                        
                         // ئەگەر دەرسی سڕاوەکە هەر هەڵبژێردراو بوو، ئەوا هیچ دەرسێک هەڵمەبژێرە
-                        if (currentLessonName === lessons[index]) {
+                        if (currentLessonName === lessonToDelete) {
                             currentLessonName = '';
                             currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
                             currentLessonSpan.classList.add('no-lesson');
@@ -743,6 +808,18 @@
                     }
                 });
             };
+
+            // وەرگرتنی هەموو قوتابیان لە localStorage
+            function getAllStudents() {
+                const allStudents = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('students_')) {
+                        allStudents[key] = JSON.parse(localStorage.getItem(key));
+                    }
+                }
+                return allStudents;
+            }
 
             // زیادکردنی قوتابی
             saveButton.addEventListener('click', function () {
@@ -774,7 +851,7 @@
                 const students = getCurrentStudents();
                 
                 // پشکنینی ئەوەی ئەم قوتابیە پێشتر تۆمارکراوە
-                const existingStudent = students.find(s => s.name === name && s.email === email);
+                const existingStudent = students.find(s => s.email === email);
                 if (existingStudent) {
                     Swal.fire({
                         icon: 'error',
@@ -796,6 +873,7 @@
 
                 saveCurrentStudents(students);
                 renderTable();
+                renderLessonTable();
                 
                 // پاککردنەوەی خانەکان
                 studentNameInput.value = '';
@@ -831,7 +909,7 @@
                 if (students.length === 0) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td colspan="7" class="text-center">هیچ قوتابیەک تۆمارنەکراوە</td>
+                        <td colspan="8" class="text-center">هیچ قوتابیەک تۆمارنەکراوە</td>
                     `;
                     studentTableBody.appendChild(row);
                     return;
@@ -841,7 +919,13 @@
                     const row = document.createElement('tr');
                     
                     // ژمارەی غیابەکان بۆ دەرسی هەڵبژێردراو
-                    const absenceCount = currentLessonName ? (student.absences[currentLessonName] || 0) : 0;
+                    let absenceCount = 0;
+                    let absenceNotes = [];
+                    
+                    if (currentLessonName && student.absences && student.absences[currentLessonName]) {
+                        absenceCount = student.absences[currentLessonName].count || 0;
+                        absenceNotes = student.absences[currentLessonName].notes || [];
+                    }
                     
                     // دیاریکردنی ڕەنگی غیابەکان
                     let badgeClass = 'absence-badge';
@@ -851,6 +935,13 @@
                         badgeClass += ' absence-danger';
                     } else if (absenceCount >= 3) {
                         badgeClass += ' absence-warning';
+                    }
+                    
+                    // دروستکردنی نمایشی تێبینییەکان
+                    let notesDisplay = 'کەمتر لە ٣ غیاب';
+                    if (absenceCount >= 3) {
+                        notesDisplay = absenceNotes.length > 0 ? 
+                            `${absenceNotes.length} تێبینی` : 'هیچ تێبینیەک نیە';
                     }
                     
                     row.innerHTML = `
@@ -864,6 +955,20 @@
                         <td>${student.group}</td>
                         <td>
                             <span class="${badgeClass}">${absenceCount} غیاب</span>
+                        </td>
+                        <td class="absence-notes">
+                            ${notesDisplay}
+                            ${absenceNotes.length > 0 ? `
+                                <div class="notes-toggle" onclick="toggleNotes(this)">(بینین)</div>
+                                <div class="notes-container" style="display: none;">
+                                    ${absenceNotes.map(note => `
+                                        <div class="note-item">
+                                            <div class="note-date">${note.date}</div>
+                                            <div>${note.text}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </td>
                         <td>
                             <button class="btn btn-primary btn-sm btn-action" onclick="addAbsence(${index})"><i class="fas fa-user-minus"></i> غیاب</button>
@@ -895,7 +1000,19 @@
                 
                 const encodedSubject = encodeURIComponent(subject);
                 const encodedBody = encodeURIComponent(body);
-                window.location.href = `mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`;
+                window.open(`mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`, '_blank');
+            };
+
+            // نیشاندانی/شاردنەوەی تێبینییەکان
+            window.toggleNotes = function (element) {
+                const notesContainer = element.nextElementSibling;
+                if (notesContainer.style.display === 'none') {
+                    notesContainer.style.display = 'block';
+                    element.textContent = '(شاردنەوە)';
+                } else {
+                    notesContainer.style.display = 'none';
+                    element.textContent = '(بینین)';
+                }
             };
 
             // زیادکردنی غیاب
@@ -923,76 +1040,44 @@
                 }
                 
                 if (!student.absences[currentLessonName]) {
-                    student.absences[currentLessonName] = 0;
+                    student.absences[currentLessonName] = { count: 0, notes: [] };
                 }
                 
-                student.absences[currentLessonName]++;
+                student.absences[currentLessonName].count++;
+                const absenceCount = student.absences[currentLessonName].count;
+                
+                // زیادکردنی تێبینی بەپێی ژمارەی غیاب
+                if (absenceCount === 3 || absenceCount === 5 || absenceCount === 7) {
+                    Swal.fire({
+                        icon: absenceCount >= 7 ? 'error' : 'warning',
+                        title: `ئاگاداری ${absenceCount === 3 ? 'یەکەم' : absenceCount === 5 ? 'دووەم' : 'کۆتایی'}`,
+                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>${absenceCount} غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
+                        <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
+                        showCancelButton: true,
+                        confirmButtonText: 'هەڵگرتنی تێبینی',
+                        cancelButtonText: 'پاشخست',
+                        preConfirm: () => {
+                            return {
+                                note: document.getElementById('warningNote').value
+                            };
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value.note) {
+                            const noteText = result.value.note;
+                            const noteDate = new Date().toLocaleString('ku');
+                            student.absences[currentLessonName].notes.push({
+                                text: noteText,
+                                date: noteDate
+                            });
+                            saveCurrentStudents(students);
+                            renderTable();
+                        }
+                    });
+                }
+                
                 saveCurrentStudents(students);
                 renderTable();
-                
-                // ئاگاداری بەرزکردنەوەی ژمارەی غیابەکان
-                const absenceCount = student.absences[currentLessonName];
-                if (absenceCount === 3) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'ئاگاداری یەکەم',
-                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>٣ غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
-                        <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
-                        showCancelButton: true,
-                        confirmButtonText: 'هەڵگرتنی تێبینی',
-                        cancelButtonText: 'پاشخست',
-                        preConfirm: () => {
-                            return {
-                                note: document.getElementById('warningNote').value
-                            };
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // لێرە دەتوانیت تێبینیەکە هەڵبگریت یان بنێریت بۆ ئیمەیڵ
-                            console.log('تێبینی بۆ ٣ غیاب:', result.value.note);
-                        }
-                    });
-                } else if (absenceCount === 5) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'ئاگاداری دووەم',
-                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>٥ غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
-                        <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
-                        showCancelButton: true,
-                        confirmButtonText: 'هەڵگرتنی تێبینی',
-                        cancelButtonText: 'پاشخست',
-                        preConfirm: () => {
-                            return {
-                                note: document.getElementById('warningNote').value
-                            };
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // لێرە دەتوانیت تێبینیەکە هەڵبگریت یان بنێریت بۆ ئیمەیڵ
-                            console.log('تێبینی بۆ ٥ غیاب:', result.value.note);
-                        }
-                    });
-                } else if (absenceCount === 7) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ئاگاداری کۆتایی',
-                        html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>٧ غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
-                        <textarea id="warningNote" class="form-control" rows="4" placeholder="تێبینی بنووسە...">قوتابی بەڕێز ${student.name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت.</textarea>`,
-                        showCancelButton: true,
-                        confirmButtonText: 'هەڵگرتنی تێبینی',
-                        cancelButtonText: 'پاشخست',
-                        preConfirm: () => {
-                            return {
-                                note: document.getElementById('warningNote').value
-                            };
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // لێرە دەتوانیت تێبینیەکە هەڵبگریت یان بنێریت بۆ ئیمەیڵ
-                            console.log('تێبینی بۆ ٧ غیاب:', result.value.note);
-                        }
-                    });
-                }
+                renderLessonTable();
             };
 
             // لابردنی غیاب
@@ -1009,7 +1094,7 @@
                 const students = getCurrentStudents();
                 const student = students[index];
                 
-                if (!student.absences || !student.absences[currentLessonName] || student.absences[currentLessonName] <= 0) {
+                if (!student.absences || !student.absences[currentLessonName] || student.absences[currentLessonName].count <= 0) {
                     Swal.fire({
                         icon: 'error',
                         title: 'هەڵە',
@@ -1018,9 +1103,10 @@
                     return;
                 }
                 
-                student.absences[currentLessonName]--;
+                student.absences[currentLessonName].count--;
                 saveCurrentStudents(students);
                 renderTable();
+                renderLessonTable();
             };
 
             // سڕینەوەی قوتابی
@@ -1040,6 +1126,7 @@
                         students.splice(index, 1);
                         saveCurrentStudents(students);
                         renderTable();
+                        renderLessonTable();
                         
                         Swal.fire({
                             icon: 'success',
@@ -1082,6 +1169,71 @@
             // پرینتکردنی لیستی قوتابیان
             window.printStudentTable = function () {
                 window.print();
+            };
+
+            // هەڵگرتنی داتاکان بە فۆرماتی Excel
+            window.exportToExcel = function () {
+                const students = getCurrentStudents();
+                
+                if (students.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'هیچ داتایەک نیە بۆ هەڵگرتن!',
+                    });
+                    return;
+                }
+                
+                // دروستکردنی داتا بۆ Excel
+                const data = [];
+                
+                // زیادکردنی سەرپێڕ
+                data.push([
+                    'ناو', 
+                    'ئیمەیڵ', 
+                    'کۆلێژ', 
+                    'بەش', 
+                    'گروپ', 
+                    'ژمارەی غیاب', 
+                    'تێبینییەکان'
+                ]);
+                
+                // زیادکردنی داتاکان
+                students.forEach(student => {
+                    let absenceCount = 0;
+                    let notesText = '';
+                    
+                    if (currentLessonName && student.absences && student.absences[currentLessonName]) {
+                        absenceCount = student.absences[currentLessonName].count || 0;
+                        const notes = student.absences[currentLessonName].notes || [];
+                        notesText = notes.map(note => `${note.date}: ${note.text}`).join('; ');
+                    }
+                    
+                    data.push([
+                        student.name,
+                        student.email,
+                        student.college,
+                        student.department,
+                        student.group,
+                        absenceCount,
+                        notesText
+                    ]);
+                });
+                
+                // دروستکردنی Workbook
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'قوتابیان');
+                
+                // هەڵگرتن
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const lesson = currentLessonName || 'هیچ';
+                const fileName = `غیاب_${college}_${stage}_${department}_${group}_${lesson}.xlsx`;
+                
+                XLSX.writeFile(wb, fileName);
             };
 
             // گەڕان لە لیستی قوتابیان
