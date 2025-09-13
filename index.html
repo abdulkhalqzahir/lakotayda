@@ -408,6 +408,18 @@
             transform: scale(1.2);
         }
 
+        .edit-email-icon {
+            color: var(--light-purple);
+            cursor: pointer;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-email-icon:hover {
+            color: var(--accent-color);
+            transform: scale(1.2);
+        }
+
         .email-cell {
             display: flex;
             align-items: center;
@@ -447,15 +459,68 @@
             color: var(--light-purple);
             font-size: 0.8em;
         }
+
+        .file-upload-area {
+            border: 2px dashed var(--light-purple);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            background: rgba(106, 13, 173, 0.2);
+            border-color: var(--main-purple);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--light-purple);
+            margin-bottom: 15px;
+        }
+
+        .import-summary {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid var(--main-purple);
+        }
+
+        .import-success {
+            color: var(--success-color);
+        }
+
+        .import-error {
+            color: var(--danger-color);
+        }
+
+        .edit-email-modal .modal-content {
+            background: linear-gradient(135deg, rgba(75, 0, 130, 0.95), rgba(106, 13, 173, 0.95));
+            border: 2px solid var(--light-purple);
+            border-radius: 15px;
+            color: var(--white);
+        }
+
+        .edit-email-modal .modal-header {
+            border-bottom: 1px solid var(--light-purple);
+        }
+
+        .edit-email-modal .modal-footer {
+            border-top: 1px solid var(--light-purple);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="welcome-header">
             <div class="logo-container">
-                <img src="logo.jpg" alt="لۆگۆی کۆلێژ">
+                <img src="logo.png" alt="">
                 <div style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; color: var(--light-purple); font-size: 14px; text-align: center;">
-                  
+                    
                 </div>
             </div>
             <h1>سیستەمی غیاباتی قوتابیان</h1>
@@ -538,6 +603,42 @@
             </div>
         </div>
 
+        <!-- ناوەڕۆکی نوێ: هەڵگرتنی فایل -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-file-import"></i> هەڵگرتنی قوتابیان لە فایلی Excel
+                    </div>
+                    <div class="card-body">
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <h4>فایلی Excel هەڵبگرە ئەنجامی بینە</h4>
+                            <p>فایلەکە پێویستە ستوونی ناو و ئیمەیڵی تێدابێت</p>
+                            <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
+                            <button class="btn-grad btn-primary" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-upload"></i> هەڵگرتنی فایل
+                            </button>
+                        </div>
+                        
+                        <div id="importSummary" class="import-summary" style="display: none;">
+                            <h5>کۆی گشتی:</h5>
+                            <p class="import-success" id="importSuccess">٠ قوتابی بە سەرکەوتوویی تۆمارکران</p>
+                            <p class="import-error" id="importError">٠ هەڵە ڕوویدا</p>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button onclick="exportTemplate()" class="btn-grad btn-warning mb-3">
+                                <i class="fas fa-download"></i> هەڵگرتنی فەرمیتی Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-4">
             <div class="col-md-12">
                 <h2 class="section-title"><i class="fas fa-book-open"></i> لیستی دەرسەکان</h2>
@@ -607,6 +708,37 @@
         </div>
     </div>
 
+    <!-- Modal ی دەستکاریکردنی ئیمەیڵ -->
+    <div class="modal fade edit-email-modal" id="editEmailModal" tabindex="-1" role="dialog" aria-labelledby="editEmailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editEmailModalLabel"><i class="fas fa-edit"></i> دەستکاریکردنی ئیمەیڵ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="currentEmail">ئیمەیڵی ئێستا:</label>
+                        <input type="email" class="form-control" id="currentEmail" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEmail">ئیمەیڵی نوێ:</label>
+                        <input type="email" class="form-control" id="newEmail" placeholder="ئیمەیڵی نوێ بنووسە">
+                    </div>
+                    <div id="emailEditWarning" class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>ئاگاداری:</strong> دەستکاریکردنی ئیمەیڵ کارایی نیە بۆ سەرجەم داتاکانی پێشوو. تەنها دەستکاری بکە ئەگەر پێویستت بێت.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">پاشخست</button>
+                    <button type="button" class="btn btn-primary" id="saveEmailChanges">هەڵگرتنی گۆڕانکارییەکان</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -625,9 +757,15 @@
             const searchInput = document.getElementById('searchInput');
             const lessonTableBody = document.querySelector('#lessonTable tbody');
             const currentLessonSpan = document.getElementById('currentLessonSpan');
+            const fileInput = document.getElementById('fileInput');
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const importSummary = document.getElementById('importSummary');
+            const importSuccess = document.getElementById('importSuccess');
+            const importError = document.getElementById('importError');
 
             let currentLessonName = '';
             let lastAbsentClickTime = 0;
+            let currentStudentIndex = -1;
             
             // پێرستی بەشەکان بەپێی کۆلێژ
             const collegeDepartments = {
@@ -897,10 +1035,11 @@
                 let students = getCurrentStudents();
                 const searchTerm = searchInput.value.toLowerCase();
                 
-                // گەڕان بە ناو
+                // گەڕان بە ناو یان ئیمەیڵ
                 if (searchTerm) {
                     students = students.filter(student => 
-                        student.name.toLowerCase().includes(searchTerm)
+                        student.name.toLowerCase().includes(searchTerm) ||
+                        student.email.toLowerCase().includes(searchTerm)
                     );
                 }
                 
@@ -948,6 +1087,7 @@
                         <td>${student.name}</td>
                         <td class="email-cell">
                             <i class="fas fa-envelope email-icon" onclick="sendEmailNotification('${student.email}', '${student.name}', ${absenceCount})"></i>
+                            <i class="fas fa-edit edit-email-icon" onclick="editStudentEmail(${index}, '${student.email}')"></i>
                             ${student.email}
                         </td>
                         <td>${student.college}</td>
@@ -1013,6 +1153,14 @@
                     notesContainer.style.display = 'none';
                     element.textContent = '(بینین)';
                 }
+            };
+
+            // دەستکاریکردنی ئیمەیڵ
+            window.editStudentEmail = function(index, currentEmail) {
+                currentStudentIndex = index;
+                $('#currentEmail').val(currentEmail);
+                $('#newEmail').val(currentEmail);
+                $('#editEmailModal').modal('show');
             };
 
             // زیادکردنی غیاب
@@ -1235,6 +1383,213 @@
                 
                 XLSX.writeFile(wb, fileName);
             };
+
+            // ========== سیستەمی هەڵگرتنی فایل ==========
+            
+            // هەڵگرتنی فەرمیتی Excel
+            window.exportTemplate = function() {
+                // دروستکردنی داتا بۆ Excel
+                const data = [];
+                
+                // زیادکردنی سەرپێڕ
+                data.push([
+                    'ناو', 
+                    'ئیمەیڵ'
+                ]);
+                
+                // زیادکردنی نمونەیەک
+                data.push([
+                    ' دکتۆر کارزان ئامۆزا',
+                    'dkkarazan@example.com'
+                ]);
+                data.push([
+                    'عبدالخالق خۆشناو ',
+                    'abdulkhalq@example.com'
+                ]);
+                
+                // دروستکردنی Workbook
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'قوتابیان');
+                
+                // هەڵگرتن
+                XLSX.writeFile(wb, 'فەرمیتی_ناوەکان.xlsx');
+            };
+            
+            // فایلی Excel هەڵدەگرین و دەخوێنینەوە
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        
+                        // وەرگرتنی یەکەم وەرەق
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                        
+                        // پشکنینی فەرماتی فایلەکە
+                        if (jsonData.length < 2) {
+                            throw new Error('فایلەکە داتای تێدا نیە');
+                        }
+                        
+                        const headers = jsonData[0];
+                        const nameIndex = headers.findIndex(h => 
+                            h.toString().toLowerCase().includes('ناو') || 
+                            h.toString().toLowerCase().includes('name')
+                        );
+                        
+                        const emailIndex = headers.findIndex(h => 
+                            h.toString().toLowerCase().includes('ئیمەیڵ') || 
+                            h.toString().toLowerCase().includes('email') ||
+                            h.toString().toLowerCase().includes('imêll')
+                        );
+                        
+                        if (nameIndex === -1 || emailIndex === -1) {
+                            throw new Error('فایلەکە پێویستە ستوونی ناو و ئیمەیڵی تێدا بێت');
+                        }
+                        
+                        // خوێندنەوەی داتاکان
+                        const students = getCurrentStudents();
+                        let successCount = 0;
+                        let errorCount = 0;
+                        
+                        for (let i = 1; i < jsonData.length; i++) {
+                            const row = jsonData[i];
+                            if (row.length <= Math.max(nameIndex, emailIndex)) continue;
+                            
+                            const name = row[nameIndex] ? row[nameIndex].toString().trim() : '';
+                            const email = row[emailIndex] ? row[emailIndex].toString().trim() : '';
+                            
+                            if (!name || !email) continue;
+                            
+                            // پشکنینی ئەوەی ئەم قوتابیە پێشتر تۆمارکراوە
+                            const existingStudent = students.find(s => s.email === email);
+                            if (existingStudent) {
+                                errorCount++;
+                                continue;
+                            }
+                            
+                            // زیادکردنی قوتابیەکە
+                            students.push({
+                                name,
+                                email,
+                                college: collegeSelect.value,
+                                stage: stageSelect.value,
+                                department: departmentSelect.value,
+                                group: groupSelect.value,
+                                absences: {}
+                            });
+                            
+                            successCount++;
+                        }
+                        
+                        // پاشکەوتکردنی قوتابیە نوێیەکان
+                        saveCurrentStudents(students);
+                        renderTable();
+                        renderLessonTable();
+                        
+                        // نیشاندانی کۆی گشتی
+                        importSummary.style.display = 'block';
+                        importSuccess.textContent = `${successCount} قوتابی بە سەرکەوتوویی تۆمارکران`;
+                        importError.textContent = `${errorCount} هەڵە ڕوویدا (ئیمەیڵ دووبارە بووەتەوە)`;
+                        
+                        if (successCount > 0) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'سەرکەوتووبوو',
+                                text: `${successCount} قوتابی بە سەرکەوتوویی تۆمارکران`,
+                            });
+                        }
+                        
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'هەڵە',
+                            text: `هەڵە لە خوێندنەوەی فایلەکە: ${error.message}`,
+                        });
+                    }
+                };
+                
+                reader.readAsArrayBuffer(file);
+            });
+            
+            // ڕاکێشانی فایل و دانانی
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.background = 'rgba(106, 13, 173, 0.3)';
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.background = 'rgba(0, 0, 0, 0.3)';
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.background = 'rgba(0, 0, 0, 0.3)';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            // هەڵگرتنی گۆڕانکارییەکانی ئیمەیڵ
+            document.getElementById('saveEmailChanges').addEventListener('click', function() {
+                const newEmail = $('#newEmail').val().trim();
+                
+                if (!newEmail) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە ئیمەیڵێک بنووسە!',
+                    });
+                    return;
+                }
+                
+                if (!isValidEmail(newEmail)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'تکایە ئیمەیڵێکی دروست بنووسە!',
+                    });
+                    return;
+                }
+                
+                const students = getCurrentStudents();
+                
+                // پشکنین بۆ ئەوەی ئیمەیڵە نوێیە پێشتر بوونی هەیە
+                const emailExists = students.some((student, i) => 
+                    i !== currentStudentIndex && student.email === newEmail
+                );
+                
+                if (emailExists) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: 'ئیمەیڵە نوێیەکە پێشتر تۆمارکراوە!',
+                    });
+                    return;
+                }
+                
+                // گۆڕینی ئیمەیڵەکە
+                students[currentStudentIndex].email = newEmail;
+                saveCurrentStudents(students);
+                renderTable();
+                
+                $('#editEmailModal').modal('hide');
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'سەرکەوتووبوو',
+                    text: 'ئیمەیڵەکە بە سەرکەوتوویی نوێکرایەوە!',
+                });
+            });
 
             // گەڕان لە لیستی قوتابیان
             searchInput.addEventListener('input', renderTable);
