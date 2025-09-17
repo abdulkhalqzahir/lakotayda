@@ -512,13 +512,42 @@
         .edit-email-modal .modal-footer {
             border-top: 1px solid var(--light-purple);
         }
+
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-connected {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .status-disconnected {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .status-icon {
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
+    <div class="connection-status status-disconnected" id="connectionStatus">
+        <i class="fas fa-plug status-icon"></i> پەیوەندی بە سەرڤەرەوە نیە
+    </div>
+
     <div class="container">
         <div class="welcome-header">
             <div class="logo-container">
-                <img src="logo.png" alt="">
                 <div style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; color: var(--light-purple); font-size: 14px; text-align: center;">
                     <i class="fas fa-graduation-cap" style="font-size: 90px;"></i>
                 </div>
@@ -745,6 +774,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
+        // ناونیشانی سەرڤەر - دەتوانیت ئەمە بگۆڕیت بە پێی ناونیشانی سەرڤەرەکەت
+        // ناونیشانی سەرڤەر - گۆڕینی بۆ ناونیشانی ڕاست
+const SERVER_URL = 'http://localhost:3000';
+        let connectionStatus = false;
+
         document.addEventListener('DOMContentLoaded', function () {
             const saveButton = document.getElementById('saveButton');
             const studentNameInput = document.getElementById('studentName');
@@ -762,10 +796,72 @@
             const importSummary = document.getElementById('importSummary');
             const importSuccess = document.getElementById('importSuccess');
             const importError = document.getElementById('importError');
+            const connectionStatusElement = document.getElementById('connectionStatus');
 
             let currentLessonName = '';
             let lastAbsentClickTime = 0;
             let currentStudentIndex = -1;
+            
+            // پشکنینی پەیوەندی بە سەرڤەرەوە
+         // پشکنینی پەیوەندی بە سەرڤەرەوە
+// ناونیشانی سەرڤەر
+const SERVER_URL = 'http://localhost:3000';
+
+// فەنکشنی پشکنینی پەیوەندی
+async function checkServerConnection() {
+    try {
+        const response = await fetch(`${SERVER_URL}/api/status`);
+        if (response.ok) {
+            connectionStatus = true;
+            connectionStatusElement.className = 'connection-status status-connected';
+            connectionStatusElement.innerHTML = '<i class="fas fa-plug status-icon"></i> پەیوەندی بە سەرڤەرەوە دروستکراوە';
+            return true;
+        } else {
+            throw new Error('پەیوەندی دروستنەکراوە');
+        }
+    } catch (error) {
+        connectionStatus = false;
+        connectionStatusElement.className = 'connection-status status-disconnected';
+        connectionStatusElement.innerHTML = '<i class="fas fa-plug status-icon"></i> پەیوەندی بە سەرڤەرەوە نیە';
+        console.error('هەڵە لە پەیوەندی بە سەرڤەرەوە: ', error);
+        return false;
+    }
+}
+
+// فەنکشنی چوونەژوورەوە
+async function loginUser(username, password) {
+    try {
+        const response = await fetch(`${SERVER_URL}/api/teachers/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        
+        if (!response.ok) throw new Error('هەڵە لە چوونەژوورەوە');
+        
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('هەڵە لە چوونەژوورەوە: ', error);
+        throw error;
+    }
+}
+
+// فەنکشنی وەرگرتنی مامۆستایان
+async function getTeachers() {
+    try {
+        const response = await fetch(`${SERVER_URL}/api/teachers`);
+        
+        if (!response.ok) throw new Error('هەڵە لە وەرگرتنی مامۆستایان');
+        
+        return await response.json();
+    } catch (error) {
+        console.error('هەڵە لە وەرگرتنی مامۆستایان: ', error);
+        throw error;
+    }
+}
             
             // پێرستی بەشەکان بەپێی کۆلێژ
             const collegeDepartments = {
@@ -799,8 +895,59 @@
             // دەستپێکردنی لیستی بەشەکان
             updateDepartments();
 
+            // پشکنینی پەیوەندی بە سەرڤەرەوە
+            async function checkServerConnection() {
+                try {
+                    const response = await fetch(`${SERVER_URL}/`);
+                    if (response.ok) {
+                        connectionStatus = true;
+                        connectionStatusElement.className = 'connection-status status-connected';
+                        connectionStatusElement.innerHTML = '<i class="fas fa-plug status-icon"></i> پەیوەندی بە سەرڤەرەوە دروستکراوە';
+                    } else {
+                        throw new Error('پەیوەندی دروستنەکراوە');
+                    }
+                } catch (error) {
+                    connectionStatus = false;
+                    connectionStatusElement.className = 'connection-status status-disconnected';
+                    connectionStatusElement.innerHTML = '<i class="fas fa-plug status-icon"></i> پەیوەندی بە سەرڤەرەوە نیە';
+                    console.error('هەڵە لە پەیوەندی بە سەرڤەرەوە: ', error);
+                    
+                    // نمایشی ئاگاداری
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'ئاگاداری',
+                        text: 'پەیوەندی بە سەرڤەرەوە دروستنەکراوە. داتاکان لە localStorageدا دەخرێنەوە.',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            }
+
+            // وەرگرتنی لیستی قوتابیان لە سەرڤەر یان localStorage
+            async function getCurrentStudents() {
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                
+                if (connectionStatus) {
+                    try {
+                        const response = await fetch(`${SERVER_URL}/api/students?college=${college}&stage=${stage}&department=${department}&group=${group}`);
+                        if (!response.ok) throw new Error('هەڵە لە وەرگرتنی قوتابیان');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        return getFromLocalStorage();
+                    }
+                } else {
+                    return getFromLocalStorage();
+                }
+            }
+
             // وەرگرتنی لیستی قوتابیان لە localStorage
-            function getCurrentStudents() {
+            function getFromLocalStorage() {
                 const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
@@ -810,30 +957,230 @@
                 return data ? JSON.parse(data) : [];
             }
 
+            // هەڵگرتنی لیستی قوتابیان لە سەرڤەر یان localStorage
+            async function saveStudent(student) {
+                if (connectionStatus) {
+                    try {
+                        const response = await fetch(`${SERVER_URL}/api/students`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(student)
+                        });
+                        
+                        if (!response.ok) throw new Error('هەڵە لە تۆمارکردنی قوتابی');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        return saveToLocalStorage(student);
+                    }
+                } else {
+                    return saveToLocalStorage(student);
+                }
+            }
+
             // هەڵگرتنی لیستی قوتابیان لە localStorage
-            function saveCurrentStudents(students) {
+            function saveToLocalStorage(student) {
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const key = `students_${college}_${stage}_${department}_${group}`;
+                
+                const students = getFromLocalStorage();
+                students.push(student);
+                localStorage.setItem(key, JSON.stringify(students));
+                
+                return { success: true, message: 'قوتابی بە سەرکەوتوویی تۆمارکرا' };
+            }
+
+            // وەرگرتنی لیستی دەرسەکان لە سەرڤەر یان localStorage
+            async function getLessons() {
+                if (connectionStatus) {
+                    try {
+                        const response = await fetch(`${SERVER_URL}/api/lessons`);
+                        if (!response.ok) throw new Error('هەڵە لە وەرگرتنی دەرسەکان');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        return getLessonsFromLocalStorage();
+                    }
+                } else {
+                    return getLessonsFromLocalStorage();
+                }
+            }
+
+            // وەرگرتنی لیستی دەرسەکان لە localStorage
+            function getLessonsFromLocalStorage() {
+                const data = localStorage.getItem('lessons');
+                return data ? JSON.parse(data) : [];
+            }
+
+            // هەڵگرتنی لیستی دەرسەکان لە سەرڤەر یان localStorage
+            async function saveLesson(lessonName) {
+                if (connectionStatus) {
+                    try {
+                        const response = await fetch(`${SERVER_URL}/api/lessons`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ name: lessonName })
+                        });
+                        
+                        if (!response.ok) throw new Error('هەڵە لە تۆمارکردنی دەرس');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        return saveLessonToLocalStorage(lessonName);
+                    }
+                } else {
+                    return saveLessonToLocalStorage(lessonName);
+                }
+            }
+
+            // هەڵگرتنی لیستی دەرسەکان لە localStorage
+            function saveLessonToLocalStorage(lessonName) {
+                const lessons = getLessonsFromLocalStorage();
+                lessons.push(lessonName);
+                localStorage.setItem('lessons', JSON.stringify(lessons));
+                
+                return { success: true, message: 'دەرس بە سەرکەوتوویی تۆمارکرا' };
+            }
+
+            // سڕینەوەی دەرس لە سەرڤەر یان localStorage
+            async function deleteLessonFromServer(lessonName) {
+                if (connectionStatus) {
+                    try {
+                        // لەم نموونەدا، ئێمە ناوی دروس وەک ID بەکار دەهێنین
+                        // لە کۆدی ڕاستیدا، پێویستە IDی دەرسەکە بنێریت
+                        const response = await fetch(`${SERVER_URL}/api/lessons/${encodeURIComponent(lessonName)}`, {
+                            method: 'DELETE'
+                        });
+                        
+                        if (!response.ok) throw new Error('هەڵە لە سڕینەوەی دەرس');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        return deleteLessonFromLocalStorage(lessonName);
+                    }
+                } else {
+                    return deleteLessonFromLocalStorage(lessonName);
+                }
+            }
+
+            // سڕینەوەی دەرس لە localStorage
+            function deleteLessonFromLocalStorage(lessonName) {
+                const lessons = getLessonsFromLocalStorage();
+                const index = lessons.indexOf(lessonName);
+                if (index > -1) {
+                    lessons.splice(index, 1);
+                    localStorage.setItem('lessons', JSON.stringify(lessons));
+                }
+                
+                // سڕینەوەی غیابەکانی ئەم دەرسە لە هەموو قوتابیان
+                const allStudents = getAllStudentsFromLocalStorage();
+                for (const key in allStudents) {
+                    if (allStudents.hasOwnProperty(key)) {
+                        const students = allStudents[key];
+                        students.forEach(student => {
+                            if (student.absences && student.absences[lessonName]) {
+                                delete student.absences[lessonName];
+                            }
+                        });
+                        localStorage.setItem(key, JSON.stringify(students));
+                    }
+                }
+                
+                return { success: true, message: 'دەرس بە سەرکەوتوویی سڕدرایەوە' };
+            }
+
+            // وەرگرتنی هەموو قوتابیان لە localStorage
+            function getAllStudentsFromLocalStorage() {
+                const allStudents = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('students_')) {
+                        allStudents[key] = JSON.parse(localStorage.getItem(key));
+                    }
+                }
+                return allStudents;
+            }
+
+            // زیادکردنی غیاب لە سەرڤەر یان localStorage
+            async function addAbsenceToServer(studentId, lesson, note) {
+                if (connectionStatus) {
+                    try {
+                        const response = await fetch(`${SERVER_URL}/api/absences`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                student_id: studentId,
+                                lesson: lesson,
+                                note: note || ''
+                            })
+                        });
+                        
+                        if (!response.ok) throw new Error('هەڵە لە تۆمارکردنی غیاب');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        return addAbsenceToLocalStorage(studentId, lesson, note);
+                    }
+                } else {
+                    return addAbsenceToLocalStorage(studentId, lesson, note);
+                }
+            }
+
+            // زیادکردنی غیاب لە localStorage
+            function addAbsenceToLocalStorage(studentIndex, lesson, note) {
+                const students = getFromLocalStorage();
+                const student = students[studentIndex];
+                
+                if (!student.absences) {
+                    student.absences = {};
+                }
+                
+                if (!student.absences[lesson]) {
+                    student.absences[lesson] = { count: 0, notes: [] };
+                }
+                
+                student.absences[lesson].count++;
+                
+                if (note) {
+                    const noteDate = new Date().toLocaleString('ku');
+                    student.absences[lesson].notes.push({
+                        text: note,
+                        date: noteDate
+                    });
+                }
+                
                 const college = collegeSelect.value;
                 const stage = stageSelect.value;
                 const department = departmentSelect.value;
                 const group = groupSelect.value;
                 const key = `students_${college}_${stage}_${department}_${group}`;
                 localStorage.setItem(key, JSON.stringify(students));
-            }
-
-            // وەرگرتنی لیستی دەرسەکان لە localStorage
-            function getLessons() {
-                const data = localStorage.getItem('lessons');
-                return data ? JSON.parse(data) : [];
-            }
-
-            // هەڵگرتنی لیستی دەرسەکان لە localStorage
-            function saveLessons(lessons) {
-                localStorage.setItem('lessons', JSON.stringify(lessons));
+                
+                return { success: true, message: 'غیاب بە سەرکەوتوویی تۆمارکرا' };
             }
 
             // نیشاندانی لیستی دەرسەکان
-            function renderLessonTable() {
-                const lessons = getLessons();
+            async function renderLessonTable() {
+                const lessons = await getLessons();
                 lessonTableBody.innerHTML = '';
                 
                 if (lessons.length === 0) {
@@ -845,7 +1192,7 @@
                     return;
                 }
                 
-                const students = getCurrentStudents();
+                const students = await getCurrentStudents();
                 
                 lessons.forEach((lesson, index) => {
                     // ژمارەی قوتابیە غایبەکان بۆ هەر دەرسێک
@@ -862,7 +1209,7 @@
                         <td><span class="absence-badge">${absentCount} قوتابی</span></td>
                         <td>
                             <button class="btn btn-primary btn-sm" onclick="selectLesson('${lesson}')">هەڵبژاردن</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteLesson(${index})">سڕینەوە</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteLesson(${index}, '${lesson}')">سڕینەوە</button>
                         </td>
                     `;
                     lessonTableBody.appendChild(row);
@@ -870,11 +1217,11 @@
             }
 
             // زیادکردنی دەرس
-            window.addLesson = function () {
+            window.addLesson = async function () {
                 const lessonName = prompt("ناوی دەرسەکە بنووسە:");
                 if (!lessonName || lessonName.trim() === '') return;
 
-                const lessons = getLessons();
+                const lessons = await getLessons();
                 if (lessons.includes(lessonName)) {
                     Swal.fire({
                         icon: 'error',
@@ -884,13 +1231,26 @@
                     return;
                 }
 
-                lessons.push(lessonName);
-                saveLessons(lessons);
-                renderLessonTable();
-                
-                // ئەگەر هیچ دەرسێک هەڵنەبژێردرابوو، ئەوا ئەم دەرسە هەڵبژێرە
-                if (currentLessonName === '') {
-                    selectLesson(lessonName);
+                const result = await saveLesson(lessonName);
+                if (result.success) {
+                    await renderLessonTable();
+                    
+                    // ئەگەر هیچ دەرسێک هەڵنەبژێردرابوو، ئەوا ئەم دەرسە هەڵبژێرە
+                    if (currentLessonName === '') {
+                        selectLesson(lessonName);
+                    }
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سەرکەوتووبوو',
+                        text: result.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: result.message,
+                    });
                 }
             };
 
@@ -903,7 +1263,7 @@
             };
 
             // سڕینەوەی دەرس
-            window.deleteLesson = function (index) {
+            window.deleteLesson = async function (index, lessonName) {
                 Swal.fire({
                     title: 'دڵنیایت؟',
                     text: 'دڵنیایت دەتەوێت ئەم دەرسە بسڕیتەوە؟',
@@ -913,54 +1273,38 @@
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'بەڵێ، بسڕەوە',
                     cancelButtonText: 'نەخێر'
-                }).then((result) => {
+                }).then(async (result) => {
                     if (result.isConfirmed) {
-                        const lessons = getLessons();
-                        const lessonToDelete = lessons[index];
-                        lessons.splice(index, 1);
-                        saveLessons(lessons);
-                        
-                        // سڕینەوەی غیابەکانی ئەم دەرسە لە هەموو قوتابیان
-                        const allStudents = getAllStudents();
-                        for (const key in allStudents) {
-                            if (allStudents.hasOwnProperty(key)) {
-                                const students = allStudents[key];
-                                students.forEach(student => {
-                                    if (student.absences && student.absences[lessonToDelete]) {
-                                        delete student.absences[lessonToDelete];
-                                    }
-                                });
-                                localStorage.setItem(key, JSON.stringify(students));
+                        const result = await deleteLessonFromServer(lessonName);
+                        if (result.success) {
+                            // ئەگەر دەرسی سڕاوەکە هەر هەڵبژێردراو بوو، ئەوا هیچ دەرسێک هەڵمەبژێرە
+                            if (currentLessonName === lessonName) {
+                                currentLessonName = '';
+                                currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
+                                currentLessonSpan.classList.add('no-lesson');
                             }
+                            
+                            await renderLessonTable();
+                            await renderTable();
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'سەرکەوتووبوو',
+                                text: result.message,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'هەڵە',
+                                text: result.message,
+                            });
                         }
-                        
-                        // ئەگەر دەرسی سڕاوەکە هەر هەڵبژێردراو بوو، ئەوا هیچ دەرسێک هەڵمەبژێرە
-                        if (currentLessonName === lessonToDelete) {
-                            currentLessonName = '';
-                            currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
-                            currentLessonSpan.classList.add('no-lesson');
-                        }
-                        
-                        renderLessonTable();
-                        renderTable();
                     }
                 });
             };
 
-            // وەرگرتنی هەموو قوتابیان لە localStorage
-            function getAllStudents() {
-                const allStudents = {};
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key.startsWith('students_')) {
-                        allStudents[key] = JSON.parse(localStorage.getItem(key));
-                    }
-                }
-                return allStudents;
-            }
-
             // زیادکردنی قوتابی
-            saveButton.addEventListener('click', function () {
+            saveButton.addEventListener('click', async function () {
                 const name = studentNameInput.value.trim();
                 const email = studentEmailInput.value.trim();
                 const college = collegeSelect.value;
@@ -986,7 +1330,7 @@
                     return;
                 }
 
-                const students = getCurrentStudents();
+                const students = await getCurrentStudents();
                 
                 // پشکنینی ئەوەی ئەم قوتابیە پێشتر تۆمارکراوە
                 const existingStudent = students.find(s => s.email === email);
@@ -999,7 +1343,7 @@
                     return;
                 }
 
-                students.push({
+                const newStudent = {
                     name,
                     email,
                     college,
@@ -1007,21 +1351,29 @@
                     department,
                     group,
                     absences: {}
-                });
+                };
 
-                saveCurrentStudents(students);
-                renderTable();
-                renderLessonTable();
-                
-                // پاککردنەوەی خانەکان
-                studentNameInput.value = '';
-                studentEmailInput.value = '';
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'سەرکەوتووبوو',
-                    text: 'قوتابیەکە بە سەرکەوتوویی تۆمارکرا!',
-                });
+                const result = await saveStudent(newStudent);
+                if (result.success) {
+                    await renderTable();
+                    await renderLessonTable();
+                    
+                    // پاککردنەوەی خانەکان
+                    studentNameInput.value = '';
+                    studentEmailInput.value = '';
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سەرکەوتووبوو',
+                        text: result.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: result.message,
+                    });
+                }
             });
 
             // پشکنینی ئیمەیڵ
@@ -1031,8 +1383,8 @@
             }
 
             // نیشاندانی لیستی قوتابیان
-            function renderTable() {
-                let students = getCurrentStudents();
+            async function renderTable() {
+                let students = await getCurrentStudents();
                 const searchTerm = searchInput.value.toLowerCase();
                 
                 // گەڕان بە ناو یان ئیمەیڵ
@@ -1164,7 +1516,7 @@
             };
 
             // زیادکردنی غیاب
-            window.addAbsence = function (index) {
+            window.addAbsence = async function (index) {
                 if (!currentLessonName) {
                     Swal.fire({
                         icon: 'error',
@@ -1180,23 +1532,18 @@
                 }
                 lastAbsentClickTime = currentTime;
                 
-                const students = getCurrentStudents();
+                const students = await getCurrentStudents();
                 const student = students[index];
+                const studentId = student.id || index; // لە کاتی بەکارهێنانی سەرڤەر، IDی قوتابی بەکار دەهێنین
                 
-                if (!student.absences) {
-                    student.absences = {};
-                }
-                
-                if (!student.absences[currentLessonName]) {
-                    student.absences[currentLessonName] = { count: 0, notes: [] };
-                }
-                
-                student.absences[currentLessonName].count++;
-                const absenceCount = student.absences[currentLessonName].count;
+                let noteText = '';
+                const absenceCount = student.absences && student.absences[currentLessonName] 
+                    ? student.absences[currentLessonName].count + 1 
+                    : 1;
                 
                 // زیادکردنی تێبینی بەپێی ژمارەی غیاب
                 if (absenceCount === 3 || absenceCount === 5 || absenceCount === 7) {
-                    Swal.fire({
+                    const { value } = await Swal.fire({
                         icon: absenceCount >= 7 ? 'error' : 'warning',
                         title: `ئاگاداری ${absenceCount === 3 ? 'یەکەم' : absenceCount === 5 ? 'دووەم' : 'کۆتایی'}`,
                         html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>${absenceCount} غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
@@ -1209,27 +1556,28 @@
                                 note: document.getElementById('warningNote').value
                             };
                         }
-                    }).then((result) => {
-                        if (result.isConfirmed && result.value.note) {
-                            const noteText = result.value.note;
-                            const noteDate = new Date().toLocaleString('ku');
-                            student.absences[currentLessonName].notes.push({
-                                text: noteText,
-                                date: noteDate
-                            });
-                            saveCurrentStudents(students);
-                            renderTable();
-                        }
                     });
+                    
+                    if (value && value.note) {
+                        noteText = value.note;
+                    }
                 }
                 
-                saveCurrentStudents(students);
-                renderTable();
-                renderLessonTable();
+                const result = await addAbsenceToServer(studentId, currentLessonName, noteText);
+                if (result.success) {
+                    await renderTable();
+                    await renderLessonTable();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'هەڵە',
+                        text: result.message,
+                    });
+                }
             };
 
             // لابردنی غیاب
-            window.removeAbsence = function (index) {
+            window.removeAbsence = async function (index) {
                 if (!currentLessonName) {
                     Swal.fire({
                         icon: 'error',
@@ -1239,7 +1587,7 @@
                     return;
                 }
                 
-                const students = getCurrentStudents();
+                const students = await getCurrentStudents();
                 const student = students[index];
                 
                 if (!student.absences || !student.absences[currentLessonName] || student.absences[currentLessonName].count <= 0) {
@@ -1251,14 +1599,22 @@
                     return;
                 }
                 
+                // لابردنی غیاب لە localStorage
                 student.absences[currentLessonName].count--;
-                saveCurrentStudents(students);
-                renderTable();
-                renderLessonTable();
+                
+                const college = collegeSelect.value;
+                const stage = stageSelect.value;
+                const department = departmentSelect.value;
+                const group = groupSelect.value;
+                const key = `students_${college}_${stage}_${department}_${group}`;
+                localStorage.setItem(key, JSON.stringify(students));
+                
+                await renderTable();
+                await renderLessonTable();
             };
 
             // سڕینەوەی قوتابی
-            window.deleteStudent = function (index) {
+            window.deleteStudent = async function (index) {
                 Swal.fire({
                     title: 'دڵنیایت؟',
                     text: 'دڵنیایت دەتەوێت ئەم قوتابیە بسڕیتەوە؟',
@@ -1268,19 +1624,71 @@
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'بەڵێ، بسڕەوە',
                     cancelButtonText: 'نەخێر'
-                }).then((result) => {
+                }).then(async (result) => {
                     if (result.isConfirmed) {
-                        const students = getCurrentStudents();
-                        students.splice(index, 1);
-                        saveCurrentStudents(students);
-                        renderTable();
-                        renderLessonTable();
-                        
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'سڕایەوە',
-                            text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
-                        });
+                        if (connectionStatus) {
+                            try {
+                                const students = await getCurrentStudents();
+                                const student = students[index];
+                                
+                                const response = await fetch(`${SERVER_URL}/api/students/${student.id}`, {
+                                    method: 'DELETE'
+                                });
+                                
+                                if (!response.ok) throw new Error('هەڵە لە سڕینەوەی قوتابی');
+                                
+                                await renderTable();
+                                await renderLessonTable();
+                                
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'سڕایەوە',
+                                    text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                                });
+                            } catch (error) {
+                                console.error('هەڵە: ', error);
+                                connectionStatus = false;
+                                checkServerConnection();
+                                
+                                // سڕینەوەی قوتابی لە localStorage
+                                const students = await getCurrentStudents();
+                                students.splice(index, 1);
+                                const college = collegeSelect.value;
+                                const stage = stageSelect.value;
+                                const department = departmentSelect.value;
+                                const group = groupSelect.value;
+                                const key = `students_${college}_${stage}_${department}_${group}`;
+                                localStorage.setItem(key, JSON.stringify(students));
+                                
+                                await renderTable();
+                                await renderLessonTable();
+                                
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'سڕایەوە',
+                                    text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                                });
+                            }
+                        } else {
+                            // سڕینەوەی قوتابی لە localStorage
+                            const students = await getCurrentStudents();
+                            students.splice(index, 1);
+                            const college = collegeSelect.value;
+                            const stage = stageSelect.value;
+                            const department = departmentSelect.value;
+                            const group = groupSelect.value;
+                            const key = `students_${college}_${stage}_${department}_${group}`;
+                            localStorage.setItem(key, JSON.stringify(students));
+                            
+                            await renderTable();
+                            await renderLessonTable();
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'سڕایەوە',
+                                text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                            });
+                        }
                     }
                 });
             };
@@ -1296,11 +1704,26 @@
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'بەڵێ، هەموو داتاکان بسڕەوە',
                     cancelButtonText: 'نەخێر'
-                }).then((result) => {
+                }).then(async (result) => {
                     if (result.isConfirmed) {
+                        if (connectionStatus) {
+                            try {
+                                // لەم نموونەدا، ئێمە هەموو داتاکان لە سەرڤەر ناسڕینەوە
+                                // لە کۆدی ڕاستیدا، پێویستە APIی گونجاو دروست بکەیت
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'ئاگاداری',
+                                    text: 'ناسڕینەوەی هەموو داتاکان لە سەرڤەر پێویستی بە APIی تایبەت هەیە.',
+                                });
+                            } catch (error) {
+                                console.error('هەڵە: ', error);
+                            }
+                        }
+                        
+                        // سڕینەوەی هەموو داتاکان لە localStorage
                         localStorage.clear();
-                        renderTable();
-                        renderLessonTable();
+                        await renderTable();
+                        await renderLessonTable();
                         currentLessonName = '';
                         currentLessonSpan.textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
                         currentLessonSpan.classList.add('no-lesson');
@@ -1320,8 +1743,8 @@
             };
 
             // هەڵگرتنی داتاکان بە فۆرماتی Excel
-            window.exportToExcel = function () {
-                const students = getCurrentStudents();
+            window.exportToExcel = async function () {
+                const students = await getCurrentStudents();
                 
                 if (students.length === 0) {
                     Swal.fire({
@@ -1417,12 +1840,12 @@
             };
             
             // فایلی Excel هەڵدەگرین و دەخوێنینەوە
-            fileInput.addEventListener('change', function(e) {
+            fileInput.addEventListener('change', async function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
                 
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     try {
                         const data = new Uint8Array(e.target.result);
                         const workbook = XLSX.read(data, { type: 'array' });
@@ -1453,7 +1876,7 @@
                         }
                         
                         // خوێندنەوەی داتاکان
-                        const students = getCurrentStudents();
+                        const students = await getCurrentStudents();
                         let successCount = 0;
                         let errorCount = 0;
                         
@@ -1474,7 +1897,7 @@
                             }
                             
                             // زیادکردنی قوتابیەکە
-                            students.push({
+                            const newStudent = {
                                 name,
                                 email,
                                 college: collegeSelect.value,
@@ -1482,15 +1905,15 @@
                                 department: departmentSelect.value,
                                 group: groupSelect.value,
                                 absences: {}
-                            });
+                            };
                             
-                            successCount++;
+                            const result = await saveStudent(newStudent);
+                            if (result.success) {
+                                successCount++;
+                            } else {
+                                errorCount++;
+                            }
                         }
-                        
-                        // پاشکەوتکردنی قوتابیە نوێیەکان
-                        saveCurrentStudents(students);
-                        renderTable();
-                        renderLessonTable();
                         
                         // نیشاندانی کۆی گشتی
                         importSummary.style.display = 'block';
@@ -1498,6 +1921,9 @@
                         importError.textContent = `${errorCount} هەڵە ڕوویدا (ئیمەیڵ دووبارە بووەتەوە)`;
                         
                         if (successCount > 0) {
+                            await renderTable();
+                            await renderLessonTable();
+                            
                             Swal.fire({
                                 icon: 'success',
                                 title: 'سەرکەوتووبوو',
@@ -1540,7 +1966,7 @@
             });
 
             // هەڵگرتنی گۆڕانکارییەکانی ئیمەیڵ
-            document.getElementById('saveEmailChanges').addEventListener('click', function() {
+            document.getElementById('saveEmailChanges').addEventListener('click', async function() {
                 const newEmail = $('#newEmail').val().trim();
                 
                 if (!newEmail) {
@@ -1561,7 +1987,7 @@
                     return;
                 }
                 
-                const students = getCurrentStudents();
+                const students = await getCurrentStudents();
                 
                 // پشکنین بۆ ئەوەی ئیمەیڵە نوێیە پێشتر بوونی هەیە
                 const emailExists = students.some((student, i) => 
@@ -1577,18 +2003,73 @@
                     return;
                 }
                 
-                // گۆڕینی ئیمەیڵەکە
-                students[currentStudentIndex].email = newEmail;
-                saveCurrentStudents(students);
-                renderTable();
-                
-                $('#editEmailModal').modal('hide');
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'سەرکەوتووبوو',
-                    text: 'ئیمەیڵەکە بە سەرکەوتوویی نوێکرایەوە!',
-                });
+                if (connectionStatus) {
+                    try {
+                        const student = students[currentStudentIndex];
+                        
+                        const response = await fetch(`${SERVER_URL}/api/students/${student.id}/email`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ email: newEmail })
+                        });
+                        
+                        if (!response.ok) throw new Error('هەڵە لە نوێکردنەوەی ئیمەیڵ');
+                        
+                        await renderTable();
+                        
+                        $('#editEmailModal').modal('hide');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سەرکەوتووبوو',
+                            text: 'ئیمەیڵەکە بە سەرکەوتوویی نوێکرایەوە!',
+                        });
+                    } catch (error) {
+                        console.error('هەڵە: ', error);
+                        connectionStatus = false;
+                        checkServerConnection();
+                        
+                        // نوێکردنەوەی ئیمەیڵ لە localStorage
+                        students[currentStudentIndex].email = newEmail;
+                        const college = collegeSelect.value;
+                        const stage = stageSelect.value;
+                        const department = departmentSelect.value;
+                        const group = groupSelect.value;
+                        const key = `students_${college}_${stage}_${department}_${group}`;
+                        localStorage.setItem(key, JSON.stringify(students));
+                        
+                        await renderTable();
+                        
+                        $('#editEmailModal').modal('hide');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'سەرکەوتووبوو',
+                            text: 'ئیمەیڵەکە بە سەرکەوتوویی نوێکرایەوە!',
+                        });
+                    }
+                } else {
+                    // نوێکردنەوەی ئیمەیڵ لە localStorage
+                    students[currentStudentIndex].email = newEmail;
+                    const college = collegeSelect.value;
+                    const stage = stageSelect.value;
+                    const department = departmentSelect.value;
+                    const group = groupSelect.value;
+                    const key = `students_${college}_${stage}_${department}_${group}`;
+                    localStorage.setItem(key, JSON.stringify(students));
+                    
+                    await renderTable();
+                    
+                    $('#editEmailModal').modal('hide');
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سەرکەوتووبوو',
+                        text: 'ئیمەیڵەکە بە سەرکەوتوویی نوێکرایەوە!',
+                    });
+                }
             });
 
             // گەڕان لە لیستی قوتابیان
