@@ -654,6 +654,228 @@ async function renderTable() {
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 // ناردنی ئاگاداری بە ئیمەیڵ
+// هەڵگرتنی قوتابیان لە فایلی Excel
+document.getElementById('fileInput').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // پشکنینی جۆری فایل
+    if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'تکایە تەنها فایلی Excel هەڵبگرە (.xlsx یان .xls)',
+        });
+        return;
+    }
+
+    try {
+        const data = await readExcelFile(file);
+        await importStudentsFromExcel(data);
+    } catch (error) {
+        console.error('هەڵە لە خوێندنەوەی فایل: ', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هەڵە ڕوویدا لە خوێندنەوەی فایلەکە!',
+        });
+    }
+});
+
+// خوێندنەوەی فایلی Excel
+function readExcelFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // وەرگرتنی یەکەم وەرەق
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                // گۆڕینی بۆ JSON
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                resolve(jsonData);
+            } catch (error) {
+                reject(error);
+            }
+        };
+        
+        reader.onerror = function(error) {
+            reject(error);
+        };
+        
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+// زیادکردنی قوتابیان لە داتای Excel
+async function importStudentsFromExcel(data) {
+    if (!data || data.length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'فایلەکە بەتاڵە یان داتاکانی دروست نیە!',
+        });
+        return;
+    }
+
+    // پشکنینی ستوونەکان
+    const firstRow = data[0];
+    if (!firstRow.hasOwnProperty('ناو') && !firstRow.hasOwnProperty('ئیمەیڵ')) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'فایلەکە پێویستە ستوونی "ناو" و "ئیمەیڵ"ی تێدابێت!',
+        });
+        return;
+    }
+
+    let successCount = 0;
+    let errorCount = 0;
+    const errorMessages = [];
+
+    const college = document.getElementById('collegeSelect').value;
+    const stage = document.getElementById('stageSelect').value;
+    const department = document.getElementById('departmentSelect').value;
+    const group = document.getElementById('groupSelect').value;
+
+    // پشکنینی ئیمەیڵە پێشتر تۆمارکراوەکان
+    const existingStudents = await getCurrentStudents();
+    const existingEmails = new Set(existingStudents.map(s => s.email.toLowerCase()));
+
+    for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        const name = row['ناو'] || row['name'] || '';
+        const email = row['ئیمەیڵ'] || row['email'] || '';
+
+        if (!name || !email) {
+            errorCount++;
+            errorMessages.push(`ڕیز ${i + 2}: ناو یان ئیمەیڵ بەتاڵە`);
+            continue;
+        }
+
+        if (!isValidEmail(email)) {
+            errorCount++;
+            errorMessages.push(`ڕیز ${i + 2}: ئیمەیڵی "${email}" دروست نیە`);
+            continue;
+        }
+
+        if (existingEmails.has(email.toLowerCase())) {
+            errorCount++;
+            errorMessages.push(`ڕیز ${i + 2}: ئیمەیڵی "${email}" پێشتر تۆمارکراوە`);
+            continue;
+        }
+
+        try {
+            const newStudent = {
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
+                college,
+                stage,
+                department,
+                group,
+                absences: {}
+            };
+
+            const result = await saveStudent(newStudent);
+            if (result.success) {
+                successCount++;
+                existingEmails.add(email.toLowerCase()); // زیادکردنی ئیمەیڵی نوێ بۆ لیستەکە
+            } else {
+                errorCount++;
+                errorMessages.push(`ڕیز ${i + 2}: ${result.message}`);
+            }
+        } catch (error) {
+            errorCount++;
+            errorMessages.push(`ڕیز ${i + 2}: ${error.message}`);
+        }
+    }
+
+    // نیشاندانی ئەنجامەکان
+    const summary = document.getElementById('importSummary');
+    const successElement = document.getElementById('importSuccess');
+    const errorElement = document.getElementById('importError');
+
+    successElement.textContent = `${successCount} قوتابی بە سەرکەوتوویی تۆمارکران`;
+    errorElement.textContent = `${errorCount} هەڵە ڕوویدا`;
+
+    summary.style.display = 'block';
+
+    // نیشاندانی هەڵەکان ئەگەر هەبوون
+    if (errorCount > 0) {
+        errorElement.innerHTML = `${errorCount} هەڵە ڕوویدا <span class="toggle-errors" onclick="toggleErrorMessages()">(بینین)</span>`;
+        
+        // هەڵگرتنی هەڵەکان بۆ نیشاندان
+        window.importErrors = errorMessages;
+    }
+
+    // نوێکردنەوەی خشتەکان
+    await renderTable();
+    await renderLessonTable();
+
+    // پاککردنەوەی فایلەکە
+    document.getElementById('fileInput').value = '';
+
+    Swal.fire({
+        icon: successCount > 0 ? 'success' : 'warning',
+        title: successCount > 0 ? 'سەرکەوتووبوو' : 'ئاگاداری',
+        html: `
+            <div style="text-align: right;">
+                <p><strong>کۆی گشتی:</strong></p>
+                <p style="color: green;">${successCount} قوتابی بە سەرکەوتوویی تۆمارکران</p>
+                <p style="color: red;">${errorCount} هەڵە ڕوویدا</p>
+                ${errorCount > 0 ? '<p><small>کلیک لەسەر "هەڵە ڕوویدا" ببینیت</small></p>' : ''}
+            </div>
+        `,
+    });
+}
+
+// نیشاندانی/شاردنەوەی هەڵەکان
+function toggleErrorMessages() {
+    if (window.importErrors && window.importErrors.length > 0) {
+        const errorList = window.importErrors.map(error => `• ${error}`).join('\n');
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵەکان',
+            text: errorList,
+            scrollbarPadding: false,
+            customClass: {
+                popup: 'error-popup'
+            }
+        });
+    }
+}
+
+// CSSی زیادە بۆ ئەم کارە
+const additionalCSS = `
+    .toggle-errors {
+        color: #007bff;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-right: 5px;
+    }
+    .toggle-errors:hover {
+        color: #0056b3;
+    }
+    .error-popup {
+        direction: rtl;
+        text-align: right;
+    }
+    .error-popup .swal2-content {
+        white-space: pre-line;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+`;
+
+// زیادکردنی CSSەکە بۆ پەڕەکە
+const style = document.createElement('style');
+style.textContent = additionalCSS;
+document.head.appendChild(style);
 function sendEmailNotification(email, name, absenceCount) {
     let subject, body;
     
