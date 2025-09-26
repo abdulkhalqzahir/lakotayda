@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی غیاباتی قوتابیان - بەڕێوەبردن</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --main-purple: #6a0dad;
+            --dark-purple: #4b0082;
+            --light-purple: #9370db;
+            --black: #090305;
+            --white: #ffffff;
+            --accent-gold: #FFD700;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23090305"/><text x="50" y="50" font-family="Arial" font-size="10" fill="%23ffffff" text-anchor="middle" dominant-baseline="middle">KU</text></svg>') no-repeat center center fixed, 
+                        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+            background-size: contain, cover;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+            min-height: 100vh;
+            color: aliceblue;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 10px ridge var(--main-purple);
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px var(--main-purple);
+            color: aliceblue;
+            animation: containerGlow 3s infinite alternate;
+        }
+
+        @keyframes containerGlow {
+            0% { box-shadow: 0 0 20px var(--main-purple); }
+            100% { box-shadow: 0 0 40px var(--light-purple); }
+        }
+
+        .university-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--main-purple);
+            color: aliceblue;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .university-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(106, 13, 173, 0.2), rgba(255, 215, 0, 0.2));
+            z-index: -1;
+            animation: headerShine 5s infinite linear;
+        }
+
+        @keyframes headerShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .logo-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--main-purple), var(--dark-purple));
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px ridge var(--main-purple);
+            box-shadow: 0 0 20px var(--accent-gold);
+            animation: logoPulse 2s infinite alternate;
+        }
+
+        @keyframes logoPulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px var(--accent-gold); }
+            100% { transform: scale(1.05); box-shadow: 0 0 30px var(--accent-gold); }
+        }
+
+        .logo-placeholder i {
+            font-size: 60px;
+            color: var(--accent-gold);
+        }
+
+        h1, h2, h3 {
+            color: var(--white);
+            text-shadow: 0 0 10px var(--main-purple);
+            font-family: 'Times New Roman', serif;
+            color: aliceblue;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after, h2::after, h3::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            animation: titleUnderline 2s infinite alternate;
+        }
+
+        @keyframes titleUnderline {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 20px var(--main-purple);
+            color: aliceblue;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .table:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px var(--light-purple);
+        }
+
+        .table th {
+            background: linear-gradient(to bottom, var(--dark-purple), var(--main-purple));
+            color: white;
+            padding: 12px;
+            text-align: center;
+            color: aliceblue;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table th::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.2) 50%, transparent 60%);
+            animation: tableShine 3s infinite linear;
+        }
+
+        @keyframes tableShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--main-purple);
+            text-align: center;
+            color: aliceblue;
+            transition: background-color 0.3s ease;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: rgba(75, 0, 130, 0.1);
+        }
+
+        .table tr:hover {
+            background-color: rgba(75, 0, 130, 0.3);
+        }
+
+        .table tr {
+            animation: fadeInRow 0.5s ease-out;
+        }
+
+        @keyframes fadeInRow {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.2) 50%, transparent 60%);
+            transform: translateX(-100%);
+        }
+
+        .btn:hover::before {
+            animation: buttonShine 0.75s;
+        }
+
+        @keyframes buttonShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--main-purple), var(--dark-purple));
+            color: white;
+            border: 2px ridge var(--light-purple);
+            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+            box-shadow: 0 0 15px var(--light-purple);
+            transform: translateY(-3px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(to right, var(--black), #333);
+            color: white;
+            border: 2px ridge var(--main-purple);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(to right, #333, var(--black));
+            box-shadow: 0 0 15px var(--main-purple);
+            transform: translateY(-3px);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 2px ridge var(--main-purple);
+            border-radius: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--light-purple);
+            transform: scale(1.02);
+        }
+
+        .absence-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--dark-purple);
+            color: white;
+            border-radius: 50px;
+            margin: 2px;
+            font-size: 0.8em;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0% { box-shadow: 0 0 0 rgba(75, 0, 130, 0.5); }
+            70% { box-shadow: 0 0 10px rgba(75, 0, 130, 0.8); }
+            100% { box-shadow: 0 0 0 rgba(75, 0, 130, 0.5); }
+        }
+
+        .tab-container {
+            margin-top: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: linear-gradient(to bottom, var(--dark-purple), var(--main-purple));
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.2) 50%, transparent 60%);
+            transform: translateX(-100%);
+        }
+
+        .tab-btn:hover::before {
+            animation: buttonShine 0.75s;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.5);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(to bottom, var(--main-purple), var(--dark-purple));
+            box-shadow: 0 0 10px var(--light-purple);
+            transform: translateY(-3px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 5px ridge var(--main-purple);
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--main-purple);
+            animation: loginPulse 3s infinite alternate;
+        }
+
+        @keyframes loginPulse {
+            0% { box-shadow: 0 0 15px var(--main-purple); }
+            100% { box-shadow: 0 0 30px var(--light-purple); }
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px ridge var(--light-purple);
+            box-shadow: 0 0 15px var(--main-purple);
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px var(--light-purple);
+        }
+
+        .warning-badge {
+            background-color: #ffcc00;
+            color: black;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 5px;
+            animation: warningPulse 2s infinite;
+        }
+
+        @keyframes warningPulse {
+            0% { box-shadow: 0 0 0 rgba(255, 204, 0, 0.5); }
+            70% { box-shadow: 0 0 10px rgba(255, 204, 0, 0.8); }
+            100% { box-shadow: 0 0 0 rgba(255, 204, 0, 0.5); }
+        }
+
+        .danger-badge {
+            background-color: #ff3333;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 5px;
+            animation: dangerPulse 1s infinite;
+        }
+
+        @keyframes dangerPulse {
+            0% { box-shadow: 0 0 0 rgba(255, 51, 51, 0.5); }
+            70% { box-shadow: 0 0 10px rgba(255, 51, 51, 0.8); }
+            100% { box-shadow: 0 0 0 rgba(255, 51, 51, 0.5); }
+        }
+
+        .filter-section {
+            background: linear-gradient(to right, rgba(75, 0, 130, 0.2), rgba(106, 13, 173, 0.2));
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--main-purple);
+            box-shadow: 0 0 10px rgba(106, 13, 173, 0.3);
+        }
+
+        .stats-cards {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(to bottom right, var(--dark-purple), var(--main-purple));
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            animation: statCardAppear 0.5s ease-out;
+        }
+
+        @keyframes statCardAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(106, 13, 173, 0.5);
+        }
+
+        .stat-card h4 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--white);
+        }
+
+        .stat-card p {
+            font-size: 1.8em;
+            margin: 10px 0 0;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .admin-only {
+            display: none;
+        }
+
+        .logged-in .admin-only {
+            display: block;
+        }
+
+        .not-logged-in .admin-only {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                border-radius: 10px;
+            }
+            
+            .table th, .table td {
+                padding: 6px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                margin-bottom: 5px;
+            }
+            
+            .stats-cards {
+                flex-direction: column;
+            }
+            
+            .stat-card {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body class="not-logged-in">
+    <div class="container" id="mainContainer">
+        <div class="university-header">
+            <div class="logo-placeholder">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>سیستەمی غیاباتی قوتابیان</h1>
+            <p>زانکۆی سەلاحەدین - هەولێر</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showTab('loginTab')">چوونەژوورەوە</button>
+                <button class="tab-btn admin-only" onclick="showTab('adminTab')">بەڕێوەبردن</button>
+                <button class="tab-btn admin-only" onclick="showTab('attendanceTab')">ئاگاداری غیاب</button>
+                <button class="tab-btn admin-only" onclick="showTab('statsTab')">ئامارەکان</button>
+            </div>
+
+            <div id="loginTab" class="tab-content active">
+                <div class="login-container">
+                    <h2>چوونەژوورەوە بۆ سیستەم</h2>
+                    <form id="loginForm">
+                        <input type="text" id="username" class="form-control" placeholder="ناوی بەکارهێنەر" required>
+                        <input type="password" id="password" class="form-control" placeholder="وشەی نهێنی" required>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">چوونەژوورەوە</button>
+                    </form>
+                    <p id="loginMessage" style="text-align: center; margin-top: 15px; color: var(--light-purple);"></p>
+                </div>
+            </div>
+
+            <div id="adminTab" class="tab-content">
+                <h2 class="text-center">بەڕێوەبردنی مامۆستایان</h2>
+                
+                <h3>زیادکردنی مامۆستای نوێ</h3>
+                <form id="addTeacherForm">
+                    <input type="text" id="teacherName" class="form-control" placeholder="ناوی مامۆستا" required>
+                    <input type="text" id="teacherUsername" class="form-control" placeholder="ناوی بەکارهێنەر" required>
+                    <input type="password" id="teacherPassword" class="form-control" placeholder="وشەی نهێنی" required>
+                    <button type="submit" class="btn btn-primary">زیادکردنی مامۆستا</button>
+                </form>
+                
+                <h3>لیستی مامۆستایان</h3>
+                <div class="table-responsive">
+                    <table id="teachersTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>ناوی مامۆستا</th>
+                                <th>ناوی بەکارهێنەر</th>
+                                <th>وشەی نهێنی</th>
+                                <th>کردارەکان</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>مامۆستای سەرەکی</td>
+                                <td>admin</td>
+                                <td>admin123</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="editTeacher(0)">دەستکاری</button>
+                                    <button class="btn btn-danger" onclick="deleteTeacher(0)">سڕینەوە</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="attendanceTab" class="tab-content">
+                <!-- ناوەڕۆکی ئاگاداری غیاب -->
+            </div>
+
+            <div id="statsTab" class="tab-content">
+                <!-- ناوەڕۆکی ئامارەکان -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // گەرەکانی داتابەیس
+        let db = null;
+        let currentUser = null;
+        
+        // داتاکانی تێستکردن
+        const initData = {
+            teachers: [
+                { name: "مامۆستای سەرەکی", username: "admin", password: "admin123" }
+            ],
+            students: [],
+            lessons: [],
+            attendance: []
+        };
+
+        // دەستپێکردنی داتابەیس
+        function initDatabase() {
+            try {
+                // دروستکردنی یان وەرگرتنی داتابەیس
+                const databaseData = localStorage.getItem('attendance_database');
+                
+                if (databaseData) {
+                    db = JSON.parse(databaseData);
+                } else {
+                    db = initData;
+                    localStorage.setItem('attendance_database', JSON.stringify(db));
+                }
+                
+                renderTeachersTable();
+            } catch (error) {
+                console.error("هەڵە لە کارکردنی داتابەیس:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'هەڵە',
+                    text: 'کێشەیەک هەیە لە کارکردنی داتابەیس!'
+                });
+            }
+        }
+
+        // نیشاندانی تاب
+        function showTab(tabId) {
+            // لەکارخستنی هەموو تابەکان
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // چالاککردنی تابە دیاریکراوەکە
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // نیشاندانی لیستی مامۆستایان
+        function renderTeachersTable() {
+            const teachersTable = document.getElementById('teachersTable').querySelector('tbody');
+            teachersTable.innerHTML = '';
+            
+            if (db.teachers && db.teachers.length > 0) {
+                db.teachers.forEach((teacher, index) => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${teacher.name}</td>
+                        <td>${teacher.username}</td>
+                        <td>${teacher.password}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editTeacher(${index})">دەستکاری</button>
+                            <button class="btn btn-danger" onclick="deleteTeacher(${index})">سڕینەوە</button>
+                        </td>
+                    `;
+                    
+                    teachersTable.appendChild(row);
+                });
+            } else {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="4" style="text-align: center;">هیچ مامۆستایەک نیە</td>';
+                teachersTable.appendChild(row);
+            }
+        }
+
+        // زیادکردنی مامۆستای نوێ
+        document.getElementById('addTeacherForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('teacherName').value;
+            const username = document.getElementById('teacherUsername').value;
+            const password = document.getElementById('teacherPassword').value;
+            
+            if (!name || !username || !password) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'ئاگاداری',
+                    text: 'تکایە هەموو خانەکان پڕ بکەوە!'
+                });
+                return;
+            }
+            
+            // پشکنین بۆ ئەوەی ناوی بەکارهێنەر پێشتر بوونی هەبێت
+            const existingUser = db.teachers.find(teacher => teacher.username === username);
+            if (existingUser) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'هەڵە',
+                    text: 'ئەم ناوی بەکارهێنەرە پێشتر هەیە!'
+                });
+                return;
+            }
+            
+            // زیادکردنی مامۆستای نوێ
+            db.teachers.push({ name, username, password });
+            localStorage.setItem('attendance_database', JSON.stringify(db));
+            
+            // پاککردنەوەی خانەکان
+            document.getElementById('teacherName').value = '';
+            document.getElementById('teacherUsername').value = '';
+            document.getElementById('teacherPassword').value = '';
+            
+            // نوێکردنەوەی لیستەکە
+            renderTeachersTable();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'سەرکەوتوو',
+                text: 'مامۆستا بە سەرکەوتوویی زیاد کرا!'
+            });
+        });
+
+        // دەستکاریکردنی مامۆستا
+        function editTeacher(index) {
+            const teacher = db.teachers[index];
+            
+            Swal.fire({
+                title: 'دەستکاریکردنی مامۆستا',
+                html: `
+                    <input id="swal-name" class="swal2-input" placeholder="ناوی مامۆستا" value="${teacher.name}">
+                    <input id="swal-username" class="swal2-input" placeholder="ناوی بەکارهێنەر" value="${teacher.username}">
+                    <input id="swal-password" class="swal2-input" placeholder="وشەی نهێنی" value="${teacher.password}">
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'نوێکردنەوە',
+                cancelButtonText: 'پاشگەزبوونەوە',
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('swal-name').value,
+                        username: document.getElementById('swal-username').value,
+                        password: document.getElementById('swal-password').value
+                    };
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const { name, username, password } = result.value;
+                    
+                    if (!name || !username || !password) {
+                        Swal.showValidationMessage('تکایە هەموو خانەکان پڕ بکەوە');
+                        return;
+                    }
+                    
+                    // پشکنین بۆ ئەوەی ناوی بەکارهێنەر پێشتر بوونی هەبێت (جگە لە خۆی)
+                    const existingUser = db.teachers.find((teacher, i) => i !== index && teacher.username === username);
+                    if (existingUser) {
+                        Swal.showValidationMessage('ئەم ناوی بەکارهێنەرە پێشتر هەیە!');
+                        return;
+                    }
+                    
+                    // نوێکردنەوەی زانیاری مامۆستا
+                    db.teachers[index] = { name, username, password };
+                    localStorage.setItem('attendance_database', JSON.stringify(db));
+                    
+                    // نوێکردنەوەی لیستەکە
+                    renderTeachersTable();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سەرکەوتوو',
+                        text: 'زانیاری مامۆستا نوێ کرایەوە!'
+                    });
+                }
+            });
+        }
+
+        // سڕینەوەی مامۆستا
+        function deleteTeacher(index) {
+            // ناهێڵیت مامۆستای سەرەکی بسڕیتەوە
+            if (index === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'هەڵە',
+                    text: 'ناتوانیت مامۆستای سەرەکی بسڕیتەوە!'
+                });
+                return;
+            }
+            
+            Swal.fire({
+                title: 'دڵنیای لە سڕینەوەی ئەم مامۆستایە؟',
+                text: 'ئەم کارە پاشگەزبوونەوەی نیە!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'بەڵێ، بسڕەوە!',
+                cancelButtonText: 'پاشگەزبوونەوە'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // سڕینەوەی مامۆستا
+                    db.teachers.splice(index, 1);
+                    localStorage.setItem('attendance_database', JSON.stringify(db));
+                    
+                    // نوێکردنەوەی لیستەکە
+                    renderTeachersTable();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سڕایەوە!',
+                        text: 'مامۆستا سڕدرایەوە.'
+                    });
+                }
+            });
+        }
+
+        // فۆرمی چوونەژوورەوە
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                document.getElementById('loginMessage').textContent = 'تکایە هەموو خانەکان پڕ بکەوە';
+                return;
+            }
+            
+            // پشکنینی ناوی بەکارهێنەر و وشەی نهێنی
+            const teacher = db.teachers.find(t => t.username === username && t.password === password);
+            
+            if (teacher) {
+                currentUser = teacher;
+                document.getElementById('loginMessage').textContent = '';
+                
+                // گۆڕینی دۆخی سیستەم بۆ چوونەژوورەوە
+                document.body.classList.remove('not-logged-in');
+                document.body.classList.add('logged-in');
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'بەخێربێیت!',
+                    text: `بە سەرکەوتوویی چوویتەژوورەوە وەک ${teacher.name}`,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // گواستنەوە بۆ تابەکانی بەڕێوەبردن
+                    showTab('adminTab');
+                });
+            } else {
+                document.getElementById('loginMessage').textContent = 'ناوی بەکارهێنەر یان وشەی نهێنی هەڵەیە';
+                
+                // ئەنیمەیشنی شەقەبوون
+                const loginContainer = document.querySelector('.login-container');
+                loginContainer.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginContainer.style.animation = '';
+                }, 500);
+            }
+        });
+
+        // دەستپێکردنی سیستەم کاتێک پەڕە بار دەبێت
+        document.addEventListener('DOMContentLoaded', function() {
+            initDatabase();
+            
+            // زیادکردنی شەپۆلی شەقەبوون بۆ CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0% { transform: translateX(0); }
+                    20% { transform: translateX(-10px); }
+                    40% { transform: translateX(10px); }
+                    60% { transform: translateX(-10px); }
+                    80% { transform: translateX(10px); }
+                    100% { transform: translateX(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

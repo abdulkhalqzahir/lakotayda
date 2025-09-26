@@ -1,0 +1,40 @@
+{
+  "teachers": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "name": "مامۆستای بەڕێز",
+      "email": "admin@college.edu.krd"
+    },
+    {
+      "id": 2,
+      "username": "karzan",
+      "password": "karzan2024",
+      "name": "دکتۆر کارزان ئامۆزا",
+      "email": "karzan@college.edu.krd"
+    },
+    {
+      "id": 3,
+      "username": "abdulkhaliq",
+      "password": "abdul123",
+      "name": "عبدالخالق خۆشناو",
+      "email": "abdulkhaliq@college.edu.krd"
+    },
+    {
+      "id": 4,
+      "username": "shwan",
+      "password": "shwan456",
+      "name": "شوان محەممەد",
+      "email": "shwan@college.edu.krd"
+    },
+    {
+      "id": 5,
+      "username": "sara",
+      "password": "sara789",
+      "name": "سارا عەلی",
+      "email": "sara@college.edu.krd"
+    }
+    
+  ]
+}
