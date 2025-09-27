@@ -1,3 +1,119 @@
+
+// فەنکشنی ناردنی داتا بۆ سێرڤەری مەركزی
+async function sendDataToCentralServer() {
+    try {
+        const allStudents = getAllStudentsFromLocalStorage();
+        const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
+        
+        const response = await fetch(`${SERVER_URL}/api/central/save-data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                studentsData: allStudents,
+                teacherName: teacherName
+            })
+        });
+        
+        if (response.ok) {
+            console.log('داتاکان بە سەرکەوتوویی نێردران بۆ سێرڤەری مەركزی');
+        }
+    } catch (error) {
+        console.error('هەڵە لە ناردنی داتا بۆ سێرڤەری مەركزی:', error);
+    }
+}
+// فەنکشنی ناردنی ڕاپۆرتی وەرەقە
+async function sendReportToFormspree() {
+    try {
+        const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
+        const students = await getCurrentStudents();
+        const lessons = await getLessons();
+        
+        // دروستکردنی ڕاپۆرت
+        let report = `ڕاپۆرتی غیاب - ${new Date().toLocaleString('ku')}\n\n`;
+        report += `مامۆستا: ${teacherName}\n`;
+        report += `کۆلێژ: ${document.getElementById('collegeSelect').value}\n`;
+        report += `بەش: ${document.getElementById('departmentSelect').value}\n`;
+        report += `قۆناغ: ${document.getElementById('stageSelect').value}\n`;
+        report += `گروپ: ${document.getElementById('groupSelect').value}\n\n`;
+        
+        report += `کۆی قوتابیان: ${students.length}\n`;
+        report += `کۆی دەرسەکان: ${lessons.length}\n\n`;
+        
+        // زانیاری غیابەکان
+        if (currentLessonName) {
+            let absentStudents = students.filter(s => 
+                s.absences && s.absences[currentLessonName] && s.absences[currentLessonName].count > 0
+            );
+            report += `دەرس: ${currentLessonName}\n`;
+            report += `قوتابی غایب: ${absentStudents.length}\n\n`;
+            
+            absentStudents.forEach(student => {
+                report += `- ${student.name}: ${student.absences[currentLessonName].count} غیاب\n`;
+            });
+        }
+        
+        await fetch('https://formspree.io/f/meorerzq', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                _subject: `ڕاپۆرتی تەواو - ${teacherName}`,
+                report: report,
+                teacherName: teacherName,
+                date: new Date().toLocaleString('ku'),
+                _format: 'plain'
+            })
+        });
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'ڕاپۆرت نێردرا',
+            text: 'ڕاپۆرتەکە بە سەرکەوتوویی نێردرا بۆ ئیمەیڵ!',
+        });
+        
+    } catch (error) {
+        console.error('هەڵە لە ناردنی ڕاپۆرت:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هەڵە ڕوویدا لە ناردنی ڕاپۆرت!',
+        });
+    }
+}
+async function saveStudent(student) {
+    // کۆدی پێشوو...
+    
+    // ناردنی داتا بۆ Formspree
+    const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
+    const students = await getCurrentStudents();
+    const lessons = await getLessons();
+    
+    await sendDataToFormspree(teacherName, students.length + 1, lessons.length);
+    
+    return result;
+}
+// زیادکردنی ئەم فەنکشنە بۆ هەموو فەنکشنەکانی تۆمارکردنی داتا
+async function saveStudent(student) {
+    // کۆدی پێشوو...
+    
+    // ناردنی داتا بۆ سێرڤەری مەركزی
+    await sendDataToCentralServer();
+    
+    return result;
+}
+
+async function addAbsenceToServer(studentId, lesson, note) {
+    // کۆدی پێشوو...
+    
+    // ناردنی داتا بۆ سێرڤەری مەركزی
+    await sendDataToCentralServer();
+    
+    return result;
+}
+
 // ناونیشانی سەرڤەر
 const SERVER_URL = 'http://localhost:3000';
 let connectionStatus = false;
@@ -871,7 +987,63 @@ const additionalCSS = `
         overflow-y: auto;
     }
 `;
-
+// ناردنی ئاگاداری بە ئیمەیڵ (لە ڕێگەی Formspree)
+async function sendEmailNotification(email, name, absenceCount) {
+    let subject, body;
+    
+    if (absenceCount >= 7) {
+        subject = `ئاگاداری کۆتایی - ${name}`;
+        body = `قوتابی بەڕێز ${name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت. ژمارەی غیابەکان: ${absenceCount}`;
+    } else if (absenceCount >= 5) {
+        subject = `ئاگاداری دووەم - ${name}`;
+        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. ئەگەر ژمارەی غیابەکان زیاتر بێت، کۆتایی بە خوێندن دێت.`;
+    } else if (absenceCount >= 3) {
+        subject = `ئاگاداری یەکەم - ${name}`;
+        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. تکایە پابەند بە کاتی دەرسەکە بە.`;
+    } else {
+        subject = `زانیاری غیاب - ${name}`;
+        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت ${absenceCount}ە.`;
+    }
+    
+    try {
+        const response = await fetch('https://formspree.io/f/meorerzq', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                _subject: subject,
+                email: email,
+                name: name,
+                message: body,
+                absenceCount: absenceCount,
+                lesson: currentLessonName || 'هیچ دەرسێک',
+                college: document.getElementById('collegeSelect').value,
+                department: document.getElementById('departmentSelect').value,
+                _replyto: email,
+                _format: 'plain'
+            })
+        });
+        
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'ئیمەیڵ نێردرا',
+                text: `ئاگاداری بۆ ${name} نێردرا!`,
+                timer: 3000
+            });
+        } else {
+            throw new Error('هەڵە لە ناردنی ئیمەیڵ');
+        }
+    } catch (error) {
+        console.error('هەڵە لە ناردنی ئیمەیڵ:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هەڵە ڕوویدا لە ناردنی ئیمەیڵ!',
+        });
+    }
+}
 // زیادکردنی CSSەکە بۆ پەڕەکە
 const style = document.createElement('style');
 style.textContent = additionalCSS;
@@ -1517,7 +1689,32 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
         }
     });
+// ناردنی داتاکان بۆ Formspree وەک پشتیوانی
+async function sendDataToFormspree(teacherName, studentCount, lessonCount) {
+    try {
+        const summaryData = {
+            _subject: `ڕاپۆرتی غیاب - ${teacherName}`,
+            teacherName: teacherName,
+            studentCount: studentCount,
+            lessonCount: lessonCount,
+            date: new Date().toLocaleString('ku'),
+            college: document.getElementById('collegeSelect').value,
+            department: document.getElementById('departmentSelect').value,
+            _format: 'plain'
+        };
 
+        await fetch('https://formspree.io/f/meorerzq', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(summaryData)
+        });
+        
+    } catch (error) {
+        console.error('هەڵە لە ناردنی داتا:', error);
+    }
+}
     // گەڕان لە لیستی قوتابیان
     document.getElementById('searchInput').addEventListener('input', renderTable);
 
