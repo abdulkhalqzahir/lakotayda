@@ -24,6 +24,7 @@ body {
     text-align: right;
     min-height: 100vh;
 }
+
 .btn-info {
     background: linear-gradient(to right, #17a2b8, #138496);
     color: var(--white);
@@ -35,6 +36,7 @@ body {
     box-shadow: 0 0 15px #17a2b8;
     transform: translateY(-2px);
 }
+
 .container {
     background-color: rgba(0, 0, 0, 0.75);
     border: 2px solid var(--main-purple);
@@ -375,13 +377,25 @@ h1, h2 {
     margin-bottom: 20px;
     border: 1px solid var(--main-purple);
     box-shadow: 0 0 15px rgba(106, 13, 173, 0.3);
+    transition: all 0.3s ease;
+}
+
+.stats-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px var(--light-purple);
 }
 
 .stats-number {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: bold;
     color: var(--light-purple);
     text-shadow: 0 0 10px var(--main-purple);
+    margin-bottom: 5px;
+}
+
+.stats-box div:last-child {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
 }
 
 .welcome-message {
@@ -551,4 +565,77 @@ h1, h2 {
     text-align: center;
     margin-top: 15px;
     display: none;
+}
+
+/* شێوازی نوێ بۆ بەشی ئامار */
+#statsTable th {
+    background: linear-gradient(to right, var(--dark-purple), var(--main-purple));
+    color: var(--white);
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+    border: none;
+}
+
+#statsTable td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(106, 13, 173, 0.3);
+    text-align: center;
+    color: var(--white);
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease;
+}
+
+#statsTable tr:hover td {
+    background-color: rgba(106, 13, 173, 0.3);
+}
+
+/* شێوازی پێگەکان */
+.absence-max {
+    background: linear-gradient(to right, #000000, #333333);
+    color: #ff0000;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.absence-danger {
+    background: linear-gradient(to right, var(--danger-color), #c62828);
+}
+
+.absence-warning {
+    background: linear-gradient(to right, var(--warning-color), #e68900);
+}
+
+/* شێوازی فیلتەرەکان */
+#statsLessonSelect, #statsDepartmentSelect, #statsGroupSelect {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--white);
+    border: 2px solid var(--main-purple);
+}
+
+#statsLessonSelect:focus, #statsDepartmentSelect:focus, #statsGroupSelect:focus {
+    box-shadow: 0 0 15px var(--light-purple);
+    border-color: var(--light-purple);
+}
+
+/* شێوازی زیادکراو بۆ هەڵەکان */
+.toggle-errors {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-right: 5px;
+}
+
+.toggle-errors:hover {
+    color: #0056b3;
+}
+
+.error-popup {
+    direction: rtl;
+    text-align: right;
+}
+
+.error-popup .swal2-content {
+    white-space: pre-line;
+    max-height: 400px;
+    overflow-y: auto;
 }

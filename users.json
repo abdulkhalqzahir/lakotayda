@@ -4,37 +4,57 @@
       "id": 1,
       "username": "admin",
       "password": "admin123",
-      "name": "مامۆستای بەڕێز",
-      "email": "admin@college.edu.krd"
+      "name": "مامۆستای ئەدمین",
+      "email": "admin@college.edu.krd",
+      "department": "هەموو بەشەکان"
     },
     {
       "id": 2,
-      "username": "karzan",
-      "password": "karzan2024",
-      "name": "دکتۆر کارزان ئامۆزا",
-      "email": "karzan@college.edu.krd"
+      "username": "accounting",
+      "password": "accounting112",
+      "name": "مامۆستای ژمێریاری",
+      "email": "accounting@college.edu.krd",
+      "department": "ژمێریاری"
     },
     {
       "id": 3,
-      "username": "abdulkhaliq",
-      "password": "abdul123",
-      "name": "عبدالخالق خۆشناو",
-      "email": "abdulkhaliq@college.edu.krd"
+      "username": "statistics",
+      "password": "statistics112",
+      "name": "مامۆستای ئامار",
+      "email": "statistics@college.edu.krd",
+      "department": "ئامار"
     },
     {
       "id": 4,
-      "username": "shwan",
-      "password": "shwan456",
-      "name": "شوان محەممەد",
-      "email": "shwan@college.edu.krd"
+      "username": "economics",
+      "password": "economics112",
+      "name": "مامۆستای ئابووری",
+      "email": "economics@college.edu.krd",
+      "department": "ئابووری"
     },
     {
       "id": 5,
-      "username": "sara",
-      "password": "sara789",
-      "name": "سارا عەلی",
-      "email": "sara@college.edu.krd"
+      "username": "management",
+      "password": "management112",
+      "name": "مامۆستای کارگێڕی کار",
+      "email": "management@college.edu.krd",
+      "department": "کارگێڕی کار"
+    },
+    {
+      "id": 6,
+      "username": "banking",
+      "password": "banking112",
+      "name": "مامۆستای دارای بانک",
+      "email": "banking@college.edu.krd",
+      "department": "دارایی بانک"
+    },
+    {
+      "id": 7,
+      "username": "marketing",
+      "password": "marketing112",
+      "name": "مامۆستای بازاڕگەری",
+      "email": "marketing@college.edu.krd",
+      "department": "بازاڕگەری"
     }
-    
   ]
 }

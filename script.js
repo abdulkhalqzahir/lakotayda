@@ -1,119 +1,3 @@
-
-// فەنکشنی ناردنی داتا بۆ سێرڤەری مەركزی
-async function sendDataToCentralServer() {
-    try {
-        const allStudents = getAllStudentsFromLocalStorage();
-        const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
-        
-        const response = await fetch(`${SERVER_URL}/api/central/save-data`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                studentsData: allStudents,
-                teacherName: teacherName
-            })
-        });
-        
-        if (response.ok) {
-            console.log('داتاکان بە سەرکەوتوویی نێردران بۆ سێرڤەری مەركزی');
-        }
-    } catch (error) {
-        console.error('هەڵە لە ناردنی داتا بۆ سێرڤەری مەركزی:', error);
-    }
-}
-// فەنکشنی ناردنی ڕاپۆرتی وەرەقە
-async function sendReportToFormspree() {
-    try {
-        const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
-        const students = await getCurrentStudents();
-        const lessons = await getLessons();
-        
-        // دروستکردنی ڕاپۆرت
-        let report = `ڕاپۆرتی غیاب - ${new Date().toLocaleString('ku')}\n\n`;
-        report += `مامۆستا: ${teacherName}\n`;
-        report += `کۆلێژ: ${document.getElementById('collegeSelect').value}\n`;
-        report += `بەش: ${document.getElementById('departmentSelect').value}\n`;
-        report += `قۆناغ: ${document.getElementById('stageSelect').value}\n`;
-        report += `گروپ: ${document.getElementById('groupSelect').value}\n\n`;
-        
-        report += `کۆی قوتابیان: ${students.length}\n`;
-        report += `کۆی دەرسەکان: ${lessons.length}\n\n`;
-        
-        // زانیاری غیابەکان
-        if (currentLessonName) {
-            let absentStudents = students.filter(s => 
-                s.absences && s.absences[currentLessonName] && s.absences[currentLessonName].count > 0
-            );
-            report += `دەرس: ${currentLessonName}\n`;
-            report += `قوتابی غایب: ${absentStudents.length}\n\n`;
-            
-            absentStudents.forEach(student => {
-                report += `- ${student.name}: ${student.absences[currentLessonName].count} غیاب\n`;
-            });
-        }
-        
-        await fetch('https://formspree.io/f/meorerzq', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                _subject: `ڕاپۆرتی تەواو - ${teacherName}`,
-                report: report,
-                teacherName: teacherName,
-                date: new Date().toLocaleString('ku'),
-                _format: 'plain'
-            })
-        });
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'ڕاپۆرت نێردرا',
-            text: 'ڕاپۆرتەکە بە سەرکەوتوویی نێردرا بۆ ئیمەیڵ!',
-        });
-        
-    } catch (error) {
-        console.error('هەڵە لە ناردنی ڕاپۆرت:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'هەڵە ڕوویدا لە ناردنی ڕاپۆرت!',
-        });
-    }
-}
-async function saveStudent(student) {
-    // کۆدی پێشوو...
-    
-    // ناردنی داتا بۆ Formspree
-    const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
-    const students = await getCurrentStudents();
-    const lessons = await getLessons();
-    
-    await sendDataToFormspree(teacherName, students.length + 1, lessons.length);
-    
-    return result;
-}
-// زیادکردنی ئەم فەنکشنە بۆ هەموو فەنکشنەکانی تۆمارکردنی داتا
-async function saveStudent(student) {
-    // کۆدی پێشوو...
-    
-    // ناردنی داتا بۆ سێرڤەری مەركزی
-    await sendDataToCentralServer();
-    
-    return result;
-}
-
-async function addAbsenceToServer(studentId, lesson, note) {
-    // کۆدی پێشوو...
-    
-    // ناردنی داتا بۆ سێرڤەری مەركزی
-    await sendDataToCentralServer();
-    
-    return result;
-}
-
 // ناونیشانی سەرڤەر
 const SERVER_URL = 'http://localhost:3000';
 let connectionStatus = false;
@@ -132,47 +16,68 @@ const collegeDepartments = {
 // فەنکشنی خوێندنەوەی فایلی یوزەرەکان
 async function loadUsersFromFile() {
     try {
-        // داتای بنەڕەتی یوزەرەکان
+        // 7 بەکارهێنەر - 1 ئەدمین + 6 مامۆستای بەش
         const defaultUsers = [
             {
                 "id": 1,
                 "username": "admin",
                 "password": "admin123",
-                "name": "مامۆستای بەڕێز",
-                "email": "admin@college.edu.krd"
+                "name": "مامۆستای ئەدمین",
+                "email": "admin@college.edu.krd",
+                "department": "هەموو بەشەکان"
             },
             {
                 "id": 2,
-                "username": "karzan",
-                "password": "karzan2024",
-                "name": "دکتۆر کارزان ئامۆزا",
-                "email": "karzan@college.edu.krd"
+                "username": "accounting",
+                "password": "accounting112",
+                "name": "مامۆستای ژمێریاری",
+                "email": "accounting@college.edu.krd",
+                "department": "ژمێریاری"
             },
             {
                 "id": 3,
-                "username": "abdulkhaliq",
-                "password": "abdul123",
-                "name": "عبدالخالق خۆشناو",
-                "email": "abdulkhaliq@college.edu.krd"
+                "username": "statistics",
+                "password": "statistics112",
+                "name": "مامۆستای ئامار",
+                "email": "statistics@college.edu.krd",
+                "department": "ئامار"
             },
             {
                 "id": 4,
-                "username": "shwan",
-                "password": "shwan456",
-                "name": "شوان محەممەد",
-                "email": "shwan@college.edu.krd"
+                "username": "economics",
+                "password": "economics112",
+                "name": "مامۆستای ئابووری",
+                "email": "economics@college.edu.krd",
+                "department": "ئابووری"
             },
             {
                 "id": 5,
-                "username": "sara",
-                "password": "sara789",
-                "name": "سارا عەلی",
-                "email": "sara@college.edu.krd"
+                "username": "management",
+                "password": "management112",
+                "name": "مامۆستای کارگێڕی کار",
+                "email": "management@college.edu.krd",
+                "department": "کارگێڕی کار"
+            },
+            {
+                "id": 6,
+                "username": "banking",
+                "password": "banking112",
+                "name": "مامۆستای دارای بانک",
+                "email": "banking@college.edu.krd",
+                "department": "دارایی بانک"
+            },
+            {
+                "id": 7,
+                "username": "marketing",
+                "password": "marketing112",
+                "name": "مامۆستای بازاڕگەری",
+                "email": "marketing@college.edu.krd",
+                "department": "بازاڕگەری"
             }
         ];
         
         users = defaultUsers;
-        console.log('یوزەرەکان بە سەرکەوتوویی بارکران');
+        console.log('7 بەکارهێنەر بە سەرکەوتوویی بارکران');
         return users;
     } catch (error) {
         console.error('هەڵە لە خوێندنەوەی فایلی یوزەرەکان: ', error);
@@ -188,8 +93,9 @@ async function loadUsersFromFile() {
                     "id": 1,
                     "username": "admin",
                     "password": "admin123",
-                    "name": "مامۆستای بەڕێز",
-                    "email": "admin@college.edu.krd"
+                    "name": "مامۆستای ئەدمین",
+                    "email": "admin@college.edu.krd",
+                    "department": "هەموو بەشەکان"
                 }
             ];
             localStorage.setItem('backupUsers', JSON.stringify(users));
@@ -625,6 +531,7 @@ function selectLesson(lessonName) {
     document.getElementById('currentLessonSpan').textContent = lessonName;
     document.getElementById('currentLessonSpan').classList.remove('no-lesson');
     renderTable();
+    updateStatistics();
 }
 
 // سڕینەوەی دەرس
@@ -651,6 +558,7 @@ async function deleteLesson(index, lessonName) {
                 
                 await renderLessonTable();
                 await renderTable();
+                await updateStatistics();
                 
                 Swal.fire({
                     icon: 'success',
@@ -764,12 +672,761 @@ async function renderTable() {
         studentTableBody.appendChild(row);
     });
 }
-//------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------
+
 // ناردنی ئاگاداری بە ئیمەیڵ
+function sendEmailNotification(email, name, absenceCount) {
+    let subject, body;
+    
+    if (absenceCount >= 7) {
+        subject = `ئاگاداری کۆتایی - ${name}`;
+        body = `قوتابی بەڕێز ${name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت. ژمارەی غیابەکان: ${absenceCount}`;
+    } else if (absenceCount >= 5) {
+        subject = `ئاگاداری دووەم - ${name}`;
+        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. ئەگەر ژمارەی غیابەکان زیاتر بێت، کۆتایی بە خوێندن دێت.`;
+    } else if (absenceCount >= 3) {
+        subject = `ئاگاداری یەکەم - ${name}`;
+        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. تکایە پابەند بە کاتی دەرسەکە بە.`;
+    } else {
+        subject = `زانیاری غیاب - ${name}`;
+        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت ${absenceCount}ە.`;
+    }
+    
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+    window.open(`mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`, '_blank');
+}
+
+// نیشاندانی/شاردنەوەی تێبینییەکان
+function toggleNotes(element) {
+    const notesContainer = element.nextElementSibling;
+    if (notesContainer.style.display === 'none') {
+        notesContainer.style.display = 'block';
+        element.textContent = '(شاردنەوە)';
+    } else {
+        notesContainer.style.display = 'none';
+        element.textContent = '(بینین)';
+    }
+}
+
+// دەستکاریکردنی ئیمەیڵ
+function editStudentEmail(index, currentEmail) {
+    currentStudentIndex = index;
+    document.getElementById('currentEmail').value = currentEmail;
+    document.getElementById('newEmail').value = currentEmail;
+    $('#editEmailModal').modal('show');
+}
+
+// زیادکردنی غیاب
+async function addAbsence(index) {
+    if (!currentLessonName) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+        });
+        return;
+    }
+    
+    const currentTime = new Date().getTime();
+    if (currentTime - lastAbsentClickTime < 1000) {
+        return; // ڕێگەنەگرە لە ماوەی 1 چرکە زیاتر لە جارێک فشاربدرێت
+    }
+    lastAbsentClickTime = currentTime;
+    
+    const students = await getCurrentStudents();
+    const student = students[index];
+    const studentId = student.id || index; // لە کاتی بەکارهێنانی سەرڤەر، IDی قوتابی بەکار دەهێنین
+    
+    let noteText = '';
+    const absenceCount = student.absences && student.absences[currentLessonName] 
+        ? student.absences[currentLessonName].count + 1 
+        : 1;
+    
+    // زیادکردنی تێبینی بەپێی ژمارەی غیاب
+    if (absenceCount === 3 || absenceCount === 5 || absenceCount === 7) {
+        const { value } = await Swal.fire({
+            icon: absenceCount >= 7 ? 'error' : 'warning',
+            title: `ئاگاداری ${absenceCount === 3 ? 'یەکەم' : absenceCount === 5 ? 'دووەم' : 'کۆتایی'}`,
+            html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>${absenceCount} غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
+            <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
+            showCancelButton: true,
+            confirmButtonText: 'هەڵگرتنی تێبینی',
+            cancelButtonText: 'پاشخست',
+            preConfirm: () => {
+                return {
+                    note: document.getElementById('warningNote').value
+                };
+            }
+        });
+        
+        if (value && value.note) {
+            noteText = value.note;
+        }
+    }
+    
+    const result = await addAbsenceToServer(studentId, currentLessonName, noteText);
+    if (result.success) {
+        await renderTable();
+        await renderLessonTable();
+        await updateStatistics();
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: result.message,
+        });
+    }
+}
+
+// لابردنی غیاب
+async function removeAbsence(index) {
+    if (!currentLessonName) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
+        });
+        return;
+    }
+    
+    const students = await getCurrentStudents();
+    const student = students[index];
+    
+    if (!student.absences || !student.absences[currentLessonName] || student.absences[currentLessonName].count <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'ئەم قوتابیە هیچ غیابێکی نیە لەم دەرسەدا!',
+        });
+        return;
+    }
+    
+    // لابردنی غیاب لە localStorage
+    student.absences[currentLessonName].count--;
+    
+    const college = document.getElementById('collegeSelect').value;
+    const stage = document.getElementById('stageSelect').value;
+    const department = document.getElementById('departmentSelect').value;
+    const group = document.getElementById('groupSelect').value;
+    const key = `students_${college}_${stage}_${department}_${group}`;
+    localStorage.setItem(key, JSON.stringify(students));
+    
+    await renderTable();
+    await renderLessonTable();
+    await updateStatistics();
+}
+
+// سڕینەوەی قوتابی
+async function deleteStudent(index) {
+    Swal.fire({
+        title: 'دڵنیایت؟',
+        text: 'دڵنیایت دەتەوێت ئەم قوتابیە بسڕیتەوە؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'بەڵێ، بسڕەوە',
+        cancelButtonText: 'نەخێر'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            if (connectionStatus) {
+                try {
+                    const students = await getCurrentStudents();
+                    const student = students[index];
+                    
+                    const response = await fetch(`${SERVER_URL}/api/students/${student.id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) throw new Error('هەڵە لە سڕینەوەی قوتابی');
+                    
+                    await renderTable();
+                    await renderLessonTable();
+                    await updateStatistics();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سڕایەوە',
+                        text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                    });
+                } catch (error) {
+                    console.error('هەڵە: ', error);
+                    connectionStatus = false;
+                    checkServerConnection();
+                    
+                    // سڕینەوەی قوتابی لە localStorage
+                    const students = await getCurrentStudents();
+                    students.splice(index, 1);
+                    const college = document.getElementById('collegeSelect').value;
+                    const stage = document.getElementById('stageSelect').value;
+                    const department = document.getElementById('departmentSelect').value;
+                    const group = document.getElementById('groupSelect').value;
+                    const key = `students_${college}_${stage}_${department}_${group}`;
+                    localStorage.setItem(key, JSON.stringify(students));
+                    
+                    await renderTable();
+                    await renderLessonTable();
+                    await updateStatistics();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'سڕایەوە',
+                        text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                    });
+                }
+            } else {
+                // سڕینەوەی قوتابی لە localStorage
+                const students = await getCurrentStudents();
+                students.splice(index, 1);
+                const college = document.getElementById('collegeSelect').value;
+                const stage = document.getElementById('stageSelect').value;
+                const department = document.getElementById('departmentSelect').value;
+                const group = document.getElementById('groupSelect').value;
+                const key = `students_${college}_${stage}_${department}_${group}`;
+                localStorage.setItem(key, JSON.stringify(students));
+                
+                await renderTable();
+                await renderLessonTable();
+                await updateStatistics();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'سڕایەوە',
+                    text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
+                });
+            }
+        }
+    });
+}
+
+// سڕینەوەی هەموو داتاکان
+async function clearAllData() {
+    Swal.fire({
+        title: 'دڵنیایت؟',
+        text: 'ئەم کارە هەموو داتاکان دەسڕێتەوە و ناتوانیت بیانگەڕێنیتەوە!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'بەڵێ، هەموو داتاکان بسڕەوە',
+        cancelButtonText: 'نەخێر'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            if (connectionStatus) {
+                try {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'ئاگاداری',
+                        text: 'ناسڕینەوەی هەموو داتاکان لە سەرڤەر پێویستی بە APIی تایبەت هەیە.',
+                    });
+                } catch (error) {
+                    console.error('هەڵە: ', error);
+                }
+            }
+            
+            // سڕینەوەی هەموو داتاکان لە localStorage
+            localStorage.clear();
+            await renderTable();
+            await renderLessonTable();
+            await updateStatistics();
+            currentLessonName = '';
+            document.getElementById('currentLessonSpan').textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
+            document.getElementById('currentLessonSpan').classList.add('no-lesson');
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'سڕایەوە',
+                text: 'هەموو داتاکان بە سەرکەوتوویی سڕدرایەوە.',
+            });
+        }
+    });
+}
+
+// پرینتکردنی لیستی قوتابیان
+function printStudentTable() {
+    window.print();
+}
+
+// هەڵگرتنی داتاکان بە فۆرماتی Excel
+async function exportToExcel() {
+    const students = await getCurrentStudents();
+    
+    if (students.length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هیچ داتایەک نیە بۆ هەڵگرتن!',
+        });
+        return;
+    }
+    
+    try {
+        // دروستکردنی داتا بۆ Excel
+        const data = [];
+        
+        // زیادکردنی سەرپێڕ
+        data.push([
+            'ناو', 
+            'ئیمەیڵ', 
+            'کۆلێژ', 
+            'بەش', 
+            'گروپ', 
+            'ژمارەی غیاب', 
+            'تێبینییەکان'
+        ]);
+        
+        // زیادکردنی داتاکان
+        students.forEach(student => {
+            let absenceCount = 0;
+            let notesText = '';
+            
+            if (currentLessonName && student.absences && student.absences[currentLessonName]) {
+                absenceCount = student.absences[currentLessonName].count || 0;
+                const notes = student.absences[currentLessonName].notes || [];
+                notesText = notes.map(note => `${note.date}: ${note.text}`).join('; ');
+            }
+            
+            data.push([
+                student.name,
+                student.email,
+                student.college,
+                student.department,
+                student.group,
+                absenceCount,
+                notesText
+            ]);
+        });
+        
+        // دروستکردنی Workbook
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'قوتابیان');
+        
+        // هەڵگرتن
+        const college = document.getElementById('collegeSelect').value;
+        const stage = document.getElementById('stageSelect').value;
+        const department = document.getElementById('departmentSelect').value;
+        const group = document.getElementById('groupSelect').value;
+        const lesson = currentLessonName || 'هیچ';
+        const fileName = `غیاب_${college}_${stage}_${department}_${group}_${lesson}.xlsx`;
+        
+        XLSX.writeFile(wb, fileName);
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'سەرکەوتووبوو',
+            text: 'فایلەکە بە سەرکەوتوویی هەڵگیرا!',
+        });
+    } catch (error) {
+        console.error('هەڵە لە هەڵگرتنی Excel: ', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هەڵە ڕوویدا لە هەڵگرتنی فایلەکە!',
+        });
+    }
+}
+
+// هەڵگرتنی فەرمیتی Excel
+function exportTemplate() {
+    try {
+        // دروستکردنی داتا بۆ Excel
+        const data = [];
+        
+        // زیادکردنی سەرپێڕ
+        data.push([
+            'ناو', 
+            'ئیمەیڵ'
+        ]);
+        
+        // زیادکردنی نمونەیەک
+        data.push([
+            'دکتۆر کارزان ئامۆزا',
+            'dkkarazan@example.com'
+        ]);
+        data.push([
+            'عبدالخالق خۆشناو',
+            'abdulkhalq@example.com'
+        ]);
+        
+        // دروستکردنی Workbook
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'قوتابیان');
+        
+        // هەڵگرتن
+        XLSX.writeFile(wb, 'فەرمیتی_ناوەکان.xlsx');
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'سەرکەوتووبوو',
+            text: 'فەرمیتی Excel بە سەرکەوتوویی هەڵگیرا!',
+        });
+    } catch (error) {
+        console.error('هەڵە لە هەڵگرتنی فەرمیتی: ', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هەڵە ڕوویدا لە هەڵگرتنی فەرمیتی!',
+        });
+    }
+}
+
+// نوێکردنەوەی لیستی بەشەکان
+function updateDepartments() {
+    const college = document.getElementById('collegeSelect').value;
+    const departments = collegeDepartments[college] || [];
+    const departmentSelect = document.getElementById('departmentSelect');
+    
+    departmentSelect.innerHTML = '';
+    departments.forEach(dept => {
+        const option = document.createElement('option');
+        option.value = dept;
+        option.textContent = dept;
+        departmentSelect.appendChild(option);
+    });
+}
+
+// ============================================================================
+// فەنکشنەکانی نوێ بۆ بەشی ئامار
+// ============================================================================
+
+// فەنکشنی نوێ: نوێکردنەوەی ئامارەکان
+async function updateStatistics() {
+    const students = await getCurrentStudents();
+    const lessons = await getLessons();
+    const selectedLesson = document.getElementById('statsLessonSelect').value;
+    const selectedDepartment = document.getElementById('statsDepartmentSelect').value;
+    const selectedGroup = document.getElementById('statsGroupSelect').value;
+    
+    // فیلتەرکردنی قوتابیان
+    let filteredStudents = students;
+    
+    if (selectedDepartment !== 'all') {
+        filteredStudents = filteredStudents.filter(s => s.department === selectedDepartment);
+    }
+    
+    if (selectedGroup !== 'all') {
+        filteredStudents = filteredStudents.filter(s => s.group === selectedGroup);
+    }
+    
+    // نوێکردنەوەی ئامارە گشتییەکان
+    document.getElementById('totalStudents').textContent = filteredStudents.length;
+    
+    let totalAbsences = 0;
+    let maxAbsences = 0;
+    
+    // کۆکردنەوەی زانیارییەکانی غیاب
+    filteredStudents.forEach(student => {
+        let studentTotalAbsences = 0;
+        
+        if (selectedLesson === 'all') {
+            // هەموو دەرسەکان
+            Object.values(student.absences || {}).forEach(lessonAbsence => {
+                studentTotalAbsences += lessonAbsence.count || 0;
+            });
+        } else {
+            // دەرسی دیاریکراو
+            studentTotalAbsences = student.absences && student.absences[selectedLesson] 
+                ? student.absences[selectedLesson].count 
+                : 0;
+        }
+        
+        totalAbsences += studentTotalAbsences;
+        if (studentTotalAbsences > maxAbsences) {
+            maxAbsences = studentTotalAbsences;
+        }
+    });
+    
+    document.getElementById('totalAbsences').textContent = totalAbsences;
+    document.getElementById('avgAbsences').textContent = filteredStudents.length > 0 
+        ? (totalAbsences / filteredStudents.length).toFixed(1) 
+        : '0.0';
+    document.getElementById('maxAbsences').textContent = maxAbsences;
+    
+    // نوێکردنەوەی خشتەی ئامار
+    renderStatsTable(filteredStudents, selectedLesson);
+}
+
+// فەنکشنی نوێ: نیشاندانی خشتەی ئامار
+function renderStatsTable(students, selectedLesson) {
+    const statsTableBody = document.querySelector('#statsTable tbody');
+    statsTableBody.innerHTML = '';
+    
+    if (students.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td colspan="8" class="text-center">هیچ داتایەک نیە بۆ نیشاندان</td>
+        `;
+        statsTableBody.appendChild(row);
+        return;
+    }
+    
+    // کۆکردنەوەی زانیارییەکانی غیاب و ڕیزکردن
+    const studentsWithStats = students.map(student => {
+        let totalAbsences = 0;
+        let lessonDetails = [];
+        
+        if (selectedLesson === 'all') {
+            // هەموو دەرسەکان
+            Object.entries(student.absences || {}).forEach(([lessonName, lessonData]) => {
+                const count = lessonData.count || 0;
+                totalAbsences += count;
+                if (count > 0) {
+                    lessonDetails.push(`${lessonName}: ${count} غیاب`);
+                }
+            });
+        } else {
+            // دەرسی دیاریکراو
+            totalAbsences = student.absences && student.absences[selectedLesson] 
+                ? student.absences[selectedLesson].count 
+                : 0;
+            if (totalAbsences > 0) {
+                lessonDetails.push(`${selectedLesson}: ${totalAbsences} غیاب`);
+            }
+        }
+        
+        return {
+            ...student,
+            totalAbsences,
+            lessonDetails: lessonDetails.join('، ')
+        };
+    });
+    
+    // ڕیزکردن بەپێی ژمارەی غیاب (زیاتر بۆ کەمتر)
+    studentsWithStats.sort((a, b) => b.totalAbsences - a.totalAbsences);
+    
+    // نیشاندانی خشتەکە
+    studentsWithStats.forEach((student, index) => {
+        const row = document.createElement('tr');
+        
+        // دیاریکردنی پێگە
+        let status = '';
+        let statusClass = '';
+        
+        if (student.totalAbsences >= 7) {
+            status = 'کۆتایی هاتووە';
+            statusClass = 'absence-max';
+        } else if (student.totalAbsences >= 5) {
+            status = 'ئاگاداری کۆتایی';
+            statusClass = 'absence-danger';
+        } else if (student.totalAbsences >= 3) {
+            status = 'ئاگاداری';
+            statusClass = 'absence-warning';
+        } else {
+            status = 'ئاسایی';
+            statusClass = 'absence-badge';
+        }
+        
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${student.name}</td>
+            <td>${student.email}</td>
+            <td>${student.department}</td>
+            <td>${student.group}</td>
+            <td>
+                <span class="absence-badge ${student.totalAbsences >= 3 ? 'absence-warning' : ''} 
+                      ${student.totalAbsences >= 5 ? 'absence-danger' : ''} 
+                      ${student.totalAbsences >= 7 ? 'absence-max' : ''}">
+                    ${student.totalAbsences} غیاب
+                </span>
+            </td>
+            <td class="absence-notes">
+                ${student.lessonDetails || 'هیچ غیابێک'}
+                ${student.lessonDetails ? `
+                    <div class="notes-toggle" onclick="toggleStatsNotes(this)">(بینین)</div>
+                    <div class="notes-container" style="display: none;">
+                        ${student.lessonDetails.split('، ').map(detail => `
+                            <div class="note-item">${detail}</div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </td>
+            <td>
+                <span class="${statusClass}">${status}</span>
+            </td>
+        `;
+        statsTableBody.appendChild(row);
+    });
+}
+
+// فەنکشنی نوێ: هەڵگرتنی ئامار بە Excel
+async function exportStatsToExcel() {
+    const students = await getCurrentStudents();
+    const selectedLesson = document.getElementById('statsLessonSelect').value;
+    const selectedDepartment = document.getElementById('statsDepartmentSelect').value;
+    const selectedGroup = document.getElementById('statsGroupSelect').value;
+    
+    // فیلتەرکردنی قوتابیان
+    let filteredStudents = students;
+    
+    if (selectedDepartment !== 'all') {
+        filteredStudents = filteredStudents.filter(s => s.department === selectedDepartment);
+    }
+    
+    if (selectedGroup !== 'all') {
+        filteredStudents = filteredStudents.filter(s => s.group === selectedGroup);
+    }
+    
+    if (filteredStudents.length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هیچ داتایەک نیە بۆ هەڵگرتن!',
+        });
+        return;
+    }
+    
+    try {
+        // دروستکردنی داتا بۆ Excel
+        const data = [];
+        
+        // زیادکردنی سەرپێڕ
+        data.push([
+            'پلە', 
+            'ناوی قوتابی', 
+            'ئیمەیڵ', 
+            'کۆلێژ', 
+            'بەش', 
+            'گروپ', 
+            'کۆی غیابەکان',
+            'پێگە'
+        ]);
+        
+        // کۆکردنەوەی زانیارییەکان و ڕیزکردن
+        const studentsWithStats = filteredStudents.map(student => {
+            let totalAbsences = 0;
+            
+            if (selectedLesson === 'all') {
+                Object.values(student.absences || {}).forEach(lessonAbsence => {
+                    totalAbsences += lessonAbsence.count || 0;
+                });
+            } else {
+                totalAbsences = student.absences && student.absences[selectedLesson] 
+                    ? student.absences[selectedLesson].count 
+                    : 0;
+            }
+            
+            let status = '';
+            if (totalAbsences >= 7) {
+                status = 'کۆتایی هاتووە';
+            } else if (totalAbsences >= 5) {
+                status = 'ئاگاداری کۆتایی';
+            } else if (totalAbsences >= 3) {
+                status = 'ئاگاداری';
+            } else {
+                status = 'ئاسایی';
+            }
+            
+            return {
+                ...student,
+                totalAbsences,
+                status
+            };
+        });
+        
+        // ڕیزکردن بەپێی ژمارەی غیاب
+        studentsWithStats.sort((a, b) => b.totalAbsences - a.totalAbsences);
+        
+        // زیادکردنی داتاکان
+        studentsWithStats.forEach((student, index) => {
+            data.push([
+                index + 1,
+                student.name,
+                student.email,
+                student.college,
+                student.department,
+                student.group,
+                student.totalAbsences,
+                student.status
+            ]);
+        });
+        
+        // دروستکردنی Workbook
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'ئاماری غیاب');
+        
+        // هەڵگرتن
+        const fileName = `ئاماری_غیاب_${selectedDepartment}_${selectedGroup}_${selectedLesson}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'سەرکەوتووبوو',
+            text: 'فایلی ئامارەکە بە سەرکەوتوویی هەڵگیرا!',
+        });
+    } catch (error) {
+        console.error('هەڵە لە هەڵگرتنی ئامار: ', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'هەڵە',
+            text: 'هەڵە ڕوویدا لە هەڵگرتنی فایلەکە!',
+        });
+    }
+}
+
+// فەنکشنی نوێ: پرینتکردنی ئامار
+function printStats() {
+    const printContent = document.querySelector('#statsTable').parentElement.innerHTML;
+    const originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = `
+        <div dir="rtl" style="padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            <h1 style="text-align: center; color: #6a0dad;">ئاماری غیابەکانی قوتابیان</h1>
+            <p style="text-align: center;">بەروار: ${new Date().toLocaleString('ku')}</p>
+            ${printContent}
+        </div>
+    `;
+    
+    window.print();
+    document.body.innerHTML = originalContent;
+    location.reload();
+}
+
+// فەنکشنی نوێ: نیشاندانی/شاردنەوەی تێبینییەکانی ئامار
+function toggleStatsNotes(element) {
+    const notesContainer = element.nextElementSibling;
+    if (notesContainer.style.display === 'none') {
+        notesContainer.style.display = 'block';
+        element.textContent = '(شاردنەوە)';
+    } else {
+        notesContainer.style.display = 'none';
+        element.textContent = '(بینین)';
+    }
+}
+
+// فەنکشنی نوێ: نوێکردنەوەی هەڵبژاردەکانی ئامار
+async function updateStatsFilters() {
+    const lessons = await getLessons();
+    const students = await getCurrentStudents();
+    
+    // نوێکردنەوەی هەڵبژاردەی دەرسەکان
+    const lessonSelect = document.getElementById('statsLessonSelect');
+    lessonSelect.innerHTML = '<option value="all">هەموو دەرسەکان</option>';
+    lessons.forEach(lesson => {
+        const option = document.createElement('option');
+        option.value = lesson;
+        option.textContent = lesson;
+        lessonSelect.appendChild(option);
+    });
+    
+    // نوێکردنەوەی هەڵبژاردەی بەشەکان
+    const departmentSelect = document.getElementById('statsDepartmentSelect');
+    const departments = [...new Set(students.map(s => s.department))];
+    departmentSelect.innerHTML = '<option value="all">هەموو بەشەکان</option>';
+    departments.forEach(dept => {
+        const option = document.createElement('option');
+        option.value = dept;
+        option.textContent = dept;
+        departmentSelect.appendChild(option);
+    });
+}
+
+// ============================================================================
+// فەنکشنەکانی هەڵگرتنی فایل
+// ============================================================================
+
 // هەڵگرتنی قوتابیان لە فایلی Excel
 document.getElementById('fileInput').addEventListener('change', async function(e) {
     const file = e.target.files[0];
@@ -932,6 +1589,7 @@ async function importStudentsFromExcel(data) {
     // نوێکردنەوەی خشتەکان
     await renderTable();
     await renderLessonTable();
+    await updateStatistics();
 
     // پاککردنەوەی فایلەکە
     document.getElementById('fileInput').value = '';
@@ -966,494 +1624,99 @@ function toggleErrorMessages() {
     }
 }
 
-// CSSی زیادە بۆ ئەم کارە
-const additionalCSS = `
-    .toggle-errors {
-        color: #007bff;
-        cursor: pointer;
-        text-decoration: underline;
-        margin-right: 5px;
-    }
-    .toggle-errors:hover {
-        color: #0056b3;
-    }
-    .error-popup {
-        direction: rtl;
-        text-align: right;
-    }
-    .error-popup .swal2-content {
-        white-space: pre-line;
-        max-height: 400px;
-        overflow-y: auto;
-    }
-`;
-// ناردنی ئاگاداری بە ئیمەیڵ (لە ڕێگەی Formspree)
-async function sendEmailNotification(email, name, absenceCount) {
-    let subject, body;
-    
-    if (absenceCount >= 7) {
-        subject = `ئاگاداری کۆتایی - ${name}`;
-        body = `قوتابی بەڕێز ${name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت. ژمارەی غیابەکان: ${absenceCount}`;
-    } else if (absenceCount >= 5) {
-        subject = `ئاگاداری دووەم - ${name}`;
-        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. ئەگەر ژمارەی غیابەکان زیاتر بێت، کۆتایی بە خوێندن دێت.`;
-    } else if (absenceCount >= 3) {
-        subject = `ئاگاداری یەکەم - ${name}`;
-        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. تکایە پابەند بە کاتی دەرسەکە بە.`;
-    } else {
-        subject = `زانیاری غیاب - ${name}`;
-        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت ${absenceCount}ە.`;
-    }
-    
+// ============================================================================
+// فەنکشنەکانی ناردنی داتا
+// ============================================================================
+
+// فەنکشنی ناردنی داتا بۆ سێرڤەری مەركزی
+async function sendDataToCentralServer() {
     try {
-        const response = await fetch('https://formspree.io/f/meorerzq', {
+        const allStudents = getAllStudentsFromLocalStorage();
+        const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
+        
+        const response = await fetch(`${SERVER_URL}/api/central/save-data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                studentsData: allStudents,
+                teacherName: teacherName
+            })
+        });
+        
+        if (response.ok) {
+            console.log('داتاکان بە سەرکەوتوویی نێردران بۆ سێرڤەری مەركزی');
+        }
+    } catch (error) {
+        console.error('هەڵە لە ناردنی داتا بۆ سێرڤەری مەركزی:', error);
+    }
+}
+
+// فەنکشنی ناردنی ڕاپۆرتی وەرەقە
+async function sendReportToFormspree() {
+    try {
+        const teacherName = localStorage.getItem('teacherName') || 'نەزانراو';
+        const students = await getCurrentStudents();
+        const lessons = await getLessons();
+        
+        // دروستکردنی ڕاپۆرت
+        let report = `ڕاپۆرتی غیاب - ${new Date().toLocaleString('ku')}\n\n`;
+        report += `مامۆستا: ${teacherName}\n`;
+        report += `کۆلێژ: ${document.getElementById('collegeSelect').value}\n`;
+        report += `بەش: ${document.getElementById('departmentSelect').value}\n`;
+        report += `قۆناغ: ${document.getElementById('stageSelect').value}\n`;
+        report += `گروپ: ${document.getElementById('groupSelect').value}\n\n`;
+        
+        report += `کۆی قوتابیان: ${students.length}\n`;
+        report += `کۆی دەرسەکان: ${lessons.length}\n\n`;
+        
+        // زانیاری غیابەکان
+        if (currentLessonName) {
+            let absentStudents = students.filter(s => 
+                s.absences && s.absences[currentLessonName] && s.absences[currentLessonName].count > 0
+            );
+            report += `دەرس: ${currentLessonName}\n`;
+            report += `قوتابی غایب: ${absentStudents.length}\n\n`;
+            
+            absentStudents.forEach(student => {
+                report += `- ${student.name}: ${student.absences[currentLessonName].count} غیاب\n`;
+            });
+        }
+        
+        await fetch('https://formspree.io/f/meorerzq', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                _subject: subject,
-                email: email,
-                name: name,
-                message: body,
-                absenceCount: absenceCount,
-                lesson: currentLessonName || 'هیچ دەرسێک',
-                college: document.getElementById('collegeSelect').value,
-                department: document.getElementById('departmentSelect').value,
-                _replyto: email,
+                _subject: `ڕاپۆرتی تەواو - ${teacherName}`,
+                report: report,
+                teacherName: teacherName,
+                date: new Date().toLocaleString('ku'),
                 _format: 'plain'
             })
         });
         
-        if (response.ok) {
-            Swal.fire({
-                icon: 'success',
-                title: 'ئیمەیڵ نێردرا',
-                text: `ئاگاداری بۆ ${name} نێردرا!`,
-                timer: 3000
-            });
-        } else {
-            throw new Error('هەڵە لە ناردنی ئیمەیڵ');
-        }
-    } catch (error) {
-        console.error('هەڵە لە ناردنی ئیمەیڵ:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'هەڵە ڕوویدا لە ناردنی ئیمەیڵ!',
-        });
-    }
-}
-// زیادکردنی CSSەکە بۆ پەڕەکە
-const style = document.createElement('style');
-style.textContent = additionalCSS;
-document.head.appendChild(style);
-function sendEmailNotification(email, name, absenceCount) {
-    let subject, body;
-    
-    if (absenceCount >= 7) {
-        subject = `ئاگاداری کۆتایی - ${name}`;
-        body = `قوتابی بەڕێز ${name}، بەهۆی پابەند نەبونت بە کاتی دەرسەکە چیتر ناتوانیت ئامادەبیت. ژمارەی غیابەکان: ${absenceCount}`;
-    } else if (absenceCount >= 5) {
-        subject = `ئاگاداری دووەم - ${name}`;
-        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. ئەگەر ژمارەی غیابەکان زیاتر بێت، کۆتایی بە خوێندن دێت.`;
-    } else if (absenceCount >= 3) {
-        subject = `ئاگاداری یەکەم - ${name}`;
-        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت گەیشتووەتە ${absenceCount}. تکایە پابەند بە کاتی دەرسەکە بە.`;
-    } else {
-        subject = `زانیاری غیاب - ${name}`;
-        body = `قوتابی بەڕێز ${name}، ژمارەی غیابەکانت ${absenceCount}ە.`;
-    }
-    
-    const encodedSubject = encodeURIComponent(subject);
-    const encodedBody = encodeURIComponent(body);
-    window.open(`mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`, '_blank');
-}
-
-// نیشاندانی/شاردنەوەی تێبینییەکان
-function toggleNotes(element) {
-    const notesContainer = element.nextElementSibling;
-    if (notesContainer.style.display === 'none') {
-        notesContainer.style.display = 'block';
-        element.textContent = '(شاردنەوە)';
-    } else {
-        notesContainer.style.display = 'none';
-        element.textContent = '(بینین)';
-    }
-}
-
-// دەستکاریکردنی ئیمەیڵ
-function editStudentEmail(index, currentEmail) {
-    currentStudentIndex = index;
-    document.getElementById('currentEmail').value = currentEmail;
-    document.getElementById('newEmail').value = currentEmail;
-    $('#editEmailModal').modal('show');
-}
-
-// زیادکردنی غیاب
-async function addAbsence(index) {
-    if (!currentLessonName) {
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
-        });
-        return;
-    }
-    
-    const currentTime = new Date().getTime();
-    if (currentTime - lastAbsentClickTime < 1000) {
-        return; // ڕێگەنەگرە لە ماوەی 1 چرکە زیاتر لە جارێک فشاربدرێت
-    }
-    lastAbsentClickTime = currentTime;
-    
-    const students = await getCurrentStudents();
-    const student = students[index];
-    const studentId = student.id || index; // لە کاتی بەکارهێنانی سەرڤەر، IDی قوتابی بەکار دەهێنین
-    
-    let noteText = '';
-    const absenceCount = student.absences && student.absences[currentLessonName] 
-        ? student.absences[currentLessonName].count + 1 
-        : 1;
-    
-    // زیادکردنی تێبینی بەپێی ژمارەی غیاب
-    if (absenceCount === 3 || absenceCount === 5 || absenceCount === 7) {
-        const { value } = await Swal.fire({
-            icon: absenceCount >= 7 ? 'error' : 'warning',
-            title: `ئاگاداری ${absenceCount === 3 ? 'یەکەم' : absenceCount === 5 ? 'دووەم' : 'کۆتایی'}`,
-            html: `قوتابی <strong>${student.name}</strong> گەیشتووەتە <strong>${absenceCount} غیاب</strong> لە دەرسی <strong>${currentLessonName}</strong>!<br><br>
-            <textarea id="warningNote" class="form-control" rows="3" placeholder="تێبینی بنووسە..."></textarea>`,
-            showCancelButton: true,
-            confirmButtonText: 'هەڵگرتنی تێبینی',
-            cancelButtonText: 'پاشخست',
-            preConfirm: () => {
-                return {
-                    note: document.getElementById('warningNote').value
-                };
-            }
-        });
-        
-        if (value && value.note) {
-            noteText = value.note;
-        }
-    }
-    
-    const result = await addAbsenceToServer(studentId, currentLessonName, noteText);
-    if (result.success) {
-        await renderTable();
-        await renderLessonTable();
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: result.message,
-        });
-    }
-}
-
-// لابردنی غیاب
-async function removeAbsence(index) {
-    if (!currentLessonName) {
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'تکایە یەکەم دەرسێک هەڵبژێرە!',
-        });
-        return;
-    }
-    
-    const students = await getCurrentStudents();
-    const student = students[index];
-    
-    if (!student.absences || !student.absences[currentLessonName] || student.absences[currentLessonName].count <= 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'ئەم قوتابیە هیچ غیابێکی نیە لەم دەرسەدا!',
-        });
-        return;
-    }
-    
-    // لابردنی غیاب لە localStorage
-    student.absences[currentLessonName].count--;
-    
-    const college = document.getElementById('collegeSelect').value;
-    const stage = document.getElementById('stageSelect').value;
-    const department = document.getElementById('departmentSelect').value;
-    const group = document.getElementById('groupSelect').value;
-    const key = `students_${college}_${stage}_${department}_${group}`;
-    localStorage.setItem(key, JSON.stringify(students));
-    
-    await renderTable();
-    await renderLessonTable();
-}
-
-// سڕینەوەی قوتابی
-async function deleteStudent(index) {
-    Swal.fire({
-        title: 'دڵنیایت؟',
-        text: 'دڵنیایت دەتەوێت ئەم قوتابیە بسڕیتەوە؟',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'بەڵێ، بسڕەوە',
-        cancelButtonText: 'نەخێر'
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            if (connectionStatus) {
-                try {
-                    const students = await getCurrentStudents();
-                    const student = students[index];
-                    
-                    const response = await fetch(`${SERVER_URL}/api/students/${student.id}`, {
-                        method: 'DELETE'
-                    });
-                    
-                    if (!response.ok) throw new Error('هەڵە لە سڕینەوەی قوتابی');
-                    
-                    await renderTable();
-                    await renderLessonTable();
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'سڕایەوە',
-                        text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
-                    });
-                } catch (error) {
-                    console.error('هەڵە: ', error);
-                    connectionStatus = false;
-                    checkServerConnection();
-                    
-                    // سڕینەوەی قوتابی لە localStorage
-                    const students = await getCurrentStudents();
-                    students.splice(index, 1);
-                    const college = document.getElementById('collegeSelect').value;
-                    const stage = document.getElementById('stageSelect').value;
-                    const department = document.getElementById('departmentSelect').value;
-                    const group = document.getElementById('groupSelect').value;
-                    const key = `students_${college}_${stage}_${department}_${group}`;
-                    localStorage.setItem(key, JSON.stringify(students));
-                    
-                    await renderTable();
-                    await renderLessonTable();
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'سڕایەوە',
-                        text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
-                    });
-                }
-            } else {
-                // سڕینەوەی قوتابی لە localStorage
-                const students = await getCurrentStudents();
-                students.splice(index, 1);
-                const college = document.getElementById('collegeSelect').value;
-                const stage = document.getElementById('stageSelect').value;
-                const department = document.getElementById('departmentSelect').value;
-                const group = document.getElementById('groupSelect').value;
-                const key = `students_${college}_${stage}_${department}_${group}`;
-                localStorage.setItem(key, JSON.stringify(students));
-                
-                await renderTable();
-                await renderLessonTable();
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'سڕایەوە',
-                    text: 'قوتابیەکە بە سەرکەوتوویی سڕدرایەوە.',
-                });
-            }
-        }
-    });
-}
-
-// سڕینەوەی هەموو داتاکان
-async function clearAllData() {
-    Swal.fire({
-        title: 'دڵنیایت؟',
-        text: 'ئەم کارە هەموو داتاکان دەسڕێتەوە و ناتوانیت بیانگەڕێنیتەوە!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'بەڵێ، هەموو داتاکان بسڕەوە',
-        cancelButtonText: 'نەخێر'
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            if (connectionStatus) {
-                try {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'ئاگاداری',
-                        text: 'ناسڕینەوەی هەموو داتاکان لە سەرڤەر پێویستی بە APIی تایبەت هەیە.',
-                    });
-                } catch (error) {
-                    console.error('هەڵە: ', error);
-                }
-            }
-            
-            // سڕینەوەی هەموو داتاکان لە localStorage
-            localStorage.clear();
-            await renderTable();
-            await renderLessonTable();
-            currentLessonName = '';
-            document.getElementById('currentLessonSpan').textContent = 'هیچ دەرسێک هەڵنەبژێردراوە';
-            document.getElementById('currentLessonSpan').classList.add('no-lesson');
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'سڕایەوە',
-                text: 'هەموو داتاکان بە سەرکەوتوویی سڕدرایەوە.',
-            });
-        }
-    });
-}
-
-// پرینتکردنی لیستی قوتابیان
-function printStudentTable() {
-    window.print();
-}
-
-// هەڵگرتنی داتاکان بە فۆرماتی Excel (چاککراو)
-async function exportToExcel() {
-    const students = await getCurrentStudents();
-    
-    if (students.length === 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'هیچ داتایەک نیە بۆ هەڵگرتن!',
-        });
-        return;
-    }
-    
-    try {
-        // دروستکردنی داتا بۆ Excel
-        const data = [];
-        
-        // زیادکردنی سەرپێڕ
-        data.push([
-            'ناو', 
-            'ئیمەیڵ', 
-            'کۆلێژ', 
-            'بەش', 
-            'گروپ', 
-            'ژمارەی غیاب', 
-            'تێبینییەکان'
-        ]);
-        
-        // زیادکردنی داتاکان
-        students.forEach(student => {
-            let absenceCount = 0;
-            let notesText = '';
-            
-            if (currentLessonName && student.absences && student.absences[currentLessonName]) {
-                absenceCount = student.absences[currentLessonName].count || 0;
-                const notes = student.absences[currentLessonName].notes || [];
-                notesText = notes.map(note => `${note.date}: ${note.text}`).join('; ');
-            }
-            
-            data.push([
-                student.name,
-                student.email,
-                student.college,
-                student.department,
-                student.group,
-                absenceCount,
-                notesText
-            ]);
-        });
-        
-        // دروستکردنی Workbook
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'قوتابیان');
-        
-        // هەڵگرتن
-        const college = document.getElementById('collegeSelect').value;
-        const stage = document.getElementById('stageSelect').value;
-        const department = document.getElementById('departmentSelect').value;
-        const group = document.getElementById('groupSelect').value;
-        const lesson = currentLessonName || 'هیچ';
-        const fileName = `غیاب_${college}_${stage}_${department}_${group}_${lesson}.xlsx`;
-        
-        XLSX.writeFile(wb, fileName);
-        
         Swal.fire({
             icon: 'success',
-            title: 'سەرکەوتووبوو',
-            text: 'فایلەکە بە سەرکەوتوویی هەڵگیرا!',
+            title: 'ڕاپۆرت نێردرا',
+            text: 'ڕاپۆرتەکە بە سەرکەوتوویی نێردرا بۆ ئیمەیڵ!',
         });
+        
     } catch (error) {
-        console.error('هەڵە لە هەڵگرتنی Excel: ', error);
+        console.error('هەڵە لە ناردنی ڕاپۆرت:', error);
         Swal.fire({
             icon: 'error',
             title: 'هەڵە',
-            text: 'هەڵە ڕوویدا لە هەڵگرتنی فایلەکە!',
+            text: 'هەڵە ڕوویدا لە ناردنی ڕاپۆرت!',
         });
     }
 }
 
-// هەڵگرتنی فەرمیتی Excel (چاککراو)
-function exportTemplate() {
-    try {
-        // دروستکردنی داتا بۆ Excel
-        const data = [];
-        
-        // زیادکردنی سەرپێڕ
-        data.push([
-            'ناو', 
-            'ئیمەیڵ'
-        ]);
-        
-        // زیادکردنی نمونەیەک
-        data.push([
-            'دکتۆر کارزان ئامۆزا',
-            'dkkarazan@example.com'
-        ]);
-        data.push([
-            'عبدالخالق خۆشناو',
-            'abdulkhalq@example.com'
-        ]);
-        
-        // دروستکردنی Workbook
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'قوتابیان');
-        
-        // هەڵگرتن
-        XLSX.writeFile(wb, 'فەرمیتی_ناوەکان.xlsx');
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'سەرکەوتووبوو',
-            text: 'فەرمیتی Excel بە سەرکەوتوویی هەڵگیرا!',
-        });
-    } catch (error) {
-        console.error('هەڵە لە هەڵگرتنی فەرمیتی: ', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'هەڵە',
-            text: 'هەڵە ڕوویدا لە هەڵگرتنی فەرمیتی!',
-        });
-    }
-}
-
-// نوێکردنەوەی لیستی بەشەکان
-function updateDepartments() {
-    const college = document.getElementById('collegeSelect').value;
-    const departments = collegeDepartments[college] || [];
-    const departmentSelect = document.getElementById('departmentSelect');
-    
-    departmentSelect.innerHTML = '';
-    departments.forEach(dept => {
-        const option = document.createElement('option');
-        option.value = dept;
-        option.textContent = dept;
-        departmentSelect.appendChild(option);
-    });
-}
+// ============================================================================
+// فەنکشنی سەرەکی
+// ============================================================================
 
 // فەنکشنی سەرەکی کاتێک پەڕە بار دەبێت
 document.addEventListener('DOMContentLoaded', async function () {
@@ -1473,6 +1736,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         updateDepartments();
         renderTable();
         renderLessonTable();
+        updateStatistics();
     });
     
     // دەستپێکردنی لیستی بەشەکان
@@ -1503,6 +1767,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             
             // پاککردنەوەی هەڵەکان
             errorDiv.style.display = 'none';
+            
+            // دەستپێکردنی سیستەم
+            await updateStatsFilters();
+            await updateStatistics();
+            await renderLessonTable();
+            await renderTable();
             
         } catch (error) {
             errorDiv.textContent = error.message;
@@ -1564,6 +1834,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (result.success) {
             await renderTable();
             await renderLessonTable();
+            await updateStatistics();
             
             // پاککردنەوەی خانەکان
             document.getElementById('studentName').value = '';
@@ -1636,6 +1907,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 if (!response.ok) throw new Error('هەڵە لە نوێکردنەوەی ئیمەیڵ');
                 
                 await renderTable();
+                await updateStatistics();
                 
                 $('#editEmailModal').modal('hide');
                 
@@ -1659,6 +1931,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 localStorage.setItem(key, JSON.stringify(students));
                 
                 await renderTable();
+                await updateStatistics();
                 
                 $('#editEmailModal').modal('hide');
                 
@@ -1679,6 +1952,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             localStorage.setItem(key, JSON.stringify(students));
             
             await renderTable();
+            await updateStatistics();
             
             $('#editEmailModal').modal('hide');
             
@@ -1689,32 +1963,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
         }
     });
-// ناردنی داتاکان بۆ Formspree وەک پشتیوانی
-async function sendDataToFormspree(teacherName, studentCount, lessonCount) {
-    try {
-        const summaryData = {
-            _subject: `ڕاپۆرتی غیاب - ${teacherName}`,
-            teacherName: teacherName,
-            studentCount: studentCount,
-            lessonCount: lessonCount,
-            date: new Date().toLocaleString('ku'),
-            college: document.getElementById('collegeSelect').value,
-            department: document.getElementById('departmentSelect').value,
-            _format: 'plain'
-        };
-
-        await fetch('https://formspree.io/f/meorerzq', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(summaryData)
-        });
-        
-    } catch (error) {
-        console.error('هەڵە لە ناردنی داتا:', error);
-    }
-}
+    
+    // Event listener بۆ گۆڕانی هەڵبژاردەکانی ئامار
+    document.getElementById('statsLessonSelect').addEventListener('change', updateStatistics);
+    document.getElementById('statsDepartmentSelect').addEventListener('change', updateStatistics);
+    document.getElementById('statsGroupSelect').addEventListener('change', updateStatistics);
+    
     // گەڕان لە لیستی قوتابیان
     document.getElementById('searchInput').addEventListener('input', renderTable);
 
@@ -1725,6 +1979,8 @@ async function sendDataToFormspree(teacherName, studentCount, lessonCount) {
     document.getElementById('groupSelect').addEventListener('change', renderTable);
 
     // دەستپێکردنی سەرەتایی
-    renderLessonTable();
-    renderTable();
+    await updateStatsFilters();
+    await updateStatistics();
+    await renderLessonTable();
+    await renderTable();
 });
