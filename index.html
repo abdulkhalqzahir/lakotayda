@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="connection-status status-disconnected" id="connectionStatus">
-        <i class="fas fa-plug status-icon"></i> پەیوەندی بە سەرڤەرەوە نیە
-    </div>
 
     <div class="container">
         <!-- فۆرمی چوونەژوورەوە -->
@@ -63,7 +60,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="collegeSelect"><i class="fas fa-building"></i> هەڵبژاردنی کۆلێژ:</label>
                                         <select id="collegeSelect" class="form-control">
@@ -71,7 +68,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="stageSelect"><i class="fas fa-graduation-cap"></i> هەڵبژاردنی قۆناغ:</label>
                                         <select id="stageSelect" class="form-control">
@@ -82,7 +79,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="departmentSelect"><i class="fas fa-book"></i> هەڵبژاردنی بەش:</label>
                                         <select id="departmentSelect" class="form-control">
@@ -90,7 +87,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="groupSelect"><i class="fas fa-users"></i> هەڵبژاردنی گروپ:</label>
                                         <select id="groupSelect" class="form-control">
@@ -101,16 +98,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="studentName"><i class="fas fa-user"></i> ناوی قوتابی:</label>
                                         <input type="text" id="studentName" class="form-control" placeholder="ناوی قوتابی بنووسە">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="studentEmail"><i class="fas fa-envelope"></i> ئیمەیڵ:</label>
-                                        <input type="email" id="studentEmail" class="form-control" placeholder="example@gmail.com">
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +129,7 @@
                                     <i class="fas fa-file-excel"></i>
                                 </div>
                                 <h4>فایلی Excel هەڵبگرە ئەنجامی بینە</h4>
-                                <p>فایلەکە پێویستە ستوونی ناو و ئیمەیڵی تێدابێت</p>
+                                <p>فایلەکە پێویستە ستوونی ناوی تێدابێت</p>
                                 <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;">
                                 <button class="btn-grad btn-primary" onclick="document.getElementById('fileInput').click()">
                                     <i class="fas fa-upload"></i> هەڵگرتنی فایل
@@ -235,7 +226,6 @@
                                         <tr>
                                             <th>پلە</th>
                                             <th>ناوی قوتابی</th>
-                                            <th>ئیمەیڵ</th>
                                             <th>بەش</th>
                                             <th>گروپ</th>
                                             <th>کۆی غیابەکان</th>
@@ -321,7 +311,6 @@
                             <thead>
                                 <tr>
                                     <th>ناو</th>
-                                    <th>ئیمەیڵ</th>
                                     <th>کۆلێژ</th>
                                     <th>بەش</th>
                                     <th>گروپ</th>
@@ -335,37 +324,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal ی دەستکاریکردنی ئیمەیڵ -->
-    <div class="modal fade edit-email-modal" id="editEmailModal" tabindex="-1" role="dialog" aria-labelledby="editEmailModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editEmailModalLabel"><i class="fas fa-edit"></i> دەستکاریکردنی ئیمەیڵ</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="currentEmail">ئیمەیڵی ئێستا:</label>
-                        <input type="email" class="form-control" id="currentEmail" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="newEmail">ئیمەیڵی نوێ:</label>
-                        <input type="email" class="form-control" id="newEmail" placeholder="ئیمەیڵی نوێ بنووسە">
-                    </div>
-                    <div id="emailEditWarning" class="alert alert-warning mt-3">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>ئاگاداری:</strong> دەستکاریکردنی ئیمەیڵ کارایی نیە بۆ سەرجەم داتاکانی پێشوو. تەنها دەستکاری بکە ئەگەر پێویستت بێت.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">پاشخست</button>
-                    <button type="button" class="btn btn-primary" id="saveEmailChanges">هەڵگرتنی گۆڕانکارییەکان</button>
                 </div>
             </div>
         </div>
